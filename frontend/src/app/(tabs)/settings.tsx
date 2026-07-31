@@ -1,32 +1,19 @@
-import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { AppText, Box, Stack } from '@/design-system';
 
 /** Placeholder — user-preferences module screen will mount here (Day 5). */
 export default function ProfileScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea} edges={['bottom']}>
-        <ThemedText type="subtitle">Perfil</ThemedText>
-        <ThemedText type="default">
-          Aquí irán preferencias, rol y tema.
-        </ThemedText>
+    <Box className="flex-1 bg-background dark:bg-background-dark">
+      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+        <Stack gap="sm" className="px-6 pt-6">
+          <AppText variant="subtitle">Perfil</AppText>
+          <AppText tone="muted">
+            Aquí irán preferencias, rol y tema.
+          </AppText>
+        </Stack>
       </SafeAreaView>
-    </ThemedView>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
-    gap: Spacing.two,
-  },
-});
