@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
 
 import { ThemeProvider, useTheme, type ThemePreference } from '@/design-system';
+import { PreferencesHydrator } from '@/modules/user-preferences';
 
 import { createQueryClient } from './query-client';
 
@@ -25,6 +26,7 @@ export function AppProviders({
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider initialPreference={initialThemePreference}>
+        <PreferencesHydrator />
         <StatusBarFromTheme />
         {children}
       </ThemeProvider>

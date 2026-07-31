@@ -1,0 +1,30 @@
+import { useEffect } from 'react';
+
+import { useTheme } from '@/design-system';
+
+import { usePreferencesStore } from './store/preferences-store';
+
+/**
+ * Loads persisted preferences once and syncs theme into ThemeProvider.
+ * Mount near the app root (inside ThemeProvider).
+ */
+export function PreferencesHydrator() {
+  const hydrated = usePreferencesStore((s) => s.hydrated);
+  const hydrate = usePreferencesStore((s) => s.hydrate);
+  const theme = usePreferencesStore((s) => s.prefs.theme);
+  const { setPreference } = useTheme();
+
+  useEffect(() => {
+    if (!hydrated) {
+      void hydrate();
+    }
+  }, [hydrated, hydrate]);
+
+  useEffect(() => {
+    if (hydrated) {
+      setPreference(theme);
+    }
+  }, [hydrated, theme, setPreference]);
+
+  return null;
+}
