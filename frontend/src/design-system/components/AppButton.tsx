@@ -89,7 +89,8 @@ export function AppButton({
         buttonVariants({ variant, size, fullWidth, disabled: isDisabled }),
         className,
       )}
-      {...props}>
+      {...props}
+      accessibilityLabel={props.accessibilityLabel ?? label}>
       {loading ? (
         <ActivityIndicator
           size="small"

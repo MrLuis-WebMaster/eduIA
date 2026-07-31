@@ -93,6 +93,23 @@ describe('POST /api/v1/tutor/messages', () => {
     });
   });
 
+  it('accepts teacher role requests with the fake provider', async () => {
+    const app = createApp({ env: testEnv() });
+
+    const res = await request(app)
+      .post('/api/v1/tutor/messages')
+      .send({
+        ...validBody,
+        userRole: 'teacher',
+        message: 'Dame ideas para explicar fracciones',
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.provider).toBe('fake');
+    expect(typeof res.body.reply).toBe('string');
+    expect(res.body.reply.length).toBeGreaterThan(10);
+  });
+
   it('returns normalized NOT_FOUND for unknown routes', async () => {
     const app = createApp({ env: testEnv() });
 

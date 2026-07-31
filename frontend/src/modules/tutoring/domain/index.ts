@@ -20,3 +20,6 @@ export {
   createEmptySession,
   toApiConversation,
 } from './types';
+
+export type { RecentTutoringSessionDto } from './session-summary';
+export { toRecentTutoringSessionDto } from './session-summary';

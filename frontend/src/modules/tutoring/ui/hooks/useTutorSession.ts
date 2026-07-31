@@ -12,6 +12,7 @@ import {
   type TutorSession,
   type UserRole,
 } from '../../domain';
+import { RECENT_TUTORING_SESSIONS_QUERY_KEY } from './useRecentTutoringSessions';
 
 export const TUTOR_SESSION_QUERY_KEY = ['tutoring', 'session'] as const;
 
@@ -132,6 +133,9 @@ export function useTutorSession(
     },
     onSuccess: (outcome) => {
       queryClient.setQueryData(TUTOR_SESSION_QUERY_KEY, outcome.session);
+      void queryClient.invalidateQueries({
+        queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
+      });
       setDraft('');
       lastFailedMessageRef.current = null;
     },
@@ -149,6 +153,9 @@ export function useTutorSession(
       tutoring.startNewSession({ subject, difficulty }),
     onSuccess: (fresh) => {
       queryClient.setQueryData(TUTOR_SESSION_QUERY_KEY, fresh);
+      void queryClient.invalidateQueries({
+        queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
+      });
       setDraft('');
       lastFailedMessageRef.current = null;
       sendMutation.reset();

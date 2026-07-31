@@ -17,6 +17,9 @@ export function createStartNewSession(deps: {
   return async function startNewSession(
     input: StartNewSessionInput = {},
   ): Promise<TutorSession> {
+    const current = await deps.conversationRepository.load();
+    await deps.conversationRepository.archiveIfMeaningful(current);
+
     const session = createEmptySession(
       input.subject ?? 'math',
       input.difficulty ?? 'basic',

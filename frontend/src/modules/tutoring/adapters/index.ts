@@ -7,4 +7,7 @@ export type {
 
 export { FakeTutorEngine } from './outbound/fake-tutor-engine';
 export { HttpTutorEngine } from './outbound/http-tutor-engine';
-export { AsyncStorageConversationRepository } from './outbound/async-storage-conversation-repository';
+export {
+  AsyncStorageConversationRepository,
+  InMemoryConversationRepository,
+} from './outbound/async-storage-conversation-repository';

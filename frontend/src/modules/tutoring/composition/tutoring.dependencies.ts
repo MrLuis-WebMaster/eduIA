@@ -9,6 +9,7 @@ import {
 } from '../adapters';
 import {
   createClearConversation,
+  createListRecentSessions,
   createLoadConversation,
   createSendTutorMessage,
   createStartNewSession,
@@ -16,7 +17,7 @@ import {
   type SendTutorMessageOutcome,
   type StartNewSessionInput,
 } from '../application';
-import type { TutorSession } from '../domain';
+import type { RecentTutoringSessionDto, TutorSession } from '../domain';
 
 export type TutoringModuleOptions = {
   apiUrl: string;
@@ -32,6 +33,7 @@ export type TutoringDependencies = {
   loadConversation: () => Promise<TutorSession | null>;
   startNewSession: (input?: StartNewSessionInput) => Promise<TutorSession>;
   clearConversation: () => Promise<void>;
+  listRecentSessions: (limit?: number) => Promise<RecentTutoringSessionDto[]>;
 };
 
 /** Manual composition root for the tutoring module. */
@@ -56,5 +58,6 @@ export function createTutoringModule(
     loadConversation: createLoadConversation({ conversationRepository }),
     startNewSession: createStartNewSession({ conversationRepository }),
     clearConversation: createClearConversation({ conversationRepository }),
+    listRecentSessions: createListRecentSessions({ conversationRepository }),
   };
 }
