@@ -13,6 +13,8 @@ export {
   type StartNewSessionInput,
 } from './use-cases/start-new-session';
 
+export { createClearConversation } from './use-cases/clear-conversation';
+
 /** Re-export port DTOs for convenience (public API / composition). */
 export type {
   SendTutorMessageInput,

@@ -64,14 +64,19 @@ export function createSendTutorMessage(deps: {
       createdAt: new Date().toISOString(),
     };
 
-    const result: SendTutorMessageResult = await deps.tutorEngine.sendMessage({
-      message: trimmed,
-      subject: command.subject,
-      difficulty: command.difficulty,
-      userRole: command.userRole,
-      conversation: command.session.messages,
-      signal: command.signal,
-    });
+    let result: SendTutorMessageResult;
+    try {
+      result = await deps.tutorEngine.sendMessage({
+        message: trimmed,
+        subject: command.subject,
+        difficulty: command.difficulty,
+        userRole: command.userRole,
+        conversation: command.session.messages,
+        signal: command.signal,
+      });
+    } catch (error) {
+      throw mapSendError(error, command.signal);
+    }
 
     const session: TutorSession = {
       ...command.session,
@@ -92,4 +97,26 @@ export function createSendTutorMessage(deps: {
       requestId: result.requestId,
     };
   };
+}
+
+function mapSendError(error: unknown, signal?: AbortSignal): AppError {
+  if (error instanceof AppError) return error;
+  if (error instanceof Error && error.name === 'AbortError') {
+    const cancelled = signal?.aborted === true;
+    return new AppError(
+      cancelled ? 'CANCELLED' : 'TIMEOUT',
+      cancelled ? 'Solicitud cancelada' : 'La solicitud agotó el tiempo de espera',
+      { retryable: true, cause: error },
+    );
+  }
+  if (error instanceof Error) {
+    return new AppError('UNKNOWN', error.message || 'Error al enviar el mensaje', {
+      retryable: true,
+      cause: error,
+    });
+  }
+  return new AppError('UNKNOWN', 'Error al enviar el mensaje', {
+    retryable: true,
+    cause: error,
+  });
 }

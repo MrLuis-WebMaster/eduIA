@@ -6,6 +6,7 @@ type MessageComposerProps = {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
+  onCancel?: () => void;
   disabled?: boolean;
   sending?: boolean;
 };
@@ -14,6 +15,7 @@ export function MessageComposer({
   value,
   onChange,
   onSend,
+  onCancel,
   disabled,
   sending,
 }: MessageComposerProps) {
@@ -37,13 +39,24 @@ export function MessageComposer({
           tone={length > MESSAGE_MAX_LENGTH - 100 ? 'warning' : 'muted'}>
           {length}/{MESSAGE_MAX_LENGTH}
         </AppText>
-        <AppButton
-          label="Enviar"
-          size="sm"
-          loading={sending}
-          disabled={!canSend}
-          onPress={onSend}
-        />
+        <Row gap="sm" align="center">
+          {sending ? (
+            <AppButton
+              label="Detener"
+              variant="outline"
+              size="sm"
+              onPress={onCancel}
+              accessibilityLabel="Cancelar solicitud al tutor"
+            />
+          ) : null}
+          <AppButton
+            label="Enviar"
+            size="sm"
+            loading={sending}
+            disabled={!canSend}
+            onPress={onSend}
+          />
+        </Row>
       </Row>
     </Stack>
   );

@@ -30,7 +30,7 @@ export function createDependencies(): AppDependencies {
       storage,
     }),
     learningProgress: createLearningProgressModule(),
-    userPreferences: createUserPreferencesModule(),
+    userPreferences: createUserPreferencesModule({ storage }),
   };
 }
 
