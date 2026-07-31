@@ -1,3 +1,5 @@
+import { AppError } from '@/shared';
+
 import type {
   SendTutorMessageInput,
   SendTutorMessageResult,
@@ -14,12 +16,20 @@ const DELAY_MS = 600;
 export class FakeTutorEngine implements TutorEngine {
   async sendMessage(input: SendTutorMessageInput): Promise<SendTutorMessageResult> {
     if (input.signal?.aborted) {
-      const err = new Error('Aborted');
-      err.name = 'AbortError';
-      throw err;
+      throw new AppError('CANCELLED', 'Solicitud cancelada', { retryable: true });
     }
 
-    await delay(DELAY_MS, input.signal);
+    try {
+      await delay(DELAY_MS, input.signal);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new AppError('CANCELLED', 'Solicitud cancelada', {
+          retryable: true,
+          cause: error,
+        });
+      }
+      throw error;
+    }
 
     const subjectLabel = SUBJECT_LABELS[input.subject];
     const content = [

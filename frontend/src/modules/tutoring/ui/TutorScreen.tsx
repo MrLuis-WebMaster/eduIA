@@ -7,6 +7,7 @@ import {
   Box,
   Stack,
 } from '@/design-system';
+import { usePreferencesStore } from '@/modules/user-preferences';
 
 import { ChatMessageList } from './components/ChatMessageList';
 import { DifficultySelector } from './components/DifficultySelector';
@@ -16,12 +17,16 @@ import { SubjectSelector } from './components/SubjectSelector';
 import { TutorHeader, TutorRoleHint } from './components/TutorHeader';
 import { useTutorSession } from './hooks/useTutorSession';
 
-const PLACEHOLDER_ROLE: 'student' | 'teacher' = 'student';
-const PLACEHOLDER_NAME = 'Luis';
-
 export function TutorScreen() {
-  const tutor = useTutorSession(PLACEHOLDER_ROLE);
-  const roleLabel = PLACEHOLDER_ROLE === 'teacher' ? 'docente' : 'estudiante';
+  const prefs = usePreferencesStore((s) => s.prefs);
+  const prefsHydrated = usePreferencesStore((s) => s.hydrated);
+
+  const role = prefs.role;
+  const displayName =
+    prefs.displayName.trim() || (role === 'teacher' ? 'Docente' : 'Estudiante');
+  const roleLabel = role === 'teacher' ? 'docente' : 'estudiante';
+
+  const tutor = useTutorSession(role, prefs.preferredLevel);
   const busy = tutor.isSending || tutor.isStartingSession;
 
   return (
@@ -33,12 +38,20 @@ export function TutorScreen() {
           keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
           <Stack gap="sm" className="flex-1 pt-2">
             <TutorHeader
-              displayName={PLACEHOLDER_NAME}
+              displayName={prefsHydrated ? displayName : '…'}
               roleLabel={roleLabel}
               onNewSession={tutor.startNewSession}
               newSessionDisabled={busy}
             />
             <TutorRoleHint roleLabel={roleLabel} />
+
+            {tutor.isOffline ? (
+              <View className="mx-4 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 dark:border-warning-dark/40 dark:bg-warning-dark/10">
+                <AppText variant="caption" tone="warning">
+                  Sin conexión — el envío puede fallar hasta que vuelva la red.
+                </AppText>
+              </View>
+            ) : null}
 
             <SubjectSelector
               value={tutor.subject}
@@ -51,7 +64,7 @@ export function TutorScreen() {
               disabled={busy}
             />
             <QuickActions
-              role={PLACEHOLDER_ROLE}
+              role={role}
               onSelect={tutor.applyQuickAction}
               disabled={busy}
             />
@@ -60,11 +73,15 @@ export function TutorScreen() {
               <View className="mx-4 overflow-hidden rounded-xl border border-danger/30 dark:border-danger-dark/40">
                 <AppErrorState
                   compact
-                  title="No se pudo enviar"
+                  title={errorTitle(tutor.sendErrorKind)}
                   message={tutor.sendErrorMessage}
-                  onRetry={() => {
-                    tutor.retrySend();
-                  }}
+                  onRetry={
+                    tutor.sendErrorKind === 'cancelled'
+                      ? undefined
+                      : () => {
+                          tutor.retrySend();
+                        }
+                  }
                   retryLabel="Reintentar"
                 />
               </View>
@@ -101,6 +118,7 @@ export function TutorScreen() {
               value={tutor.draft}
               onChange={tutor.setDraft}
               onSend={() => tutor.send()}
+              onCancel={tutor.cancelSend}
               disabled={tutor.isLoadingSession || tutor.isSessionError}
               sending={tutor.isSending}
             />
@@ -109,4 +127,22 @@ export function TutorScreen() {
       </SafeAreaView>
     </Box>
   );
+}
+
+function errorTitle(
+  kind: ReturnType<typeof useTutorSession>['sendErrorKind'],
+): string {
+  switch (kind) {
+    case 'timeout':
+      return 'Tiempo agotado';
+    case 'cancelled':
+      return 'Cancelado';
+    case 'offline':
+    case 'network':
+      return 'Sin conexión';
+    case 'validation':
+      return 'Mensaje inválido';
+    default:
+      return 'No se pudo enviar';
+  }
 }

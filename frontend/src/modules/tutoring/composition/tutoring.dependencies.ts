@@ -8,6 +8,7 @@ import {
   type TutorEngine,
 } from '../adapters';
 import {
+  createClearConversation,
   createLoadConversation,
   createSendTutorMessage,
   createStartNewSession,
@@ -30,6 +31,7 @@ export type TutoringDependencies = {
   sendMessage: (command: SendTutorMessageCommand) => Promise<SendTutorMessageOutcome>;
   loadConversation: () => Promise<TutorSession | null>;
   startNewSession: (input?: StartNewSessionInput) => Promise<TutorSession>;
+  clearConversation: () => Promise<void>;
 };
 
 /** Manual composition root for the tutoring module. */
@@ -53,5 +55,6 @@ export function createTutoringModule(
     }),
     loadConversation: createLoadConversation({ conversationRepository }),
     startNewSession: createStartNewSession({ conversationRepository }),
+    clearConversation: createClearConversation({ conversationRepository }),
   };
 }
