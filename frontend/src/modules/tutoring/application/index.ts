@@ -1,22 +1,20 @@
-/** Tutoring application use-cases (stubs — Day 4). */
+/** Tutoring application use-cases. */
 
-import type { ChatMessage, Difficulty, Subject, UserRole } from '../domain';
+export {
+  createSendTutorMessage,
+  type SendTutorMessageCommand,
+  type SendTutorMessageOutcome,
+} from './use-cases/send-tutor-message';
 
-export type SendTutorMessageInput = {
-  message: string;
-  subject: Subject;
-  difficulty: Difficulty;
-  userRole: UserRole;
-  conversation: ChatMessage[];
-};
+export { createLoadConversation } from './use-cases/load-conversation';
 
-export type SendTutorMessageResult = {
-  reply: ChatMessage;
-};
+export {
+  createStartNewSession,
+  type StartNewSessionInput,
+} from './use-cases/start-new-session';
 
-/** Placeholder use-case — wired in composition when TutorEngine exists. */
-export async function sendTutorMessage(
-  _input: SendTutorMessageInput,
-): Promise<SendTutorMessageResult> {
-  throw new Error('sendTutorMessage is not implemented yet (Day 4)');
-}
+/** Re-export port DTOs for convenience (public API / composition). */
+export type {
+  SendTutorMessageInput,
+  SendTutorMessageResult,
+} from '../adapters/ports';
