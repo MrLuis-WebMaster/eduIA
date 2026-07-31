@@ -32,5 +32,9 @@ export interface TutorEngine {
 export interface ConversationRepository {
   load(): Promise<TutorSession | null>;
   save(session: TutorSession): Promise<void>;
+  /** Archived sessions with at least one user question (newest first). */
+  listHistory(): Promise<TutorSession[]>;
+  /** Persist session into history when it has at least one user question. */
+  archiveIfMeaningful(session: TutorSession | null): Promise<void>;
   clear(): Promise<void>;
 }

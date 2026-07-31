@@ -57,6 +57,7 @@ export function AppInput({
       <TextInput
         editable={!isDisabled}
         placeholderTextColor="#829AB1"
+        accessibilityLabel={props.accessibilityLabel ?? label}
         className={cn(
           fieldVariants({ invalid: isInvalid, disabled: isDisabled }),
           className,

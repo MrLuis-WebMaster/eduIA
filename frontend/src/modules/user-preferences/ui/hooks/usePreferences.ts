@@ -3,7 +3,10 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { getDependencies } from '@/bootstrap';
 import { useTheme } from '@/design-system';
-import { TUTOR_SESSION_QUERY_KEY } from '@/modules/tutoring';
+import {
+  RECENT_TUTORING_SESSIONS_QUERY_KEY,
+  TUTOR_SESSION_QUERY_KEY,
+} from '@/modules/tutoring';
 
 import type { UserPreferences } from '../../domain';
 import { usePreferencesStore } from '../store/preferences-store';
@@ -83,6 +86,9 @@ export function usePreferences() {
     try {
       await getDependencies().tutoring.clearConversation();
       await queryClient.invalidateQueries({ queryKey: TUTOR_SESSION_QUERY_KEY });
+      await queryClient.invalidateQueries({
+        queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
+      });
       setStatusMessage('Historial del tutor borrado');
     } catch (error) {
       setErrorMessage(

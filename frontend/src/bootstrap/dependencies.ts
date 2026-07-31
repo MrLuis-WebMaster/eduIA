@@ -21,15 +21,19 @@ export function createDependencies(): AppDependencies {
   const config = getAppConfig();
   const storage = new AsyncStorageAdapter();
 
+  const tutoring = createTutoringModule({
+    apiUrl: config.apiUrl,
+    useFake: config.useFakeTutor,
+    requestTimeoutMs: config.requestTimeoutMs,
+    storage,
+  });
+
   return {
     storage,
-    tutoring: createTutoringModule({
-      apiUrl: config.apiUrl,
-      useFake: config.useFakeTutor,
-      requestTimeoutMs: config.requestTimeoutMs,
-      storage,
+    tutoring,
+    learningProgress: createLearningProgressModule({
+      listRecentSessions: tutoring.listRecentSessions,
     }),
-    learningProgress: createLearningProgressModule(),
     userPreferences: createUserPreferencesModule({ storage }),
   };
 }
@@ -39,4 +43,9 @@ export function getDependencies(): AppDependencies {
     dependencies = createDependencies();
   }
   return dependencies;
+}
+
+/** Test helper — reset singleton between suites. */
+export function resetDependencies(): void {
+  dependencies = null;
 }

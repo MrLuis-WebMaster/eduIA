@@ -15,6 +15,8 @@ export {
 
 export { createClearConversation } from './use-cases/clear-conversation';
 
+export { createListRecentSessions } from './use-cases/list-recent-sessions';
+
 /** Re-export port DTOs for convenience (public API / composition). */
 export type {
   SendTutorMessageInput,

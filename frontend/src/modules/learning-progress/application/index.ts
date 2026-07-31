@@ -1,12 +1,27 @@
-/** Learning progress use-cases (stubs — Day 6). */
+/** Learning progress application use-cases. */
 
-import type { ProgressSummary } from '../domain';
+import type { RecentTutoringSessionDto } from '@/modules/tutoring/domain';
 
-export async function getProgressSummary(): Promise<ProgressSummary> {
-  return {
-    sessionCount: 0,
-    questionCount: 0,
-    topSubject: null,
-    streakDays: 0,
+import {
+  computeProgressSummary,
+  emptyProgressSummary,
+  type ProgressSummary,
+} from '../domain';
+
+export type ListRecentSessions = (
+  limit?: number,
+) => Promise<RecentTutoringSessionDto[]>;
+
+export function createGetProgressSummary(deps: {
+  listRecentSessions: ListRecentSessions;
+}) {
+  return async function getProgressSummary(
+    limit = 50,
+  ): Promise<ProgressSummary> {
+    const sessions = await deps.listRecentSessions(limit);
+    return computeProgressSummary(sessions);
   };
 }
+
+export { computeProgressSummary, emptyProgressSummary };
+export type { ProgressSummary };

@@ -7,6 +7,7 @@ export type {
   ChatRole,
   ChatMessage,
   TutorSession,
+  RecentTutoringSessionDto,
 } from './domain';
 
 export {
@@ -17,6 +18,7 @@ export {
   MESSAGE_MIN_LENGTH,
   QUICK_ACTIONS,
   createEmptySession,
+  toRecentTutoringSessionDto,
 } from './domain';
 
 export type {
@@ -32,6 +34,7 @@ export {
   FakeTutorEngine,
   HttpTutorEngine,
   AsyncStorageConversationRepository,
+  InMemoryConversationRepository,
 } from './adapters';
 
 export {
@@ -40,5 +43,11 @@ export {
   type TutoringModuleOptions,
 } from './composition';
 
-export { TutorScreen, useTutorSession, TUTOR_SESSION_QUERY_KEY } from './ui';
+export {
+  TutorScreen,
+  useTutorSession,
+  TUTOR_SESSION_QUERY_KEY,
+  useRecentTutoringSessions,
+  RECENT_TUTORING_SESSIONS_QUERY_KEY,
+} from './ui';
 export type { TutorSendErrorKind } from './ui/hooks/useTutorSession';

@@ -56,7 +56,8 @@ export function AppChip({
       accessibilityState={{ selected: Boolean(selected), disabled: Boolean(disabled) }}
       disabled={Boolean(disabled)}
       className={cn(chipVariants({ selected, disabled }), className)}
-      {...props}>
+      {...props}
+      accessibilityLabel={props.accessibilityLabel ?? label}>
       <Text className={chipLabelVariants({ selected })}>{label}</Text>
     </Pressable>
   );
