@@ -1,0 +1,26 @@
+{
+  "name": "muyu-eduia",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EduIA — AI tutoring companion (Muyu take-home)",
+  "packageManager": "pnpm@10.30.3",
+  "scripts": {
+    "dev": "concurrently -n frontend,backend -c cyan,magenta \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "typecheck": "pnpm -r run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
