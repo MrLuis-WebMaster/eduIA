@@ -1,19 +1,22 @@
-/** Tutoring domain types and rules (stubs — Day 3–4). */
+export type {
+  Subject,
+  Difficulty,
+  UserRole,
+  ChatRole,
+  ChatMessage,
+  TutorSession,
+} from './types';
 
-export type Subject =
-  | 'math'
-  | 'science'
-  | 'language'
-  | 'history'
-  | 'other';
-
-export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
-
-export type UserRole = 'student' | 'teacher';
-
-export type ChatMessage = {
-  id: string;
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  createdAt: string;
-};
+export {
+  SUBJECT_OPTIONS,
+  DIFFICULTY_OPTIONS,
+  SUBJECT_LABELS,
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+  CONVERSATION_CONTEXT_LIMIT,
+  QUICK_ACTIONS,
+  createMessageId,
+  createSessionId,
+  createEmptySession,
+  toApiConversation,
+} from './types';

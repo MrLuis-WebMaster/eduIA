@@ -1,4 +1,6 @@
-/** Local storage stubs (AsyncStorage wired Day 5). */
+/** Local key-value storage (AsyncStorage + in-memory fallback). */
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface KeyValueStorage {
   getItem(key: string): Promise<string | null>;
@@ -6,7 +8,22 @@ export interface KeyValueStorage {
   removeItem(key: string): Promise<void>;
 }
 
-/** In-memory storage for development until AsyncStorage is wired. */
+/** Production adapter backed by AsyncStorage. */
+export class AsyncStorageAdapter implements KeyValueStorage {
+  async getItem(key: string): Promise<string | null> {
+    return AsyncStorage.getItem(key);
+  }
+
+  async setItem(key: string, value: string): Promise<void> {
+    await AsyncStorage.setItem(key, value);
+  }
+
+  async removeItem(key: string): Promise<void> {
+    await AsyncStorage.removeItem(key);
+  }
+}
+
+/** In-memory storage for tests / isolated tooling. */
 export class MemoryStorage implements KeyValueStorage {
   private readonly store = new Map<string, string>();
 
