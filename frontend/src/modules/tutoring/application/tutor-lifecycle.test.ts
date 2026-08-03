@@ -55,6 +55,8 @@ describe('tutor critical flows (fake adapters)', () => {
       subject: 'math',
       difficulty: 'basic',
       userRole: 'student',
+      explanationStyle: 'simple',
+      tutorPersonality: 'friendly',
       session,
     });
 
@@ -77,6 +79,8 @@ describe('tutor critical flows (fake adapters)', () => {
       subject: 'math',
       difficulty: 'basic',
       userRole: 'student',
+      explanationStyle: 'simple',
+      tutorPersonality: 'friendly',
       conversation: [],
       signal: controller.signal,
     });
@@ -85,6 +89,36 @@ describe('tutor critical flows (fake adapters)', () => {
     await expect(pending).rejects.toMatchObject({
       code: 'CANCELLED',
     });
+  });
+
+  it('maps aborted network failures to CANCELLED (RN fetch shape)', async () => {
+    const storage = new MemoryStorage();
+    const repo = new AsyncStorageConversationRepository(storage);
+    const controller = new AbortController();
+    const send = createSendTutorMessage({
+      tutorEngine: {
+        async sendMessage() {
+          controller.abort();
+          throw new AppError('NETWORK', 'Network request failed', {
+            retryable: true,
+          });
+        },
+      },
+      conversationRepository: repo,
+    });
+
+    await expect(
+      send({
+        message: 'Propón una actividad',
+        subject: 'math',
+        difficulty: 'basic',
+        userRole: 'student',
+        explanationStyle: 'simple',
+        tutorPersonality: 'friendly',
+        session: createEmptySession(),
+        signal: controller.signal,
+      }),
+    ).rejects.toMatchObject({ code: 'CANCELLED' });
   });
 
   it('rejects short messages before calling the engine', async () => {
@@ -101,6 +135,8 @@ describe('tutor critical flows (fake adapters)', () => {
         subject: 'math',
         difficulty: 'basic',
         userRole: 'student',
+        explanationStyle: 'simple',
+        tutorPersonality: 'friendly',
         session: createEmptySession(),
       }),
     ).rejects.toMatchObject({ code: 'VALIDATION' });

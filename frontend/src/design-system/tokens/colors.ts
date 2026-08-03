@@ -1,6 +1,7 @@
 /**
  * Brand + semantic color tokens for EduIA.
- * Teal / navy educational palette — avoid purple AI-default cluster.
+ * Teal / navy educational palette — avoid purple as overall brand theme.
+ * Chat user bubbles may use a dedicated chat-user accent for conversation UX.
  */
 export const colors = {
   teal: {

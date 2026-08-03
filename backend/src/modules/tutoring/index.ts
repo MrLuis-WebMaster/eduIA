@@ -1,6 +1,8 @@
 export type {
   ConversationMessage,
   Difficulty,
+  ExplanationStyle,
+  TutorPersonality,
   TutorRequest,
   TutorResponse,
   UserRole,

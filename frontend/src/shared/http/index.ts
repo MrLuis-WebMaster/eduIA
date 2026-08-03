@@ -54,13 +54,19 @@ export async function httpJson<T>(
     return (await response.json()) as T;
   } catch (error) {
     if (error instanceof AppError) throw error;
+    // RN fetch often rejects aborted requests as a generic network TypeError
+    // instead of AbortError — trust the caller's signal first.
+    if (signal?.aborted === true) {
+      throw new AppError('CANCELLED', 'Request was cancelled', {
+        retryable: true,
+        cause: error,
+      });
+    }
     if (error instanceof Error && error.name === 'AbortError') {
-      const cancelled = signal?.aborted === true;
-      throw new AppError(
-        cancelled ? 'CANCELLED' : 'TIMEOUT',
-        cancelled ? 'Request was cancelled' : 'Request timed out',
-        { retryable: true, cause: error },
-      );
+      throw new AppError('TIMEOUT', 'Request timed out', {
+        retryable: true,
+        cause: error,
+      });
     }
     throw new AppError('NETWORK', 'Network request failed', {
       retryable: true,

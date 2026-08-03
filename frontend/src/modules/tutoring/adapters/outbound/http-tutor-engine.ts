@@ -41,6 +41,8 @@ export class HttpTutorEngine implements TutorEngine {
           subject: SUBJECT_LABELS[input.subject],
           difficulty: input.difficulty,
           userRole: input.userRole,
+          explanationStyle: input.explanationStyle,
+          tutorPersonality: input.tutorPersonality,
           conversation: toApiConversation(input.conversation),
         },
       });

@@ -89,6 +89,13 @@ module.exports = {
           dark: '#F87171',
           'dark-foreground': '#102A43',
         },
+        // Chat UX accent (user bubbles) — not brand primary
+        'chat-user': {
+          DEFAULT: '#4F46E5',
+          foreground: '#FFFFFF',
+          dark: '#6366F1',
+          'dark-foreground': '#FFFFFF',
+        },
       },
       fontFamily: {
         sans: ['System'],

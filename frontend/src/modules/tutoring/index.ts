@@ -4,10 +4,14 @@ export type {
   Subject,
   Difficulty,
   UserRole,
+  ExplanationStyle,
+  TutorPersonality,
   ChatRole,
   ChatMessage,
   TutorSession,
   RecentTutoringSessionDto,
+  QuickAction,
+  QuickActionId,
 } from './domain';
 
 export {
@@ -17,6 +21,7 @@ export {
   MESSAGE_MAX_LENGTH,
   MESSAGE_MIN_LENGTH,
   QUICK_ACTIONS,
+  ROLE_OPTIONS,
   createEmptySession,
   toRecentTutoringSessionDto,
 } from './domain';

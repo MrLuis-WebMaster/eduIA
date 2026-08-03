@@ -1,131 +1,180 @@
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMemo, useState } from 'react';
+import { View } from 'react-native';
 
 import {
   AppErrorState,
+  AppScreen,
+  AppScreenSection,
   AppText,
   Box,
-  Stack,
+  layout,
 } from '@/design-system';
-import { usePreferencesStore } from '@/modules/user-preferences';
+import { usePreferencesStore } from '@/modules/user-preferences/ui/store/preferences-store';
 
 import { ChatMessageList } from './components/ChatMessageList';
-import { DifficultySelector } from './components/DifficultySelector';
 import { MessageComposer } from './components/MessageComposer';
-import { QuickActions } from './components/QuickActions';
-import { SubjectSelector } from './components/SubjectSelector';
-import { TutorHeader, TutorRoleHint } from './components/TutorHeader';
+import { QuickActions, QuickActionsSheet } from './components/QuickActions';
+import { SessionFilters } from './components/SessionFilters';
+import { TutorSessionBar } from './components/TutorHeader';
 import { useTutorSession } from './hooks/useTutorSession';
+import { getFollowUpSuggestions, type UserRole } from '../domain';
 
 export function TutorScreen() {
   const prefs = usePreferencesStore((s) => s.prefs);
-  const prefsHydrated = usePreferencesStore((s) => s.hydrated);
+  const savePrefs = usePreferencesStore((s) => s.save);
+  const [actionsOpen, setActionsOpen] = useState(false);
 
   const role = prefs.role;
-  const displayName =
-    prefs.displayName.trim() || (role === 'teacher' ? 'Docente' : 'Estudiante');
-  const roleLabel = role === 'teacher' ? 'docente' : 'estudiante';
-
-  const tutor = useTutorSession(role, prefs.preferredLevel);
+  const tutor = useTutorSession(
+    role,
+    prefs.preferredLevel,
+    prefs.explanationStyle,
+    prefs.tutorPersonality,
+  );
   const busy = tutor.isSending || tutor.isStartingSession;
 
+  const messages = tutor.session?.messages ?? [];
+  const hasMessages = messages.length > 0;
+  const isEmptyConversation = !hasMessages && !tutor.isSending;
+
+  const followUps = useMemo(() => {
+    const last = messages[messages.length - 1];
+    if (!last || last.role !== 'assistant') return [];
+    return getFollowUpSuggestions(role, last.content);
+  }, [messages, role]);
+
+  const showSendErrorBanner =
+    tutor.isSendError && Boolean(tutor.sendErrorMessage) && hasMessages;
+
+  const showSendErrorPane =
+    !tutor.isSessionError &&
+    tutor.isSendError &&
+    Boolean(tutor.sendErrorMessage) &&
+    !hasMessages &&
+    !tutor.isSending &&
+    !tutor.isLoadingSession;
+
+  const handleRoleChange = (nextRole: UserRole) => {
+    void savePrefs({ ...prefs, role: nextRole });
+  };
+
+  const handleQuickAction = (prompt: string) => {
+    tutor.applyQuickAction(prompt);
+  };
+
   return (
-    <Box className="flex-1 bg-background dark:bg-background-dark">
-      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
-          <Stack gap="sm" className="flex-1 pt-2">
-            <TutorHeader
-              displayName={prefsHydrated ? displayName : '…'}
-              roleLabel={roleLabel}
-              onNewSession={tutor.startNewSession}
-              newSessionDisabled={busy}
+    <AppScreen
+      keyboard
+      padded={false}
+      gap={layout.gapCompact}
+      contentClassName="pt-1"
+      footer={
+        <MessageComposer
+          value={tutor.draft}
+          onChange={tutor.setDraft}
+          onSend={(message) => {
+            if (tutor.isSendError) {
+              tutor.clearSendError();
+            }
+            tutor.send(message);
+          }}
+          onCancel={tutor.cancelSend}
+          onOpenActions={() => setActionsOpen(true)}
+          disabled={tutor.isLoadingSession || tutor.isSessionError}
+          sending={tutor.isSending}
+        />
+      }>
+      <TutorSessionBar
+        onNewSession={tutor.startNewSession}
+        newSessionDisabled={busy}
+      />
+
+      {tutor.isOffline ? (
+        <AppScreenSection>
+          <View className="rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 dark:border-warning-dark/40 dark:bg-warning-dark/10">
+            <AppText variant="caption" tone="warning">
+              Sin conexión — el envío puede fallar hasta que vuelva la red.
+            </AppText>
+          </View>
+        </AppScreenSection>
+      ) : null}
+
+      <SessionFilters
+        subject={tutor.subject}
+        difficulty={tutor.difficulty}
+        role={role}
+        onSubjectChange={tutor.setSubject}
+        onDifficultyChange={tutor.setDifficulty}
+        onRoleChange={handleRoleChange}
+        disabled={busy}
+      />
+
+      {isEmptyConversation ? (
+        <QuickActions
+          role={role}
+          onSelect={handleQuickAction}
+          disabled={busy}
+        />
+      ) : null}
+
+      {showSendErrorBanner ? (
+        <AppScreenSection>
+          <View className="overflow-hidden rounded-xl border border-danger/30 dark:border-danger-dark/40">
+            <AppErrorState
+              compact
+              title={errorTitle(tutor.sendErrorKind)}
+              message={tutor.sendErrorMessage!}
+              onRetry={() => {
+                tutor.retrySend();
+              }}
+              retryLabel="Reintentar"
             />
-            <TutorRoleHint roleLabel={roleLabel} />
+          </View>
+        </AppScreenSection>
+      ) : null}
 
-            {tutor.isOffline ? (
-              <View className="mx-4 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 dark:border-warning-dark/40 dark:bg-warning-dark/10">
-                <AppText variant="caption" tone="warning">
-                  Sin conexión — el envío puede fallar hasta que vuelva la red.
-                </AppText>
-              </View>
-            ) : null}
+      <Box className="min-h-0 flex-1">
+        {tutor.isSessionError ? (
+          <AppErrorState
+            fill
+            placement="start"
+            align="start"
+            message="No se pudo cargar la conversación guardada."
+            onRetry={() => {
+              void tutor.refetchSession();
+            }}
+          />
+        ) : showSendErrorPane ? (
+          <AppErrorState
+            fill
+            placement="start"
+            align="start"
+            title={errorTitle(tutor.sendErrorKind)}
+            message={tutor.sendErrorMessage!}
+            onRetry={() => {
+              tutor.retrySend();
+            }}
+            retryLabel="Reintentar"
+          />
+        ) : (
+          <ChatMessageList
+            messages={messages}
+            isLoading={tutor.isLoadingSession}
+            isSending={tutor.isSending}
+            followUps={followUps}
+            onFollowUpSelect={handleQuickAction}
+            followUpsDisabled={busy}
+          />
+        )}
+      </Box>
 
-            <SubjectSelector
-              value={tutor.subject}
-              onChange={tutor.setSubject}
-              disabled={busy}
-            />
-            <DifficultySelector
-              value={tutor.difficulty}
-              onChange={tutor.setDifficulty}
-              disabled={busy}
-            />
-            <QuickActions
-              role={role}
-              onSelect={tutor.applyQuickAction}
-              disabled={busy}
-            />
-
-            {tutor.isSendError && tutor.sendErrorMessage ? (
-              <View className="mx-4 overflow-hidden rounded-xl border border-danger/30 dark:border-danger-dark/40">
-                <AppErrorState
-                  compact
-                  title={errorTitle(tutor.sendErrorKind)}
-                  message={tutor.sendErrorMessage}
-                  onRetry={
-                    tutor.sendErrorKind === 'cancelled'
-                      ? undefined
-                      : () => {
-                          tutor.retrySend();
-                        }
-                  }
-                  retryLabel="Reintentar"
-                />
-              </View>
-            ) : null}
-
-            {tutor.isSendSuccess && !tutor.isSending ? (
-              <AppText
-                variant="caption"
-                tone="success"
-                className="px-4"
-                accessibilityLiveRegion="polite">
-                Respuesta recibida
-              </AppText>
-            ) : null}
-
-            <Box className="min-h-0 flex-1">
-              {tutor.isSessionError ? (
-                <AppErrorState
-                  message="No se pudo cargar la conversación guardada."
-                  onRetry={() => {
-                    void tutor.refetchSession();
-                  }}
-                />
-              ) : (
-                <ChatMessageList
-                  messages={tutor.session?.messages ?? []}
-                  isLoading={tutor.isLoadingSession}
-                  isSending={tutor.isSending}
-                />
-              )}
-            </Box>
-
-            <MessageComposer
-              value={tutor.draft}
-              onChange={tutor.setDraft}
-              onSend={() => tutor.send()}
-              onCancel={tutor.cancelSend}
-              disabled={tutor.isLoadingSession || tutor.isSessionError}
-              sending={tutor.isSending}
-            />
-          </Stack>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </Box>
+      <QuickActionsSheet
+        role={role}
+        visible={actionsOpen}
+        onClose={() => setActionsOpen(false)}
+        onSelect={handleQuickAction}
+      />
+    </AppScreen>
   );
 }
 
@@ -135,8 +184,6 @@ function errorTitle(
   switch (kind) {
     case 'timeout':
       return 'Tiempo agotado';
-    case 'cancelled':
-      return 'Cancelado';
     case 'offline':
     case 'network':
       return 'Sin conexión';

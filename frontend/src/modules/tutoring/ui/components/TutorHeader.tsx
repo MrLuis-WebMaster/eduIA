@@ -1,40 +1,31 @@
-import { AppButton, AppText, Row } from '@/design-system';
+import { Plus } from 'lucide-react-native';
 
-type TutorHeaderProps = {
-  displayName?: string;
-  roleLabel: string;
+import { AppButton, AppScreenSection, Row } from '@/design-system';
+
+type TutorSessionBarProps = {
   onNewSession: () => void;
   newSessionDisabled?: boolean;
 };
 
-export function TutorHeader({
-  displayName = 'Estudiante',
-  roleLabel,
+/** Tutor-only session controls (not part of the global header). */
+export function TutorSessionBar({
   onNewSession,
   newSessionDisabled,
-}: TutorHeaderProps) {
+}: TutorSessionBarProps) {
   return (
-    <Row justify="between" align="start" className="px-4 pt-2 pb-1">
-      <Row gap="sm" align="center" className="flex-1 pr-3">
-        <AppText variant="subtitle" numberOfLines={1}>
-          Hola, {displayName}
-        </AppText>
+    <AppScreenSection>
+      <Row justify="end" align="center">
+        <AppButton
+          label="Nueva sesión"
+          icon={Plus}
+          variant="outline"
+          size="sm"
+          onPress={onNewSession}
+          disabled={newSessionDisabled}
+          className="h-9 shrink-0 rounded-full px-3"
+          accessibilityLabel="Iniciar nueva sesión"
+        />
       </Row>
-      <AppButton
-        label="Nueva"
-        variant="outline"
-        size="sm"
-        onPress={onNewSession}
-        disabled={newSessionDisabled}
-      />
-    </Row>
-  );
-}
-
-export function TutorRoleHint({ roleLabel }: { roleLabel: string }) {
-  return (
-    <AppText tone="muted" variant="caption" className="px-4 pb-2">
-      Modo {roleLabel} · elige materia y nivel, luego pregunta
-    </AppText>
+    </AppScreenSection>
   );
 }

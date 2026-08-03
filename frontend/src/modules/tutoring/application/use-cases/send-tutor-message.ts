@@ -6,7 +6,9 @@ import {
   createMessageId,
   type ChatMessage,
   type Difficulty,
+  type ExplanationStyle,
   type Subject,
+  type TutorPersonality,
   type TutorSession,
   type UserRole,
 } from '../../domain';
@@ -21,6 +23,8 @@ export type SendTutorMessageCommand = {
   subject: Subject;
   difficulty: Difficulty;
   userRole: UserRole;
+  explanationStyle: ExplanationStyle;
+  tutorPersonality: TutorPersonality;
   session: TutorSession;
   signal?: AbortSignal;
 };
@@ -71,6 +75,8 @@ export function createSendTutorMessage(deps: {
         subject: command.subject,
         difficulty: command.difficulty,
         userRole: command.userRole,
+        explanationStyle: command.explanationStyle,
+        tutorPersonality: command.tutorPersonality,
         conversation: command.session.messages,
         signal: command.signal,
       });
@@ -100,12 +106,19 @@ export function createSendTutorMessage(deps: {
 }
 
 function mapSendError(error: unknown, signal?: AbortSignal): AppError {
+  // Prefer the abort signal over the thrown shape: RN may surface cancel as
+  // NETWORK / TypeError ("Network request failed") instead of AbortError.
+  if (signal?.aborted === true) {
+    return new AppError('CANCELLED', 'Solicitud cancelada', {
+      retryable: true,
+      cause: error,
+    });
+  }
   if (error instanceof AppError) return error;
   if (error instanceof Error && error.name === 'AbortError') {
-    const cancelled = signal?.aborted === true;
     return new AppError(
-      cancelled ? 'CANCELLED' : 'TIMEOUT',
-      cancelled ? 'Solicitud cancelada' : 'La solicitud agotó el tiempo de espera',
+      'TIMEOUT',
+      'La solicitud agotó el tiempo de espera',
       { retryable: true, cause: error },
     );
   }

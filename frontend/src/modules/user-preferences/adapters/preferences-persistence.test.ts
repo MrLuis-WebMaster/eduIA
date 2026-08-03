@@ -17,7 +17,9 @@ describe('preferences persistence (critical)', () => {
       preferredLevel: 'advanced',
       favoriteSubjects: ['math', 'science'],
       explanationStyle: 'socratic',
+      tutorPersonality: 'motivating',
       theme: 'dark',
+      weeklyQuestionGoal: 14,
     });
 
     const loaded = await repo.loadAll();
@@ -26,7 +28,9 @@ describe('preferences persistence (critical)', () => {
     expect(loaded.preferredLevel).toBe('advanced');
     expect(loaded.favoriteSubjects).toEqual(['math', 'science']);
     expect(loaded.explanationStyle).toBe('socratic');
+    expect(loaded.tutorPersonality).toBe('motivating');
     expect(loaded.theme).toBe('dark');
+    expect(loaded.weeklyQuestionGoal).toBe(14);
   });
 
   it('falls back to defaults after clear', async () => {
@@ -44,6 +48,9 @@ describe('preferences persistence (critical)', () => {
     expect(loaded.displayName).toBe(defaultUserPreferences.displayName);
     expect(loaded.theme).toBe(defaultUserPreferences.theme);
     expect(loaded.role).toBe(defaultUserPreferences.role);
+    expect(loaded.weeklyQuestionGoal).toBe(
+      defaultUserPreferences.weeklyQuestionGoal,
+    );
   });
 
   it('normalizes invalid stored JSON fields', async () => {
@@ -56,11 +63,12 @@ describe('preferences persistence (critical)', () => {
         preferredLevel: 'expert',
         favoriteSubjects: ['math', 'invalid'],
         explanationStyle: 'weird',
+        tutorPersonality: 'chaotic',
       }),
     );
     await storage.setItem(
       STORAGE_KEYS.preferences,
-      JSON.stringify({ theme: 'neon' }),
+      JSON.stringify({ theme: 'neon', weeklyQuestionGoal: 999 }),
     );
 
     const repo = new AsyncStoragePreferencesRepository(storage);
@@ -71,6 +79,10 @@ describe('preferences persistence (critical)', () => {
     expect(loaded.preferredLevel).toBe(defaultUserPreferences.preferredLevel);
     expect(loaded.favoriteSubjects).toEqual(['math']);
     expect(loaded.explanationStyle).toBe(defaultUserPreferences.explanationStyle);
+    expect(loaded.tutorPersonality).toBe(defaultUserPreferences.tutorPersonality);
     expect(loaded.theme).toBe(defaultUserPreferences.theme);
+    expect(loaded.weeklyQuestionGoal).toBe(
+      defaultUserPreferences.weeklyQuestionGoal,
+    );
   });
 });

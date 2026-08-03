@@ -110,6 +110,37 @@ describe('POST /api/v1/tutor/messages', () => {
     expect(res.body.reply.length).toBeGreaterThan(10);
   });
 
+  it('accepts explanationStyle and tutorPersonality', async () => {
+    const app = createApp({ env: testEnv() });
+
+    const res = await request(app)
+      .post('/api/v1/tutor/messages')
+      .send({
+        ...validBody,
+        explanationStyle: 'socratic',
+        tutorPersonality: 'patient',
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.provider).toBe('fake');
+    expect(typeof res.body.reply).toBe('string');
+  });
+
+  it('rejects invalid explanationStyle or tutorPersonality', async () => {
+    const app = createApp({ env: testEnv() });
+
+    const res = await request(app)
+      .post('/api/v1/tutor/messages')
+      .send({
+        ...validBody,
+        explanationStyle: 'poetic',
+        tutorPersonality: 'chaotic',
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe('VALIDATION_ERROR');
+  });
+
   it('returns normalized NOT_FOUND for unknown routes', async () => {
     const app = createApp({ env: testEnv() });
 

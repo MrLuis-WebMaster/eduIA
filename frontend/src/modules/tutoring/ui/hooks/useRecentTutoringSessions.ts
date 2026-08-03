@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getDependencies } from '@/bootstrap';
+import { getDependencies } from '@/bootstrap/dependencies';
 
 import type { RecentTutoringSessionDto } from '../../domain';
 

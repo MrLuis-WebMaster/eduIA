@@ -1,284 +1,342 @@
-import { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo, useState, type ReactNode } from 'react';
+import { Alert, View } from 'react-native';
+import {
+  BookOpen,
+  ChartColumn,
+  Clock3,
+  GraduationCap,
+  MessageSquareText,
+  Moon,
+  Palette,
+  Pencil,
+  RotateCcw,
+  SlidersHorizontal,
+  UserRound,
+} from 'lucide-react-native';
 
 import {
-  AppButton,
-  AppChip,
-  AppInput,
-  AppSegmentedControl,
+  AppAvatar,
+  AppCard,
+  AppScreen,
   AppSpinner,
   AppText,
-  Box,
+  Pressable,
   Row,
   Stack,
+  useTheme,
 } from '@/design-system';
 
-import {
-  LEVEL_OPTIONS,
-  ROLE_OPTIONS,
-  STYLE_OPTIONS,
-  SUBJECT_OPTIONS,
-  THEME_OPTIONS,
-  type FavoriteSubject,
-} from '../domain';
+import { LEVEL_OPTIONS, ROLE_OPTIONS, THEME_OPTIONS } from '../domain';
+import { AppearanceSheet, THEME_STATUS } from './components/AppearanceSheet';
+import { ConversationsSheet } from './components/ConversationsSheet';
+import { ProfileSheet } from './components/ProfileSheet';
+import { SpaceMenuRow } from './components/SpaceMenuRow';
+import { TutorPreferencesSheet } from './components/TutorPreferencesSheet';
 import { usePreferences } from './hooks/usePreferences';
-import {
-  preferencesFormSchema,
-  type PreferencesFormValues,
-} from './schema';
+
+type SheetId = 'profile' | 'tutor' | 'appearance' | 'conversations' | null;
 
 export function PreferencesScreen() {
+  const { colors } = useTheme();
   const {
     prefs,
     hydrated,
     saving,
     resetting,
     clearingHistory,
-    statusMessage,
-    errorMessage,
     save,
     reset,
     clearHistory,
   } = usePreferences();
 
-  const {
-    control,
-    handleSubmit,
-    reset: resetForm,
-    formState: { errors, isDirty },
-  } = useForm<PreferencesFormValues>({
-    resolver: zodResolver(preferencesFormSchema),
-    defaultValues: toFormValues(prefs),
-  });
+  const [sheet, setSheet] = useState<SheetId>(null);
 
-  useEffect(() => {
-    if (hydrated) {
-      resetForm(toFormValues(prefs));
-    }
-  }, [hydrated, prefs, resetForm]);
+  const openSheet = (id: Exclude<SheetId, null>) => {
+    setSheet(id);
+  };
 
-  const busy = saving || resetting || clearingHistory;
+  const closeSheet = () => {
+    setSheet(null);
+  };
 
-  const onSave = handleSubmit(async (values) => {
-    await save({
-      displayName: values.displayName,
-      role: values.role,
-      preferredLevel: values.preferredLevel,
-      favoriteSubjects: values.favoriteSubjects ?? [],
-      explanationStyle: values.explanationStyle,
-      theme: values.theme,
-    });
-  });
+  const initials = useMemo(
+    () => initialsFromName(prefs.displayName),
+    [prefs.displayName],
+  );
+
+  const roleLabel =
+    ROLE_OPTIONS.find((o) => o.value === prefs.role)?.label ?? prefs.role;
+  const levelLabel =
+    LEVEL_OPTIONS.find((o) => o.value === prefs.preferredLevel)?.label ??
+    prefs.preferredLevel;
+  const themeLabel =
+    THEME_OPTIONS.find((o) => o.value === prefs.theme)?.label ?? prefs.theme;
+  const subjectsLabel =
+    prefs.favoriteSubjects.length === 0
+      ? 'Sin elegir'
+      : prefs.favoriteSubjects.length === 1
+        ? '1 materia'
+        : `${prefs.favoriteSubjects.length} materias`;
+
+  const displayName = prefs.displayName.trim() || 'Tu espacio';
 
   if (!hydrated) {
     return (
-      <Box className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
-        <AppSpinner label="Cargando perfil…" />
-      </Box>
+      <AppScreen padded={false}>
+        <AppSpinner fill label="Cargando tu espacio…" />
+      </AppScreen>
     );
   }
 
   return (
-    <Box className="flex-1 bg-background dark:bg-background-dark">
-      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
-        <ScrollView
-          contentContainerStyle={{ paddingBottom: 32 }}
-          keyboardShouldPersistTaps="handled">
-          <Stack gap="md" className="px-4 pt-4">
-            <Stack gap="xs">
-              <AppText variant="subtitle">Perfil</AppText>
-              <AppText tone="muted" variant="caption">
-                Nombre, rol y cómo prefieres que EduIA te explique.
-              </AppText>
-            </Stack>
+    <AppScreen scroll accessibilityLabel="Mi espacio">
+      <AppText variant="title" className="mb-1">
+        Mi espacio
+      </AppText>
 
-            <Controller
-              control={control}
-              name="displayName"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <AppInput
-                  label="Nombre"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder="Tu nombre"
-                  error={errors.displayName?.message}
-                  editable={!busy}
-                />
-              )}
+      <AppCard padding="md" className="overflow-hidden">
+        <Row align="center" gap="md">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Editar perfil"
+            onPress={() => openSheet('profile')}
+            className="relative">
+            <AppAvatar
+              size="xl"
+              tone="primary"
+              initials={initials}
+              accessibilityLabel={displayName}
             />
+            <View className="absolute -bottom-0.5 -right-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-surface bg-primary dark:border-surface-dark dark:bg-primary-dark">
+              <Pencil size={12} color={colors.primaryForeground} strokeWidth={2.5} />
+            </View>
+          </Pressable>
 
-            <Stack gap="xs">
-              <AppText variant="label">Rol</AppText>
-              <Controller
-                control={control}
-                name="role"
-                render={({ field: { onChange, value } }) => (
-                  <AppSegmentedControl
-                    options={ROLE_OPTIONS}
-                    value={value}
-                    onChange={onChange}
-                    disabled={busy}
-                  />
-                )}
-              />
-            </Stack>
-
-            <Stack gap="xs">
-              <AppText variant="label">Nivel preferido</AppText>
-              <Controller
-                control={control}
-                name="preferredLevel"
-                render={({ field: { onChange, value } }) => (
-                  <AppSegmentedControl
-                    options={LEVEL_OPTIONS}
-                    value={value}
-                    onChange={onChange}
-                    disabled={busy}
-                  />
-                )}
-              />
-            </Stack>
-
-            <Stack gap="xs">
-              <AppText variant="label">Estilo de explicación</AppText>
-              <Controller
-                control={control}
-                name="explanationStyle"
-                render={({ field: { onChange, value } }) => (
-                  <AppSegmentedControl
-                    options={STYLE_OPTIONS}
-                    value={value}
-                    onChange={onChange}
-                    disabled={busy}
-                  />
-                )}
-              />
-            </Stack>
-
-            <Stack gap="xs">
-              <AppText variant="label">Materias favoritas</AppText>
-              <Controller
-                control={control}
-                name="favoriteSubjects"
-                render={({ field: { onChange, value } }) => (
-                  <Row gap="sm" className="flex-wrap">
-                    {SUBJECT_OPTIONS.map((option) => {
-                      const selected = (value ?? []).includes(option.value);
-                      return (
-                        <AppChip
-                          key={option.value}
-                          label={option.label}
-                          selected={selected}
-                          disabled={busy}
-                          onPress={() =>
-                            onChange(
-                              toggleSubject(value ?? [], option.value),
-                            )
-                          }
-                        />
-                      );
-                    })}
-                  </Row>
-                )}
-              />
-            </Stack>
-
-            <Stack gap="xs">
-              <AppText variant="label">Tema</AppText>
-              <Controller
-                control={control}
-                name="theme"
-                render={({ field: { onChange, value } }) => (
-                  <AppSegmentedControl
-                    options={THEME_OPTIONS}
-                    value={value}
-                    onChange={onChange}
-                    disabled={busy}
-                  />
-                )}
-              />
-            </Stack>
-
-            {statusMessage ? (
-              <AppText tone="success" variant="caption">
-                {statusMessage}
+          <Stack gap="xs" className="min-w-0 flex-1">
+            <AppText variant="subtitle" numberOfLines={1}>
+              {displayName}
+            </AppText>
+            <Row
+              align="center"
+              gap="xs"
+              className="self-start rounded-full bg-primary/15 px-2.5 py-1 dark:bg-primary-dark/15">
+              <GraduationCap size={12} color={colors.primary} strokeWidth={2} />
+              <AppText
+                variant="caption"
+                className="font-medium text-primary dark:text-primary-dark">
+                {roleLabel}
               </AppText>
-            ) : null}
-            {errorMessage ? (
-              <AppText tone="danger" variant="caption">
-                {errorMessage}
-              </AppText>
-            ) : null}
-
-            <AppButton
-              label="Guardar"
-              onPress={onSave}
-              loading={saving}
-              disabled={busy || !isDirty}
-              fullWidth
-            />
-
-            <View className="h-px bg-border dark:bg-border-dark" />
-
-            <Stack gap="sm">
-              <AppText variant="label">Datos locales</AppText>
-              <AppButton
-                label="Borrar historial del tutor"
-                variant="outline"
-                onPress={() => {
-                  void clearHistory();
-                }}
-                loading={clearingHistory}
-                disabled={busy}
-                fullWidth
-              />
-              <AppButton
-                label="Restablecer preferencias"
-                variant="danger"
-                onPress={() => {
-                  void reset().then((next) => {
-                    resetForm(toFormValues(next));
-                  });
-                }}
-                loading={resetting}
-                disabled={busy}
-                fullWidth
-              />
-            </Stack>
+            </Row>
+            <AppText variant="caption" tone="muted">
+              Personaliza tu experiencia y la forma en que EduIA te ayuda.
+            </AppText>
           </Stack>
-        </ScrollView>
-      </SafeAreaView>
-    </Box>
+        </Row>
+      </AppCard>
+
+      <Row gap="sm" wrap>
+        <StatCard
+          icon={ChartColumn}
+          label="Nivel preferido"
+          value={levelLabel}
+        />
+        <StatCard
+          icon={BookOpen}
+          label="Materias favoritas"
+          value={subjectsLabel}
+        />
+        <StatCard icon={Moon} label="Tema actual" value={themeLabel} />
+        <StatCard
+          icon={Clock3}
+          label="Última sincronización"
+          value="Hace unos segundos"
+        />
+      </Row>
+
+      <MenuGroup title="Personalización">
+        <SpaceMenuRow
+          title="Perfil"
+          description="Nombre, rol y cómo te presentas"
+          icon={UserRound}
+          iconColor="#A78BFA"
+          iconBgClassName="bg-[#A78BFA]/20"
+          onPress={() => openSheet('profile')}
+        />
+        <Divider />
+        <SpaceMenuRow
+          title="Preferencias del tutor"
+          description="Nivel, materias y estilo de explicación"
+          icon={SlidersHorizontal}
+          iconColor={colors.primary}
+          iconBgClassName="bg-primary/15 dark:bg-primary-dark/15"
+          onPress={() => openSheet('tutor')}
+        />
+        <Divider />
+        <SpaceMenuRow
+          title="Apariencia"
+          description="Tema y aspecto visual de la app"
+          icon={Palette}
+          iconColor="#FB923C"
+          iconBgClassName="bg-[#FB923C]/20"
+          onPress={() => openSheet('appearance')}
+        />
+      </MenuGroup>
+
+      <MenuGroup title="Datos">
+        <SpaceMenuRow
+          title="Conversaciones"
+          description="Revisa o borra el historial del tutor"
+          icon={MessageSquareText}
+          iconColor="#60A5FA"
+          iconBgClassName="bg-[#60A5FA]/20"
+          onPress={() => openSheet('conversations')}
+        />
+        <Divider />
+        <SpaceMenuRow
+          title="Restablecer aplicación"
+          description="Vuelve a las preferencias por defecto"
+          icon={RotateCcw}
+          iconColor={colors.danger}
+          iconBgClassName="bg-danger/15 dark:bg-danger-dark/15"
+          danger
+          onPress={() => {
+            Alert.alert(
+              'Restablecer aplicación',
+              'Se restaurarán nombre, rol, tema y preferencias del tutor. El historial de conversaciones no se borra.',
+              [
+                { text: 'Cancelar', style: 'cancel' },
+                {
+                  text: 'Restablecer',
+                  style: 'destructive',
+                  onPress: () => {
+                    void reset();
+                  },
+                },
+              ],
+            );
+          }}
+        />
+      </MenuGroup>
+
+      {resetting ? (
+        <AppText variant="caption" tone="muted">
+          Restableciendo preferencias…
+        </AppText>
+      ) : null}
+
+      <ProfileSheet
+        visible={sheet === 'profile'}
+        prefs={prefs}
+        saving={saving}
+        onClose={closeSheet}
+        onSave={async (patch) => {
+          closeSheet();
+          await save(
+            { ...prefs, ...patch },
+            { statusMessage: 'Guardado — Se aplicaron los cambios' },
+          );
+        }}
+      />
+
+      <TutorPreferencesSheet
+        visible={sheet === 'tutor'}
+        prefs={prefs}
+        saving={saving}
+        onClose={closeSheet}
+        onSave={async (patch) => {
+          closeSheet();
+          await save(
+            { ...prefs, ...patch },
+            { statusMessage: 'Guardado — Preferencias actualizadas' },
+          );
+        }}
+      />
+
+      <AppearanceSheet
+        visible={sheet === 'appearance'}
+        prefs={prefs}
+        saving={saving}
+        onClose={closeSheet}
+        onSave={async (theme) => {
+          closeSheet();
+          await save(
+            { ...prefs, theme },
+            { statusMessage: THEME_STATUS[theme] },
+          );
+        }}
+      />
+
+      <ConversationsSheet
+        visible={sheet === 'conversations'}
+        clearingHistory={clearingHistory}
+        onClose={closeSheet}
+        onClearHistory={async () => {
+          closeSheet();
+          await clearHistory();
+        }}
+      />
+    </AppScreen>
   );
 }
 
-function toFormValues(prefs: {
-  displayName: string;
-  role: PreferencesFormValues['role'];
-  preferredLevel: PreferencesFormValues['preferredLevel'];
-  favoriteSubjects: FavoriteSubject[];
-  explanationStyle: PreferencesFormValues['explanationStyle'];
-  theme: PreferencesFormValues['theme'];
-}): PreferencesFormValues {
-  return {
-    displayName: prefs.displayName,
-    role: prefs.role,
-    preferredLevel: prefs.preferredLevel,
-    favoriteSubjects: prefs.favoriteSubjects,
-    explanationStyle: prefs.explanationStyle,
-    theme: prefs.theme,
-  };
+function MenuGroup({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <Stack gap="sm">
+      <AppText variant="caption" tone="muted" className="px-1 font-medium uppercase tracking-wide">
+        {title}
+      </AppText>
+      <AppCard padding="none" className="overflow-hidden">
+        {children}
+      </AppCard>
+    </Stack>
+  );
 }
 
-function toggleSubject(
-  current: FavoriteSubject[],
-  subject: FavoriteSubject,
-): FavoriteSubject[] {
-  return current.includes(subject)
-    ? current.filter((s) => s !== subject)
-    : [...current, subject];
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof ChartColumn;
+  label: string;
+  value: string;
+}) {
+  const { colors } = useTheme();
+  return (
+    <AppCard
+      variant="muted"
+      padding="sm"
+      className="min-w-[46%] flex-1"
+      accessibilityLabel={`${label}: ${value}`}>
+      <Row align="center" gap="xs" className="mb-1.5">
+        <Icon size={14} color={colors.foregroundMuted} strokeWidth={2} />
+        <AppText variant="caption" tone="muted" numberOfLines={1}>
+          {label}
+        </AppText>
+      </Row>
+      <AppText
+        variant="label"
+        className="text-primary dark:text-primary-dark"
+        numberOfLines={1}>
+        {value}
+      </AppText>
+    </AppCard>
+  );
+}
+
+function Divider() {
+  return <View className="mx-3 h-px bg-border dark:bg-border-dark" />;
+}
+
+function initialsFromName(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'E';
+  if (parts.length === 1) return parts[0]!.slice(0, 2);
+  return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`;
 }

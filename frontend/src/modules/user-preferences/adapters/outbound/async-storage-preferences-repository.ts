@@ -2,11 +2,14 @@ import type { KeyValueStorage } from '@/shared';
 
 import {
   STORAGE_KEYS,
+  WEEKLY_QUESTION_GOAL_MAX,
+  WEEKLY_QUESTION_GOAL_MIN,
   type AppPreferences,
   type FavoriteSubject,
   type ExplanationStyle,
   type PreferredLevel,
   type ThemePreference,
+  type TutorPersonality,
   type UserPreferences,
   type UserProfile,
   type UserRole,
@@ -21,6 +24,13 @@ import type { PreferencesRepository } from '../ports';
 const VALID_ROLES: UserRole[] = ['student', 'teacher'];
 const VALID_LEVELS: PreferredLevel[] = ['basic', 'intermediate', 'advanced'];
 const VALID_STYLES: ExplanationStyle[] = ['simple', 'detailed', 'socratic'];
+const VALID_PERSONALITIES: TutorPersonality[] = [
+  'friendly',
+  'formal',
+  'motivating',
+  'patient',
+  'direct',
+];
 const VALID_SUBJECTS: FavoriteSubject[] = [
   'math',
   'science',
@@ -86,8 +96,12 @@ export class AsyncStoragePreferencesRepository implements PreferencesRepository 
       preferredLevel: prefs.preferredLevel,
       favoriteSubjects: prefs.favoriteSubjects,
       explanationStyle: prefs.explanationStyle,
+      tutorPersonality: prefs.tutorPersonality,
     };
-    const preferences: AppPreferences = { theme: prefs.theme };
+    const preferences: AppPreferences = {
+      theme: prefs.theme,
+      weeklyQuestionGoal: prefs.weeklyQuestionGoal,
+    };
     await Promise.all([
       this.saveProfile(profile),
       this.savePreferences(preferences),
@@ -129,7 +143,10 @@ export class InMemoryPreferencesRepository implements PreferencesRepository {
 
   async saveAll(prefs: UserPreferences): Promise<void> {
     await this.saveProfile(prefs);
-    await this.savePreferences({ theme: prefs.theme });
+    await this.savePreferences({
+      theme: prefs.theme,
+      weeklyQuestionGoal: prefs.weeklyQuestionGoal,
+    });
   }
 
   async clear(): Promise<void> {
@@ -150,6 +167,11 @@ function normalizeProfile(input: Partial<UserProfile>): UserProfile {
   )
     ? (input.explanationStyle as ExplanationStyle)
     : defaultUserPreferences.explanationStyle;
+  const tutorPersonality = VALID_PERSONALITIES.includes(
+    input.tutorPersonality as TutorPersonality,
+  )
+    ? (input.tutorPersonality as TutorPersonality)
+    : defaultUserPreferences.tutorPersonality;
   const favoriteSubjects = Array.isArray(input.favoriteSubjects)
     ? input.favoriteSubjects.filter((s): s is FavoriteSubject =>
         VALID_SUBJECTS.includes(s as FavoriteSubject),
@@ -165,6 +187,7 @@ function normalizeProfile(input: Partial<UserProfile>): UserProfile {
     preferredLevel,
     favoriteSubjects,
     explanationStyle,
+    tutorPersonality,
   };
 }
 
@@ -174,5 +197,15 @@ function normalizePreferences(
   const theme = VALID_THEMES.includes(input.theme as ThemePreference)
     ? (input.theme as ThemePreference)
     : defaultAppPreferences.theme;
-  return { theme };
+
+  const rawGoal = input.weeklyQuestionGoal;
+  const weeklyQuestionGoal =
+    typeof rawGoal === 'number' &&
+    Number.isFinite(rawGoal) &&
+    rawGoal >= WEEKLY_QUESTION_GOAL_MIN &&
+    rawGoal <= WEEKLY_QUESTION_GOAL_MAX
+      ? Math.round(rawGoal)
+      : defaultAppPreferences.weeklyQuestionGoal;
+
+  return { theme, weeklyQuestionGoal };
 }

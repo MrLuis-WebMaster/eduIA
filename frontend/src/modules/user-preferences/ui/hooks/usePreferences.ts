@@ -1,19 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getDependencies } from '@/bootstrap';
-import { useTheme } from '@/design-system';
-import {
-  RECENT_TUTORING_SESSIONS_QUERY_KEY,
-  TUTOR_SESSION_QUERY_KEY,
-} from '@/modules/tutoring';
+import { getDependencies } from '@/bootstrap/dependencies';
+import { useTheme, useToast } from '@/design-system';
+import { TUTOR_SESSION_QUERY_KEY } from '@/modules/tutoring/ui/hooks/useTutorSession';
+import { RECENT_TUTORING_SESSIONS_QUERY_KEY } from '@/modules/tutoring/ui/hooks/useRecentTutoringSessions';
 
 import type { UserPreferences } from '../../domain';
 import { usePreferencesStore } from '../store/preferences-store';
 
 export function usePreferences() {
   const queryClient = useQueryClient();
-  const { setPreference } = useTheme();
+  const toast = useToast();
+  const { preference, setPreference } = useTheme();
   const prefs = usePreferencesStore((s) => s.prefs);
   const hydrated = usePreferencesStore((s) => s.hydrated);
   const hydrate = usePreferencesStore((s) => s.hydrate);
@@ -23,8 +22,6 @@ export function usePreferences() {
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [clearingHistory, setClearingHistory] = useState(false);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!hydrated) {
@@ -33,23 +30,27 @@ export function usePreferences() {
   }, [hydrated, hydrate]);
 
   useEffect(() => {
-    if (hydrated) {
+    if (hydrated && preference !== prefs.theme) {
       setPreference(prefs.theme);
     }
-  }, [hydrated, prefs.theme, setPreference]);
+  }, [hydrated, preference, prefs.theme, setPreference]);
 
   const save = useCallback(
-    async (next: UserPreferences) => {
+    async (
+      next: UserPreferences,
+      options?: { statusMessage?: string },
+    ) => {
       setSaving(true);
-      setErrorMessage(null);
-      setStatusMessage(null);
       try {
         const saved = await saveStore(next);
         setPreference(saved.theme);
-        setStatusMessage('Preferencias guardadas');
+        const message =
+          options?.statusMessage ?? 'Guardado — Se aplicaron los cambios';
+        // After the sheet Modal closes, open the toast Modal on top.
+        setTimeout(() => toast.success(message), 160);
         return saved;
       } catch (error) {
-        setErrorMessage(
+        toast.error(
           error instanceof Error ? error.message : 'No se pudieron guardar',
         );
         throw error;
@@ -57,48 +58,44 @@ export function usePreferences() {
         setSaving(false);
       }
     },
-    [saveStore, setPreference],
+    [saveStore, setPreference, toast],
   );
 
   const reset = useCallback(async () => {
     setResetting(true);
-    setErrorMessage(null);
-    setStatusMessage(null);
     try {
       const resetPrefs = await resetStore();
       setPreference(resetPrefs.theme);
-      setStatusMessage('Preferencias restablecidas');
+      setTimeout(() => toast.success('Preferencias restablecidas'), 120);
       return resetPrefs;
     } catch (error) {
-      setErrorMessage(
+      toast.error(
         error instanceof Error ? error.message : 'No se pudieron restablecer',
       );
       throw error;
     } finally {
       setResetting(false);
     }
-  }, [resetStore, setPreference]);
+  }, [resetStore, setPreference, toast]);
 
   const clearHistory = useCallback(async () => {
     setClearingHistory(true);
-    setErrorMessage(null);
-    setStatusMessage(null);
     try {
       await getDependencies().tutoring.clearConversation();
       await queryClient.invalidateQueries({ queryKey: TUTOR_SESSION_QUERY_KEY });
       await queryClient.invalidateQueries({
         queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
       });
-      setStatusMessage('Historial del tutor borrado');
+      setTimeout(() => toast.success('Guardado — Historial eliminado'), 160);
     } catch (error) {
-      setErrorMessage(
+      toast.error(
         error instanceof Error ? error.message : 'No se pudo borrar el historial',
       );
       throw error;
     } finally {
       setClearingHistory(false);
     }
-  }, [queryClient]);
+  }, [queryClient, toast]);
 
   return {
     prefs,
@@ -106,12 +103,6 @@ export function usePreferences() {
     saving,
     resetting,
     clearingHistory,
-    statusMessage,
-    errorMessage,
-    clearStatus: () => {
-      setStatusMessage(null);
-      setErrorMessage(null);
-    },
     save,
     reset,
     clearHistory,

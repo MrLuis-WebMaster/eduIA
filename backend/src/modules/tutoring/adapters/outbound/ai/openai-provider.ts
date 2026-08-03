@@ -30,19 +30,20 @@ export class OpenAIProvider implements AIProvider {
     }
 
     try {
-      const completion = await this.client.chat.completions.create(
+      // Responses API is the current OpenAI Node SDK surface (not Chat Completions).
+      const response = await this.client.responses.create(
         {
           model: this.model,
-          messages: input.messages.map((message) => ({
-            role: message.role,
+          temperature: 0.6,
+          input: input.messages.map((message) => ({
+            role: message.role === 'system' ? 'developer' : message.role,
             content: message.content,
           })),
-          temperature: 0.6,
         },
         { signal: input.signal },
       );
 
-      const content = completion.choices[0]?.message?.content?.trim();
+      const content = response.output_text?.trim();
       if (!content) {
         throw AppError.aiProvider('OpenAI returned an empty response', true);
       }
@@ -50,7 +51,7 @@ export class OpenAIProvider implements AIProvider {
       return {
         content,
         provider: this.name,
-        model: completion.model ?? this.model,
+        model: response.model ?? this.model,
       };
     } catch (error) {
       if (error instanceof AppError) {

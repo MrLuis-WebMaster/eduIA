@@ -3,6 +3,7 @@ export type {
   UserRole,
   PreferredLevel,
   ExplanationStyle,
+  TutorPersonality,
   FavoriteSubject,
   UserProfile,
   AppPreferences,
@@ -14,6 +15,10 @@ export {
   ROLE_OPTIONS,
   LEVEL_OPTIONS,
   STYLE_OPTIONS,
+  PERSONALITY_OPTIONS,
   SUBJECT_OPTIONS,
+  WEEKLY_QUESTION_GOAL_OPTIONS,
+  WEEKLY_QUESTION_GOAL_MIN,
+  WEEKLY_QUESTION_GOAL_MAX,
   STORAGE_KEYS,
-} from './types';
+} from './constants';

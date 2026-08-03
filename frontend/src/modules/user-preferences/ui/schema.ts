@@ -12,6 +12,13 @@ export const preferencesFormSchema = z.object({
     z.enum(['math', 'science', 'language', 'history', 'other']),
   ),
   explanationStyle: z.enum(['simple', 'detailed', 'socratic']),
+  tutorPersonality: z.enum([
+    'friendly',
+    'formal',
+    'motivating',
+    'patient',
+    'direct',
+  ]),
   theme: z.enum(['system', 'light', 'dark']),
 });
 

@@ -2,13 +2,11 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
 import { useColorScheme as useSystemColorScheme, View } from 'react-native';
-import { useColorScheme as useNativeWindColorScheme } from 'nativewind';
 
 import { darkTheme, lightTheme, type ThemeColors } from './themes';
 import { cn } from './utils/cn';
@@ -38,8 +36,8 @@ export function ThemeProvider({
   className,
 }: ThemeProviderProps) {
   const systemScheme = useSystemColorScheme();
-  const { setColorScheme } = useNativeWindColorScheme();
-  const [preference, setPreference] = useState<ThemePreference>(initialPreference);
+  const [preference, setPreferenceState] =
+    useState<ThemePreference>(initialPreference);
 
   const colorScheme: ResolvedColorScheme = useMemo(() => {
     if (preference === 'system') {
@@ -48,12 +46,12 @@ export function ThemeProvider({
     return preference;
   }, [preference, systemScheme]);
 
-  useEffect(() => {
-    setColorScheme(colorScheme);
-  }, [colorScheme, setColorScheme]);
+  const setPreference = useCallback((next: ThemePreference) => {
+    setPreferenceState((prev) => (prev === next ? prev : next));
+  }, []);
 
   const toggleColorScheme = useCallback(() => {
-    setPreference((prev) => {
+    setPreferenceState((prev) => {
       const current =
         prev === 'system' ? (systemScheme === 'dark' ? 'dark' : 'light') : prev;
       return current === 'dark' ? 'light' : 'dark';
@@ -68,7 +66,7 @@ export function ThemeProvider({
       setPreference,
       toggleColorScheme,
     }),
-    [preference, colorScheme, toggleColorScheme],
+    [preference, colorScheme, setPreference, toggleColorScheme],
   );
 
   return (

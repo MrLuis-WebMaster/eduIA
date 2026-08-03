@@ -17,6 +17,8 @@ export function createTutorController(useCase: GenerateTutorResponse) {
           subject: body.subject,
           difficulty: body.difficulty,
           userRole: body.userRole,
+          explanationStyle: body.explanationStyle,
+          tutorPersonality: body.tutorPersonality,
           conversation: body.conversation,
         });
 

@@ -8,12 +8,18 @@
     "dev": "concurrently -n frontend,backend -c cyan,magenta \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
+    "start": "pnpm --filter frontend start",
+    "start:tunnel": "pnpm --filter frontend start:tunnel",
+    "android": "pnpm --filter frontend android",
+    "ios": "pnpm --filter frontend ios",
+    "web": "pnpm --filter frontend web",
+    "expo": "pnpm --filter frontend exec expo",
     "lint": "pnpm -r run lint",
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck"
   },
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "concurrently": "^10.0.4"
   },
   "engines": {
     "node": ">=20"

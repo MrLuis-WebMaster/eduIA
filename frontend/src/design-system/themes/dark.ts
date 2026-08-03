@@ -22,4 +22,6 @@ export const darkTheme: ThemeColors = {
   warningForeground: colors.navy[900],
   danger: '#F87171',
   dangerForeground: colors.navy[900],
+  chatUser: '#6366F1',
+  chatUserForeground: '#FFFFFF',
 };

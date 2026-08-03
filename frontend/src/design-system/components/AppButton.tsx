@@ -1,9 +1,11 @@
 import { ActivityIndicator, type PressableProps } from 'react-native';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type { LucideIcon } from 'lucide-react-native';
 
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { cn } from '../utils/cn';
+import { useTheme } from '../ThemeProvider';
 
 const buttonVariants = cva(
   'flex-row items-center justify-center rounded-lg active:opacity-80',
@@ -60,9 +62,12 @@ const buttonLabelVariants = cva('font-semibold', {
   },
 });
 
+const ICON_SIZE = { sm: 14, md: 16, lg: 18 } as const;
+
 export type AppButtonProps = Omit<PressableProps, 'children' | 'disabled'> &
   VariantProps<typeof buttonVariants> & {
     label: string;
+    icon?: LucideIcon;
     loading?: boolean;
     className?: string;
     textClassName?: string;
@@ -70,16 +75,35 @@ export type AppButtonProps = Omit<PressableProps, 'children' | 'disabled'> &
 
 export function AppButton({
   label,
+  icon: Icon,
   loading = false,
   variant,
-  size,
+  size = 'md',
   fullWidth,
   disabled,
   className,
   textClassName,
   ...props
 }: AppButtonProps) {
+  const { colors } = useTheme();
   const isDisabled = Boolean(disabled || loading);
+  const resolvedSize = size ?? 'md';
+
+  const spinnerColor =
+    variant === 'outline' || variant === 'ghost'
+      ? colors.primary
+      : colors.primaryForeground;
+
+  const iconColor =
+    variant === 'solid'
+      ? colors.primaryForeground
+      : variant === 'secondary'
+        ? colors.secondaryForeground
+        : variant === 'danger'
+          ? colors.dangerForeground
+          : variant === 'ghost'
+            ? colors.primary
+            : colors.foreground;
 
   return (
     <Pressable
@@ -92,16 +116,16 @@ export function AppButton({
       {...props}
       accessibilityLabel={props.accessibilityLabel ?? label}>
       {loading ? (
-        <ActivityIndicator
-          size="small"
-          color={
-            variant === 'outline' || variant === 'ghost' ? '#0D9488' : '#FFFFFF'
-          }
-        />
+        <ActivityIndicator size="small" color={spinnerColor} />
       ) : (
-        <Text className={cn(buttonLabelVariants({ variant, size }), textClassName)}>
-          {label}
-        </Text>
+        <>
+          {Icon ? (
+            <Icon size={ICON_SIZE[resolvedSize]} color={iconColor} strokeWidth={2} />
+          ) : null}
+          <Text className={cn(buttonLabelVariants({ variant, size }), textClassName)}>
+            {label}
+          </Text>
+        </>
       )}
     </Pressable>
   );

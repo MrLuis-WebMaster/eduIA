@@ -22,6 +22,8 @@ export class GenerateTutorResponse {
       subject: request.subject,
       difficulty: request.difficulty,
       userRole: request.userRole,
+      explanationStyle: request.explanationStyle,
+      tutorPersonality: request.tutorPersonality,
     });
 
     const messages: AIChatMessage[] = [

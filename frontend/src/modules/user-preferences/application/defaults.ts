@@ -10,10 +10,12 @@ export const defaultUserProfile: UserProfile = {
   preferredLevel: 'basic',
   favoriteSubjects: [],
   explanationStyle: 'simple',
+  tutorPersonality: 'friendly',
 };
 
 export const defaultAppPreferences: AppPreferences = {
   theme: 'system',
+  weeklyQuestionGoal: 7,
 };
 
 export const defaultUserPreferences: UserPreferences = {

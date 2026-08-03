@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ThemeProvider, useTheme, type ThemePreference } from '@/design-system';
-import { PreferencesHydrator } from '@/modules/user-preferences';
+import { ThemeProvider, ToastProvider, useTheme, type ThemePreference } from '@/design-system';
+import { PreferencesHydrator } from '@/modules/user-preferences/ui/PreferencesHydrator';
 
 import { createQueryClient } from './query-client';
 
@@ -24,12 +25,16 @@ export function AppProviders({
   const [queryClient] = useState(() => createQueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider initialPreference={initialThemePreference}>
-        <PreferencesHydrator />
-        <StatusBarFromTheme />
-        {children}
-      </ThemeProvider>
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider initialPreference={initialThemePreference}>
+          <ToastProvider>
+            <PreferencesHydrator />
+            <StatusBarFromTheme />
+            {children}
+          </ToastProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }

@@ -18,6 +18,12 @@ export const tutorMessageBodySchema = z.object({
     .max(100, 'subject must be at most 100 characters'),
   difficulty: z.enum(['basic', 'intermediate', 'advanced']),
   userRole: z.enum(['student', 'teacher']),
+  explanationStyle: z
+    .enum(['simple', 'detailed', 'socratic'])
+    .default('simple'),
+  tutorPersonality: z
+    .enum(['friendly', 'formal', 'motivating', 'patient', 'direct'])
+    .default('friendly'),
   conversation: z
     .array(conversationMessageSchema)
     .max(10, 'conversation may contain at most 10 messages')

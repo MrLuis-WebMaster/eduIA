@@ -2,13 +2,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import NetInfo from '@react-native-community/netinfo';
 
-import { getDependencies } from '@/bootstrap';
+import { getDependencies } from '@/bootstrap/dependencies';
 import { AppError, getAppConfig, httpJson } from '@/shared';
 
 import {
   createEmptySession,
+  createMessageId,
+  type ChatMessage,
   type Difficulty,
+  type ExplanationStyle,
   type Subject,
+  type TutorPersonality,
   type TutorSession,
   type UserRole,
 } from '../../domain';
@@ -28,6 +32,8 @@ export type TutorSendErrorKind =
 export function useTutorSession(
   userRole: UserRole = 'student',
   preferredLevel: Difficulty = 'basic',
+  explanationStyle: ExplanationStyle = 'simple',
+  tutorPersonality: TutorPersonality = 'friendly',
 ) {
   const queryClient = useQueryClient();
   const tutoring = getDependencies().tutoring;
@@ -39,6 +45,9 @@ export function useTutorSession(
   const [draft, setDraft] = useState('');
   const [hydrated, setHydrated] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
+  /** Shown immediately while waiting for the tutor reply (not persisted yet). */
+  const [pendingUserMessage, setPendingUserMessage] =
+    useState<ChatMessage | null>(null);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -86,6 +95,41 @@ export function useTutorSession(
 
   const session = sessionQuery.data;
 
+  const displaySession = useMemo((): TutorSession | undefined => {
+    if (!pendingUserMessage) return session;
+    if (!session) {
+      return {
+        ...createEmptySession(subject, difficulty),
+        messages: [pendingUserMessage],
+      };
+    }
+    const alreadyPresent = session.messages.some(
+      (m) =>
+        m.id === pendingUserMessage.id ||
+        (m.role === 'user' && m.content === pendingUserMessage.content),
+    );
+    if (alreadyPresent) return session;
+    return {
+      ...session,
+      messages: [...session.messages, pendingUserMessage],
+    };
+  }, [session, pendingUserMessage, subject, difficulty]);
+
+  const showPendingUserMessage = useCallback((message: string) => {
+    const trimmed = message.trim();
+    if (!trimmed) return;
+    setPendingUserMessage((current) => {
+      if (current?.content === trimmed) return current;
+      return {
+        id: createMessageId('user'),
+        role: 'user',
+        content: trimmed,
+        createdAt: new Date().toISOString(),
+      };
+    });
+    setDraft('');
+  }, []);
+
   useEffect(() => {
     if (!session || hydrated) return;
     setSubject(session.subject);
@@ -118,6 +162,8 @@ export function useTutorSession(
           subject,
           difficulty,
           userRole,
+          explanationStyle,
+          tutorPersonality,
           session: {
             ...current,
             subject,
@@ -132,6 +178,7 @@ export function useTutorSession(
       }
     },
     onSuccess: (outcome) => {
+      setPendingUserMessage(null);
       queryClient.setQueryData(TUTOR_SESSION_QUERY_KEY, outcome.session);
       void queryClient.invalidateQueries({
         queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
@@ -141,6 +188,9 @@ export function useTutorSession(
     },
     onError: (error, message) => {
       if (error instanceof AppError && error.code === 'CANCELLED') {
+        // User stopped generation — restore draft, never treat as a failure.
+        setPendingUserMessage(null);
+        setDraft(message);
         lastFailedMessageRef.current = null;
         return;
       }
@@ -152,6 +202,7 @@ export function useTutorSession(
     mutationFn: async () =>
       tutoring.startNewSession({ subject, difficulty }),
     onSuccess: (fresh) => {
+      setPendingUserMessage(null);
       queryClient.setQueryData(TUTOR_SESSION_QUERY_KEY, fresh);
       void queryClient.invalidateQueries({
         queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
@@ -165,13 +216,14 @@ export function useTutorSession(
   const sendErrorKind = useMemo((): TutorSendErrorKind | null => {
     const err = sendMutation.error;
     if (!err) return null;
+    if (err instanceof AppError && err.code === 'CANCELLED') {
+      return 'cancelled';
+    }
     if (isOffline) return 'offline';
     if (err instanceof AppError) {
       switch (err.code) {
         case 'TIMEOUT':
           return 'timeout';
-        case 'CANCELLED':
-          return 'cancelled';
         case 'NETWORK':
           return 'network';
         case 'VALIDATION':
@@ -188,6 +240,9 @@ export function useTutorSession(
   const sendErrorMessage = useMemo(() => {
     const err = sendMutation.error;
     if (!err) return null;
+    if (err instanceof AppError && err.code === 'CANCELLED') {
+      return null;
+    }
     if (isOffline) {
       return 'Sin conexión. Revisa tu red e inténtalo de nuevo.';
     }
@@ -195,8 +250,6 @@ export function useTutorSession(
       switch (err.code) {
         case 'TIMEOUT':
           return 'La respuesta tardó demasiado. Puedes reintentar.';
-        case 'CANCELLED':
-          return 'Solicitud cancelada.';
         case 'NETWORK':
           return 'No hay conexión con el tutor. Revisa la red o la API.';
         default:
@@ -211,9 +264,10 @@ export function useTutorSession(
     (overrideMessage?: string) => {
       const message = (overrideMessage ?? draft).trim();
       if (!message || sendMutation.isPending) return;
+      showPendingUserMessage(message);
       sendMutation.mutate(message);
     },
-    [draft, sendMutation],
+    [draft, sendMutation, showPendingUserMessage],
   );
 
   const cancelSend = useCallback(() => {
@@ -226,12 +280,27 @@ export function useTutorSession(
   const retrySend = useCallback(() => {
     const message = lastFailedMessageRef.current?.trim() || draft.trim();
     if (!message || sendMutation.isPending) return;
+    showPendingUserMessage(message);
     sendMutation.mutate(message);
-  }, [draft, sendMutation]);
+  }, [draft, sendMutation, showPendingUserMessage]);
 
   const applyQuickAction = useCallback((prompt: string) => {
+    lastFailedMessageRef.current = null;
+    sendMutation.reset();
     setDraft(prompt);
-  }, []);
+  }, [sendMutation]);
+
+  const startNewSession = useCallback(() => {
+    if (sendMutation.isPending) {
+      cancelSend();
+    }
+    newSessionMutation.mutate();
+  }, [sendMutation.isPending, cancelSend, newSessionMutation]);
+
+  const clearSendError = useCallback(() => {
+    lastFailedMessageRef.current = null;
+    sendMutation.reset();
+  }, [sendMutation]);
 
   return {
     subject,
@@ -240,30 +309,27 @@ export function useTutorSession(
     setDifficulty,
     draft,
     setDraft,
-    session,
+    session: displaySession,
     isLoadingSession: sessionQuery.isLoading,
     isSessionError: sessionQuery.isError,
     refetchSession: sessionQuery.refetch,
     send,
     cancelSend,
     applyQuickAction,
-    startNewSession: () => {
-      if (sendMutation.isPending) {
-        cancelSend();
-      }
-      newSessionMutation.mutate();
-    },
+    startNewSession,
     isSending: sendMutation.isPending,
     isSendSuccess: sendMutation.isSuccess && !sendMutation.isPending,
-    isSendError: sendMutation.isError,
+    isSendError:
+      sendMutation.isError &&
+      !(
+        sendMutation.error instanceof AppError &&
+        sendMutation.error.code === 'CANCELLED'
+      ),
     sendErrorMessage,
-    sendErrorKind,
+    sendErrorKind: sendErrorKind === 'cancelled' ? null : sendErrorKind,
     isOffline,
     retrySend,
-    clearSendError: () => {
-      lastFailedMessageRef.current = null;
-      sendMutation.reset();
-    },
+    clearSendError,
     isStartingSession: newSessionMutation.isPending,
   };
 }

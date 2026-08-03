@@ -21,6 +21,9 @@ export type ThemeColors = {
   warningForeground: string;
   danger: string;
   dangerForeground: string;
+  /** Chat user bubble accent (conversation UX; not brand primary). */
+  chatUser: string;
+  chatUserForeground: string;
 };
 
 export const lightTheme: ThemeColors = {
@@ -44,4 +47,6 @@ export const lightTheme: ThemeColors = {
   warningForeground: '#FFFFFF',
   danger: '#DC2626',
   dangerForeground: '#FFFFFF',
+  chatUser: '#4F46E5',
+  chatUserForeground: '#FFFFFF',
 };

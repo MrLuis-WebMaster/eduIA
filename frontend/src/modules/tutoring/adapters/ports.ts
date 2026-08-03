@@ -3,7 +3,9 @@
 import type {
   ChatMessage,
   Difficulty,
+  ExplanationStyle,
   Subject,
+  TutorPersonality,
   TutorSession,
   UserRole,
 } from '../domain';
@@ -13,6 +15,8 @@ export type SendTutorMessageInput = {
   subject: Subject;
   difficulty: Difficulty;
   userRole: UserRole;
+  explanationStyle: ExplanationStyle;
+  tutorPersonality: TutorPersonality;
   /** Prior turns (excluding the message being sent). */
   conversation: ChatMessage[];
   signal?: AbortSignal;

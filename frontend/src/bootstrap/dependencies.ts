@@ -1,6 +1,6 @@
-import { createLearningProgressModule } from '@/modules/learning-progress';
-import { createTutoringModule } from '@/modules/tutoring';
-import { createUserPreferencesModule } from '@/modules/user-preferences';
+import { createLearningProgressModule } from '@/modules/learning-progress/composition';
+import { createTutoringModule } from '@/modules/tutoring/composition';
+import { createUserPreferencesModule } from '@/modules/user-preferences/composition';
 import {
   AsyncStorageAdapter,
   getAppConfig,

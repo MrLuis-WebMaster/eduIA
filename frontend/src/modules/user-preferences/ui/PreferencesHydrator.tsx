@@ -12,7 +12,7 @@ export function PreferencesHydrator() {
   const hydrated = usePreferencesStore((s) => s.hydrated);
   const hydrate = usePreferencesStore((s) => s.hydrate);
   const theme = usePreferencesStore((s) => s.prefs.theme);
-  const { setPreference } = useTheme();
+  const { preference, setPreference } = useTheme();
 
   useEffect(() => {
     if (!hydrated) {
@@ -21,10 +21,10 @@ export function PreferencesHydrator() {
   }, [hydrated, hydrate]);
 
   useEffect(() => {
-    if (hydrated) {
+    if (hydrated && preference !== theme) {
       setPreference(theme);
     }
-  }, [hydrated, theme, setPreference]);
+  }, [hydrated, preference, theme, setPreference]);
 
   return null;
 }

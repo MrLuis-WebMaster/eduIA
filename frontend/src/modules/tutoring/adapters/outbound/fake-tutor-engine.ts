@@ -35,7 +35,7 @@ export class FakeTutorEngine implements TutorEngine {
     const content = [
       `### Respuesta de práctica (${subjectLabel})`,
       '',
-      `Nivel: **${input.difficulty}** · Rol: **${input.userRole}**`,
+      `Nivel: **${input.difficulty}** · Rol: **${input.userRole}** · Estilo: **${input.explanationStyle}** · Personalidad: **${input.tutorPersonality}**`,
       '',
       `Recibí tu mensaje:`,
       '',

@@ -1,11 +1,7 @@
 /** Public DTOs for recent tutoring sessions (consumed by learning-progress). */
 
-import {
-  SUBJECT_LABELS,
-  type Difficulty,
-  type Subject,
-  type TutorSession,
-} from './types';
+import { SUBJECT_LABELS } from './constants';
+import type { Difficulty, Subject, TutorSession } from './types';
 
 export type RecentTutoringSessionDto = {
   id: string;
