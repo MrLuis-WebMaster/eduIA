@@ -1,5 +1,1 @@
-import { ProgressScreen } from '@/modules/learning-progress';
-
-export default function ProgressRoute() {
-  return <ProgressScreen />;
-}
+export { ProgressScreen as default } from '@/modules/learning-progress';

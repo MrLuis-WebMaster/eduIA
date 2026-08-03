@@ -1,5 +1,3 @@
-import { PreferencesScreen } from '@/modules/user-preferences';
+export { PreferencesScreen as default } from '@/modules/user-preferences';
 
-export default function ProfileScreen() {
-  return <PreferencesScreen />;
-}
+
