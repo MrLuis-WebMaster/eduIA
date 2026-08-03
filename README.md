@@ -54,17 +54,21 @@ pnpm test
 
 ### Ejecución de la aplicación móvil
 
-La aplicación puede ejecutarse mediante Expo Go o un emulador compatible.
-
-Después de iniciar el frontend:
+Por defecto, `pnpm dev` / `pnpm dev:frontend` arrancan Metro en modo **Expo Go** (`expo start`). Escanea el QR desde la app Expo Go.
 
 ```bash
 pnpm dev:frontend
 ```
 
-Escanea el código QR generado por Metro desde Expo Go.
+Si necesitas un **development build** nativo (carpeta `android/` / módulos nativos custom):
 
-Para utilizar la integración real con IA, el dispositivo debe poder conectarse a la API Express. En un dispositivo físico, configura `EXPO_PUBLIC_API_URL` con la dirección IP local del equipo donde se ejecuta el backend.
+```bash
+pnpm start:dev-client
+# o, para compilar e instalar en emulador/dispositivo:
+pnpm android
+```
+
+Para la integración real con IA, el dispositivo debe alcanzar la API Express. En un dispositivo físico, configura `EXPO_PUBLIC_API_URL` con la IP LAN del equipo donde corre el backend.
 
 ## Configuración de variables de entorno
 
@@ -102,6 +106,7 @@ Aplica cuando el frontend usa `remote`:
 | --- | --- |
 | `fake` | Respuestas deterministas sin API key. |
 | `openai` | OpenAI real (`OPENAI_API_KEY` obligatorio). Modelo por defecto: `gpt-4o-mini`. |
+| `gemini` | **No implementado en P0.** El valor es aceptado por la config, pero el provider lanza error en runtime. No lo uses. |
 
 ```bash
 # Demo sin red (solo móvil)

@@ -9,6 +9,7 @@
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
     "start": "pnpm --filter frontend start",
+    "start:dev-client": "pnpm --filter frontend start:dev-client",
     "start:tunnel": "pnpm --filter frontend start:tunnel",
     "android": "pnpm --filter frontend android",
     "ios": "pnpm --filter frontend ios",
@@ -19,7 +20,8 @@
     "typecheck": "pnpm -r run typecheck"
   },
   "devDependencies": {
-    "concurrently": "^10.0.4"
+    "concurrently": "^10.0.4",
+    "typescript": "~5.9.3"
   },
   "engines": {
     "node": ">=20"

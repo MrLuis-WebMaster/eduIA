@@ -37,5 +37,6 @@ function resolveTutorMode(): TutorMode {
     process.env.EXPO_PUBLIC_USE_FAKE_TUTOR === '1';
   if (useFake) return 'fake';
 
-  return 'remote';
+  // Safe default for demos / missing .env: no network required.
+  return 'fake';
 }
