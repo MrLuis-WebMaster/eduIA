@@ -1,3 +1,9 @@
+---
+title: "Runbook: errores CORS"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Runbook: errores CORS
 
 ## Síntomas

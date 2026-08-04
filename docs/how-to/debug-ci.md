@@ -1,3 +1,9 @@
+---
+title: "How-to: depurar CI en local"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # How-to: depurar CI en local
 
 Reproduce el gate de GitHub Actions antes de abrir o actualizar un PR.
@@ -39,5 +45,8 @@ pnpm --filter backend build
 | Typecheck frontend | Paths `@/*` y tipos de NativeWind / Expo |
 | Tests backend | Variables en tests; `createApp` sin `listen` |
 | Build API | `tsc` del backend; no incluir tests en el build |
+| OpenAPI | `pnpm openapi:check` — regenerar con `openapi:generate` |
+| Docs links | Links rotos en Markdown |
+| Docs site | `pnpm docs:build` (VitePress) |
 
 El workflow vive en [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml).

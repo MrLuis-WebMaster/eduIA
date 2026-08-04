@@ -1,3 +1,9 @@
+---
+title: "How-to guides"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # How-to guides
 
 Procedimientos orientados a una tarea concreta.

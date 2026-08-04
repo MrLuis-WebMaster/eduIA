@@ -43,8 +43,9 @@ Organizada con Diátaxis. Índice: **[docs/README.md](docs/README.md)**.
 | --- | --- |
 | Empezar | [getting-started](docs/getting-started.md) |
 | Env vars | [reference/environment](docs/reference/environment.md) |
-| API HTTP | [reference/api](docs/reference/api.md) |
+| API HTTP | [reference/api](docs/reference/api.md) · [OpenAPI](docs/reference/openapi.json) |
 | Scripts / CI | [reference/scripts](docs/reference/scripts.md) |
+| Docs site | `pnpm docs:dev` (VitePress) |
 | Arquitectura | [explanation/architecture](docs/explanation/architecture.md) |
 | Design system | [explanation/design-system](docs/explanation/design-system.md) |
 | Decisiones (ADR) | [docs/adr/](docs/adr/) |

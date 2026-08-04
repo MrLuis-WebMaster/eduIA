@@ -1,3 +1,9 @@
+---
+title: "How-to: cambiar el modo del tutor"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # How-to: cambiar el modo del tutor
 
 El tutor puede ejecutarse en el dispositivo (`fake`) o contra la API (`remote`).

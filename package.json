@@ -19,11 +19,19 @@
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
     "build": "pnpm --filter backend build",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm openapi:check && pnpm docs:links",
+    "openapi:generate": "pnpm --filter backend openapi:generate",
+    "openapi:check": "pnpm --filter backend openapi:check",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:links": "node scripts/check-doc-links.mjs"
   },
   "devDependencies": {
     "concurrently": "^10.0.4",
-    "typescript": "~5.9.3"
+    "markdown-link-check": "^3.15.0",
+    "typescript": "~5.9.3",
+    "vitepress": "^1.6.4"
   },
   "engines": {
     "node": ">=20"

@@ -1,3 +1,9 @@
+---
+title: "ADR 0003 — Respuesta completa del tutor (sin streaming)"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # ADR 0003 — Respuesta completa del tutor (sin streaming)
 
 - Status: Accepted

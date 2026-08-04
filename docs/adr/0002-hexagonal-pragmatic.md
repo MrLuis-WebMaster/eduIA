@@ -1,3 +1,9 @@
+---
+title: "ADR 0002 — Hexagonal pragmático por módulo"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # ADR 0002 — Hexagonal pragmático por módulo
 
 - Status: Accepted

@@ -5,8 +5,9 @@ Instrucciones para humanos y agentes de código que trabajan en este repositorio
 ## Fuente de verdad
 
 - Documentación del equipo: [`docs/README.md`](docs/README.md) (Diátaxis).
-- No inventar env vars ni rutas HTTP: usar [`docs/reference/`](docs/reference/).
+- No inventar env vars ni rutas HTTP: usar [`docs/reference/`](docs/reference/) y `openapi.json`.
 - Decisiones de arquitectura: [`docs/adr/`](docs/adr/). No contradecir ADRs Accepted sin RFC/ADR nuevo.
+- Al tocar schemas Zod de la API: `pnpm openapi:generate` en el mismo cambio.
 - Expo (frontend): versión fijada en [`frontend/AGENTS.md`](frontend/AGENTS.md) — lee docs de Expo **v57**.
 
 ## Estructura

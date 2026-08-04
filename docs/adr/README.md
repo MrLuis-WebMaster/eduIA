@@ -1,3 +1,9 @@
+---
+title: "Architecture Decision Records (ADR)"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Architecture Decision Records (ADR)
 
 Decisiones arquitectónicas versionadas. Formato corto: contexto → decisión → consecuencias.

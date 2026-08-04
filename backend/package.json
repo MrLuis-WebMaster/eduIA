@@ -12,7 +12,9 @@
     "lint": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tests.json",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tests.json",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "openapi:generate": "tsx scripts/generate-openapi.ts",
+    "openapi:check": "tsx scripts/generate-openapi.ts --check"
   },
   "dependencies": {
     "cors": "^2.8.5",

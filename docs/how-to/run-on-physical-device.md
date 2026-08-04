@@ -1,3 +1,9 @@
+---
+title: "How-to: correr en dispositivo físico"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # How-to: correr en dispositivo físico
 
 Procedimiento para que la app en un teléfono real hable con la API Express del PC.

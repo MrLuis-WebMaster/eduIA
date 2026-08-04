@@ -1,3 +1,9 @@
+---
+title: "Explanation: arquitectura"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Explanation: arquitectura
 
 Por qué EduIA está organizado así. Para el contrato HTTP usa [reference/api.md](../reference/api.md). Para decisiones formales, [adr/](../adr/).

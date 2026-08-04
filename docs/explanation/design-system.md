@@ -1,3 +1,9 @@
+---
+title: "Explanation: design system"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Explanation: design system
 
 Por qué existe un design system propio encima de NativeWind.

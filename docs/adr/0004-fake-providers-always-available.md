@@ -1,3 +1,9 @@
+---
+title: "ADR 0004 — Proveedores fake siempre disponibles"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # ADR 0004 — Proveedores fake siempre disponibles
 
 - Status: Accepted

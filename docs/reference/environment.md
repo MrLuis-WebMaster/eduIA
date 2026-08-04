@@ -1,3 +1,9 @@
+---
+title: "Referencia: variables de entorno"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Referencia: variables de entorno
 
 Fuente de verdad de configuración. Plantillas sin secretos:
