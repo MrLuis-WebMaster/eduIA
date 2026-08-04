@@ -1,5 +1,5 @@
-import type { Env } from '../../../shared/config/env.js';
-import { AppError } from '../../../shared/errors/app-error.js';
+import type { Env } from '@/shared/config/env.js';
+import { AppError } from '@/shared/errors/app-error.js';
 import type { AIProvider } from '../application/ports/ai-provider.js';
 import { GenerateTutorResponse } from '../application/use-cases/generate-tutor-response.js';
 import { createTutorRouter } from '../adapters/inbound/http/tutor.router.js';

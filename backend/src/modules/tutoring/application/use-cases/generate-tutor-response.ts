@@ -1,4 +1,4 @@
-import { AppError } from '../../../../shared/errors/app-error.js';
+import { AppError } from '@/shared/errors/app-error.js';
 import { buildPedagogicalSystemPrompt } from '../../domain/policies/pedagogical-policy.js';
 import type { TutorRequest, TutorResponse } from '../../domain/types.js';
 import type { AIChatMessage, AIProvider } from '../ports/ai-provider.js';

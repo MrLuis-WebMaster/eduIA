@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { AppError } from '../../../../../shared/errors/app-error.js';
+import { AppError } from '@/shared/errors/app-error.js';
 import type {
   AIProvider,
   GenerateCompletionInput,

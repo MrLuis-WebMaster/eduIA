@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 
-import { AppError, toNormalizedError } from '../../../../../shared/errors/app-error.js';
+import { AppError, toNormalizedError } from '@/shared/errors/app-error.js';
 import type { GenerateTutorResponse } from '../../../application/use-cases/generate-tutor-response.js';
 import { createTutorController } from './tutor.controller.js';
 
