@@ -5,7 +5,7 @@
 
 ## Context
 
-Reviewers y demos deben poder ejercer el producto sin red, sin API key y sin depender de cuotas de OpenAI.
+El equipo y las demos de producto deben poder ejercer el flujo completo sin red, sin API key y sin depender de cuotas de OpenAI.
 
 ## Decision
 

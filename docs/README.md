@@ -24,7 +24,7 @@ Documentación del monorepo organizada con [Diátaxis](https://diataxis.fr/): ca
 | Design system | [explanation/design-system.md](./explanation/design-system.md) |
 | Decisiones técnicas | [adr/](./adr/) |
 | Dispositivo físico no alcanza la API | [runbooks/device-cannot-reach-api.md](./runbooks/device-cannot-reach-api.md) |
-| Auditoría / entrevista (histórico) | [technical-review/](./technical-review/) |
+| CI / 429 / timeout IA / CORS | [runbooks/](./runbooks/) |
 
 ## Convenciones
 

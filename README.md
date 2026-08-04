@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/MrLuis-WebMaster/eduIA/actions/workflows/ci.yml/badge.svg)](https://github.com/MrLuis-WebMaster/eduIA/actions/workflows/ci.yml)
 
-Aplicación móvil de tutoría educativa (prueba técnica para Muyu Education): React Native / Expo + API Express en monorepo pnpm. Tutor IA, preferencias locales y métricas de progreso en el dispositivo.
+MVP de tutoría educativa asistida por IA: React Native / Expo + API Express en monorepo pnpm. Tutor IA, preferencias locales y métricas de progreso en el dispositivo.
 
 ## Arranque rápido
 
@@ -48,7 +48,8 @@ Organizada con Diátaxis. Índice: **[docs/README.md](docs/README.md)**.
 | Arquitectura | [explanation/architecture](docs/explanation/architecture.md) |
 | Design system | [explanation/design-system](docs/explanation/design-system.md) |
 | Decisiones (ADR) | [docs/adr/](docs/adr/) |
-| Dispositivo físico | [how-to](docs/how-to/run-on-physical-device.md) · [runbook](docs/runbooks/device-cannot-reach-api.md) |
+| Dispositivo físico | [how-to](docs/how-to/run-on-physical-device.md) · [runbooks](docs/runbooks/) |
+| Ops (CI, 429, timeout, CORS) | [docs/runbooks/](docs/runbooks/) |
 | Propuestas grandes | [docs/rfcs/](docs/rfcs/) |
 
 ## Limitaciones conocidas

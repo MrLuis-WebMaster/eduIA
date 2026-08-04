@@ -1,0 +1,17 @@
+# CODEOWNERS
+
+# Default — monorepo
+* @MrLuis-WebMaster
+
+# Documentation (Diátaxis + decisions)
+/docs/ @MrLuis-WebMaster
+/docs/adr/ @MrLuis-WebMaster
+/docs/reference/ @MrLuis-WebMaster
+/docs/rfcs/ @MrLuis-WebMaster
+
+# CI / GitHub
+/.github/ @MrLuis-WebMaster
+
+# Product surfaces
+/frontend/ @MrLuis-WebMaster
+/backend/ @MrLuis-WebMaster

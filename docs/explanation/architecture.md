@@ -9,7 +9,7 @@ Módulos por capacidad (`tutoring`, `learning-progress`, `user-preferences`) con
 - Dominio independiente de React, Express y SDKs de terceros.
 - Puertos en application; adaptadores driving (HTTP/UI) y driven (OpenAI, Fake, AsyncStorage).
 - Composition root manual en `frontend/src/bootstrap/` y en `*/composition/`.
-- Cada módulo expone su API pública vía `index.ts`.
+- Cada módulo expone su API pública vía `index.ts` (ver `README.md` del módulo).
 
 Tutoring lleva capas completas; Progress y Preferences son más delgados (ver [ADR 0002](../adr/0002-hexagonal-pragmatic.md)).
 
@@ -70,5 +70,3 @@ flowchart TB
 - Sin sync multi-dispositivo del historial.
 - Sin streaming de respuestas del tutor ([ADR 0003](../adr/0003-no-streaming-responses.md)).
 - En dispositivo físico, `localhost` no alcanza el PC: IP LAN o modo `fake`.
-
-Snapshot histórico de auditoría: [technical-review/00-system-map.md](../technical-review/00-system-map.md).

@@ -15,4 +15,4 @@ Por qué existe un design system propio encima de NativeWind.
 
 Las pantallas consumen el Design System. NativeWind acelera estilos utilitarios; **no sustituye** el sistema de componentes.
 
-Decisión relacionada: NativeWind + DS propio (tabla histórica en README; formalizar en ADR si el equipo amplía el DS).
+Decisión formal: [ADR 0005](../adr/0005-nativewind-design-system.md).

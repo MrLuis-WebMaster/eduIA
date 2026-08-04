@@ -5,7 +5,7 @@
 
 ## Context
 
-EduIA es una prueba técnica / MVP de tutoría. El flujo prioritario es el chat pedagógico. Autenticación, multi-usuario y sync multi-dispositivo aumentarían superficie de ataque, tiempo de entrega y complejidad operativa sin validar el core del producto.
+EduIA es un MVP de tutoría educativa. El flujo prioritario es el chat pedagógico. Autenticación, multi-usuario y sync multi-dispositivo aumentarían superficie de ataque, tiempo de entrega y complejidad operativa sin validar primero el core del producto.
 
 ## Decision
 

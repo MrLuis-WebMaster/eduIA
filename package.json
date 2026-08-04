@@ -2,7 +2,7 @@
   "name": "muyu-eduia",
   "version": "0.1.0",
   "private": true,
-  "description": "EduIA — AI tutoring companion (Muyu take-home)",
+  "description": "EduIA — AI tutoring companion (MVP)",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "concurrently -n frontend,backend -c cyan,magenta \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",

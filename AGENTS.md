@@ -12,8 +12,9 @@ Instrucciones para humanos y agentes de código que trabajan en este repositorio
 ## Estructura
 
 - Monorepo pnpm: `frontend/` (Expo) + `backend/` (Express).
-- Módulos por capacidad; API pública solo vía `index.ts` del módulo.
+- Módulos por capacidad; API pública solo vía `index.ts` del módulo (hay `README.md` en cada módulo).
 - Composition root: `frontend/src/bootstrap/`.
+- Ops: [`docs/runbooks/`](docs/runbooks/). Owners: [`.github/CODEOWNERS`](.github/CODEOWNERS).
 
 ## Al cambiar código
 
