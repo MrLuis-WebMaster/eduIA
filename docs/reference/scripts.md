@@ -23,13 +23,22 @@ Scripts raíz (`package.json`). Los paquetes se filtran con `pnpm --filter front
 | Script | Qué hace |
 | --- | --- |
 | `pnpm lint` | Lint en todos los workspaces |
-| `pnpm typecheck` | `tsc --noEmit` en ambos paquetes |
+| `pnpm typecheck` | `tsc --noEmit` en ambos paquetes (TypeScript **7** nativo vía `tsc`) |
 | `pnpm test` | Vitest (frontend + backend) |
 | `pnpm build` | Compila la API (backend) |
 | `pnpm openapi:generate` / `openapi:check` | OpenAPI desde Zod → `docs/reference/openapi.json` |
 | `pnpm docs:dev` / `docs:build` | Site VitePress de `docs/` |
 | `pnpm docs:links` | Comprueba links rotos en Markdown |
 | `pnpm verify` | Gate local: lint + typecheck + test + build + openapi + docs links |
+
+## TypeScript
+
+El monorepo usa TypeScript **7** para `tsc` (typecheck/build) y TypeScript **6** como API JS para herramientas (`typescript-eslint` / Expo lint) que aún no soportan la API de TS 7:
+
+- `@typescript/native` → `npm:typescript@~7.0.2` (binario `tsc`)
+- `typescript` → `npm:@typescript/typescript6@~6.0.2` (API + `tsc6`)
+
+Comprobar: `pnpm exec tsc --version` (7.x) y `pnpm exec tsc6 --version` (6.x).
 
 ## CI
 
