@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Version comes from package.json "packageManager" (do not also set `version` here).
       - name: Setup pnpm
