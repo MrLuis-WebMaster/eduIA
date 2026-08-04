@@ -91,7 +91,7 @@ export function TutorScreen() {
 
       {tutor.isOffline ? (
         <AppScreenSection>
-          <View className="rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 dark:border-warning-dark/40 dark:bg-warning-dark/10">
+          <View className="rounded-lg border border-warning/40 bg-warning/10 px-3 py-2">
             <AppText variant="caption" tone="warning">
               Sin conexión — el envío puede fallar hasta que vuelva la red.
             </AppText>
@@ -119,7 +119,7 @@ export function TutorScreen() {
 
       {showSendErrorBanner ? (
         <AppScreenSection>
-          <View className="overflow-hidden rounded-xl border border-danger/30 dark:border-danger-dark/40">
+          <View className="overflow-hidden rounded-xl border border-danger/30">
             <AppErrorState
               compact
               title={errorTitle(tutor.sendErrorKind)}

@@ -58,14 +58,14 @@ export function AppSelect<T extends string = string>({
           disabled={Boolean(disabled)}
           onPress={() => setOpen(true)}
           className={cn(
-            'h-10 flex-row items-center gap-1 rounded-xl border border-border bg-surface px-2 py-0 dark:border-border-dark dark:bg-surface-dark',
+            'h-10 flex-row items-center gap-1 rounded-xl border border-border bg-surface px-2 py-0',
             disabled && 'opacity-50',
           )}>
           {Icon ? (
             <Icon size={13} color={colors.primary} strokeWidth={2} />
           ) : null}
           <Text
-            className="min-w-0 flex-1 text-xs font-medium text-foreground dark:text-foreground-dark"
+            className="min-w-0 flex-1 text-xs font-medium text-foreground"
             numberOfLines={1}>
             {display}
           </Text>

@@ -46,7 +46,7 @@ export function MessageComposer({
   return (
     <AppScreenSection className="pb-2.5 pt-1">
       <Row gap="sm" align="center">
-        <View className="min-w-0 flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-3 py-2 dark:border-border-dark dark:bg-surface-dark">
+        <View className="min-w-0 flex-1 flex-row items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-3 py-2">
           <AppIconButton
             icon={Plus}
             accessibilityLabel="Acciones rápidas"
@@ -75,7 +75,7 @@ export function MessageComposer({
               multiline
               blurOnSubmit={false}
               maxLength={MESSAGE_MAX_LENGTH}
-              className="max-h-24 min-h-fit py-1 text-[15px] leading-5 text-foreground dark:text-foreground-dark"
+              className="max-h-24 min-h-fit py-1 text-[15px] leading-5 text-foreground"
             />
             <AppText
               variant="caption"

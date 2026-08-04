@@ -8,7 +8,7 @@ import { Pressable } from '../primitives/Pressable';
 import { Row } from '../primitives/Row';
 import { Stack } from '../primitives/Stack';
 import { cn } from '../utils/cn';
-import { useTheme } from '../ThemeProvider';
+import { ThemeSurface, useTheme } from '../ThemeProvider';
 import { AppIconButton } from './AppIconButton';
 import { AppText } from './AppText';
 
@@ -39,48 +39,50 @@ export function AppDrawer({
       transparent
       animationType="fade"
       onRequestClose={onClose}>
-      <View className="flex-1 flex-row">
-        <RNPressable
-          className="w-[82%] max-w-sm border-r border-border bg-surface dark:border-border-dark dark:bg-surface-dark"
-          style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
-          onPress={(e) => e.stopPropagation()}
-          accessibilityLabel={accessibilityLabel ?? title}>
-          <Row
-            align="center"
-            justify="between"
-            className="border-b border-border px-4 py-3 dark:border-border-dark"
-            gap="sm">
-            <AppText variant="subtitle" className="flex-1">
-              {title}
-            </AppText>
-            <AppIconButton
-              icon={X}
-              size="sm"
-              variant="ghost"
-              rounded
-              accessibilityLabel="Cerrar menú"
-              iconColor={colors.foregroundMuted}
-              onPress={onClose}
-            />
-          </Row>
+      <ThemeSurface>
+        <View className="flex-1 flex-row">
+          <RNPressable
+            className="w-[82%] max-w-sm border-r border-border bg-surface"
+            style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+            onPress={(e) => e.stopPropagation()}
+            accessibilityLabel={accessibilityLabel ?? title}>
+            <Row
+              align="center"
+              justify="between"
+              className="border-b border-border px-4 py-3"
+              gap="sm">
+              <AppText variant="subtitle" className="flex-1">
+                {title}
+              </AppText>
+              <AppIconButton
+                icon={X}
+                size="sm"
+                variant="ghost"
+                rounded
+                accessibilityLabel="Cerrar menú"
+                iconColor={colors.foregroundMuted}
+                onPress={onClose}
+              />
+            </Row>
 
-          {header ? <View className="px-4 pt-4">{header}</View> : null}
+            {header ? <View className="px-4 pt-4">{header}</View> : null}
 
-          <ScrollView
-            className="flex-1"
-            contentContainerStyle={{ paddingVertical: 8, paddingBottom: 24 }}
-            showsVerticalScrollIndicator={false}>
-            {children}
-          </ScrollView>
-        </RNPressable>
+            <ScrollView
+              className="flex-1"
+              contentContainerStyle={{ paddingVertical: 8, paddingBottom: 24 }}
+              showsVerticalScrollIndicator={false}>
+              {children}
+            </ScrollView>
+          </RNPressable>
 
-        <RNPressable
-          className="flex-1 bg-black/50"
-          onPress={onClose}
-          accessibilityRole="button"
-          accessibilityLabel="Cerrar menú"
-        />
-      </View>
+          <RNPressable
+            className="flex-1 bg-black/50"
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar menú"
+          />
+        </View>
+      </ThemeSurface>
     </Modal>
   );
 }
@@ -115,7 +117,7 @@ export function AppDrawerItem({
       onPress={onPress}
       className={cn(
         'mx-2 rounded-2xl active:opacity-80',
-        active && 'bg-primary/10 dark:bg-primary-dark/15',
+        active && 'bg-primary/10',
       )}>
       <Row align="center" gap="md" className="px-3 py-3">
         <View

@@ -63,7 +63,7 @@ export function ActivityRing({
         <View className="absolute inset-0 items-center justify-center">
           <AppText
             variant="subtitle"
-            className="text-primary dark:text-primary-dark">
+            className="text-primary">
             {clamped}%
           </AppText>
         </View>

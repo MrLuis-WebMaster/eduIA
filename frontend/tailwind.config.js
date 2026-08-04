@@ -2,7 +2,6 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -31,70 +30,49 @@ module.exports = {
           800: '#243B53',
           900: '#102A43',
         },
-        // Semantic (light defaults; pair with dark: variants in components)
+        // Semantic — values from ThemeProvider via NativeWind vars()
         background: {
-          DEFAULT: '#F8FAFC',
-          secondary: '#F1F5F9',
-          dark: '#102A43',
-          'dark-secondary': '#243B53',
+          DEFAULT: 'var(--color-background)',
+          secondary: 'var(--color-background-secondary)',
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          elevated: '#FFFFFF',
-          dark: '#243B53',
-          'dark-elevated': '#334E68',
+          DEFAULT: 'var(--color-surface)',
+          elevated: 'var(--color-surface-elevated)',
         },
         foreground: {
-          DEFAULT: '#102A43',
-          muted: '#486581',
-          inverse: '#F8FAFC',
-          dark: '#F0F4F8',
-          'dark-muted': '#9FB3C8',
+          DEFAULT: 'var(--color-foreground)',
+          muted: 'var(--color-foreground-muted)',
+          inverse: 'var(--color-foreground-inverse)',
         },
         border: {
-          DEFAULT: '#D9E2EC',
-          strong: '#9FB3C8',
-          dark: '#486581',
-          'dark-strong': '#627D98',
+          DEFAULT: 'var(--color-border)',
+          strong: 'var(--color-border-strong)',
         },
         primary: {
-          DEFAULT: '#0D9488',
-          foreground: '#FFFFFF',
-          muted: '#CCFBF1',
-          dark: '#2DD4BF',
-          'dark-foreground': '#102A43',
-          'dark-muted': '#115E59',
+          DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
+          muted: 'var(--color-primary-muted)',
         },
         secondary: {
-          DEFAULT: '#243B53',
-          foreground: '#F8FAFC',
-          dark: '#CCFBF1',
-          'dark-foreground': '#102A43',
+          DEFAULT: 'var(--color-secondary)',
+          foreground: 'var(--color-secondary-foreground)',
         },
         success: {
-          DEFAULT: '#059669',
-          foreground: '#FFFFFF',
-          dark: '#34D399',
-          'dark-foreground': '#102A43',
+          DEFAULT: 'var(--color-success)',
+          foreground: 'var(--color-success-foreground)',
         },
         warning: {
-          DEFAULT: '#D97706',
-          foreground: '#FFFFFF',
-          dark: '#FBBF24',
-          'dark-foreground': '#102A43',
+          DEFAULT: 'var(--color-warning)',
+          foreground: 'var(--color-warning-foreground)',
         },
         danger: {
-          DEFAULT: '#DC2626',
-          foreground: '#FFFFFF',
-          dark: '#F87171',
-          'dark-foreground': '#102A43',
+          DEFAULT: 'var(--color-danger)',
+          foreground: 'var(--color-danger-foreground)',
         },
         // Chat UX accent (user bubbles) — not brand primary
         'chat-user': {
-          DEFAULT: '#4F46E5',
-          foreground: '#FFFFFF',
-          dark: '#6366F1',
-          'dark-foreground': '#FFFFFF',
+          DEFAULT: 'var(--color-chat-user)',
+          foreground: 'var(--color-chat-user-foreground)',
         },
       },
       fontFamily: {

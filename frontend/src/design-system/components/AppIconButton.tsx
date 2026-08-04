@@ -11,13 +11,13 @@ const iconButtonVariants = cva(
   {
     variants: {
       variant: {
-        solid: 'bg-primary dark:bg-primary-dark',
+        solid: 'bg-primary',
         secondary:
-          'bg-background-secondary dark:bg-background-dark-secondary border border-border dark:border-border-dark',
-        outline: 'border border-border dark:border-border-dark bg-transparent',
+          'bg-background-secondary border border-border',
+        outline: 'border border-border bg-transparent',
         ghost: 'bg-transparent',
         surface:
-          'bg-surface dark:bg-surface-dark border border-border dark:border-border-dark',
+          'bg-surface border border-border',
       },
       size: {
         xs: 'h-7 w-7 rounded-md',

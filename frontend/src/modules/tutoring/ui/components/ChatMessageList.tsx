@@ -53,7 +53,6 @@ export function ChatMessageList({
   followUpsDisabled,
 }: ChatMessageListProps) {
   const { colors, colorScheme } = useTheme();
-  const isDark = colorScheme === 'dark';
   const [showJump, setShowJump] = useState(false);
   const listRef = useRef<FlashListRef<ListItem>>(null);
 
@@ -90,11 +89,11 @@ export function ChatMessageList({
       if (item.type === 'separator') {
         return (
           <Row align="center" gap="sm" className="mb-4 mt-1">
-            <Box className="h-px flex-1 bg-border/70 dark:bg-border-dark/70" />
+            <Box className="h-px flex-1 bg-border/70" />
             <AppText variant="caption" tone="muted" className="px-1">
               {item.label}
             </AppText>
-            <Box className="h-px flex-1 bg-border/70 dark:bg-border-dark/70" />
+            <Box className="h-px flex-1 bg-border/70" />
           </Row>
         );
       }
@@ -106,12 +105,11 @@ export function ChatMessageList({
             markdownTheme={markdownTheme}
             markdownStyles={markdownStyles}
             markdownRenderer={markdownRenderer}
-            isDark={isDark}
           />
         </View>
       );
     },
-    [markdownTheme, markdownStyles, markdownRenderer, isDark],
+    [markdownTheme, markdownStyles, markdownRenderer],
   );
 
   const keyExtractor = useCallback((item: ListItem) => item.id, []);
@@ -135,7 +133,7 @@ export function ChatMessageList({
         return (
           <Row gap="sm" align="end" className="mt-1 self-start pb-2">
             <AppAvatar size="sm" tone="surface" accessibilityLabel="Tutor EduIA" />
-            <View className="rounded-2xl rounded-tl-md border border-border bg-surface px-4 py-3 dark:border-border-dark dark:bg-surface-dark">
+            <View className="rounded-2xl rounded-tl-md border border-border bg-surface px-4 py-3">
               <AppSpinner size="sm" label="El tutor está pensando…" />
             </View>
           </Row>
@@ -187,7 +185,7 @@ export function ChatMessageList({
         keyExtractor={keyExtractor}
         getItemType={getItemType}
         renderItem={renderItem}
-        extraData={isDark}
+        extraData={colorScheme}
         style={{ flex: 1 }}
         contentContainerStyle={{
           paddingHorizontal: layout.gutterX,
@@ -213,7 +211,7 @@ export function ChatMessageList({
             listRef.current?.scrollToEnd({ animated: true });
             setShowJump(false);
           }}
-          className="absolute bottom-2 right-3 h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/95 active:opacity-80 dark:border-border-dark dark:bg-surface-dark/95">
+          className="absolute bottom-2 right-3 h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/95 active:opacity-80">
           <ChevronDown size={16} color={colors.foregroundMuted} strokeWidth={2} />
         </Pressable>
       ) : null}
@@ -226,13 +224,11 @@ function MessageBubble({
   markdownTheme,
   markdownStyles,
   markdownRenderer,
-  isDark,
 }: {
   message: ChatMessage;
   markdownTheme: ReturnType<typeof createTutorMarkdownTheme>;
   markdownStyles: ReturnType<typeof createTutorMarkdownStyles>;
   markdownRenderer: ReturnType<typeof createTutorMarkdownRenderer>;
-  isDark: boolean;
 }) {
   const { colors } = useTheme();
   const isUser = message.role === 'user';
@@ -242,14 +238,14 @@ function MessageBubble({
   if (isUser) {
     return (
       <View className="max-w-[85%] self-end">
-        <View className="rounded-2xl rounded-br-md bg-chat-user px-3.5 py-2.5 dark:bg-chat-user-dark">
-          <AppText className="text-[15px] leading-[22px] text-chat-user-foreground dark:text-chat-user-dark-foreground">
+        <View className="rounded-2xl rounded-br-md bg-chat-user px-3.5 py-2.5">
+          <AppText className="text-[15px] leading-[22px] text-chat-user-foreground">
             {message.content}
           </AppText>
           <Row justify="end" align="center" gap="xs" className="mt-1.5">
             <AppText
               variant="caption"
-              className="text-[11px] text-chat-user-foreground/70 dark:text-chat-user-dark-foreground/70">
+              className="text-[11px] text-chat-user-foreground/70">
               {timeLabel}
             </AppText>
             <CheckCheck size={13} color="rgba(255,255,255,0.75)" strokeWidth={2} />
@@ -268,12 +264,7 @@ function MessageBubble({
         accessibilityLabel="Tutor EduIA"
       />
       <View className="min-w-0 flex-1">
-        <View
-          className={`overflow-hidden rounded-2xl rounded-tl-md border ${
-            isDark
-              ? 'border-border-dark bg-surface-dark'
-              : 'border-border bg-surface'
-          }`}>
+        <View className="overflow-hidden rounded-2xl rounded-tl-md border border-border bg-surface">
           <View className="px-4 pb-1.5 pt-3.5">
             <Markdown
               value={message.content}

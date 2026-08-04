@@ -5,8 +5,13 @@ export { cn } from './utils/cn';
 export * from './tokens';
 export * from './themes';
 
-export { ThemeProvider, useTheme } from './ThemeProvider';
-export type { ThemePreference, ResolvedColorScheme, ThemeProviderProps } from './ThemeProvider';
+export { ThemeProvider, ThemeSurface, useTheme } from './ThemeProvider';
+export type {
+  ThemePreference,
+  ResolvedColorScheme,
+  ThemeProviderProps,
+  ThemeSurfaceProps,
+} from './ThemeProvider';
 
 export { ToastProvider, useToast } from './ToastProvider';
 export type { ToastProviderProps, ShowToastOptions } from './ToastProvider';

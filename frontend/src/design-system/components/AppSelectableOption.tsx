@@ -49,8 +49,8 @@ export function AppSelectableOption({
       className={cn(
         'rounded-2xl border px-4 py-3.5 active:opacity-80',
         selected
-          ? 'border-primary bg-transparent dark:border-primary-dark'
-          : 'border-border bg-transparent dark:border-border-dark',
+          ? 'border-primary bg-transparent'
+          : 'border-border bg-transparent',
         disabled && 'opacity-50',
         className,
       )}>
@@ -58,7 +58,7 @@ export function AppSelectableOption({
         <Row align="center" gap="md" className="min-w-0 flex-1">
           {Icon ? (
             selected ? (
-              <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/20 dark:bg-primary-dark/20">
+              <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/20">
                 <Icon size={20} color={colors.primary} strokeWidth={2} />
               </View>
             ) : (
@@ -74,8 +74,8 @@ export function AppSelectableOption({
               className={cn(
                 'text-[16px] font-semibold',
                 selected
-                  ? 'text-primary dark:text-primary-dark'
-                  : 'text-foreground dark:text-foreground-dark',
+                  ? 'text-primary'
+                  : 'text-foreground',
               )}>
               {label}
             </AppText>
@@ -92,7 +92,7 @@ export function AppSelectableOption({
         </Row>
 
         {hideIndicator ? null : selected ? (
-          <View className="h-6 w-6 items-center justify-center rounded-full bg-primary dark:bg-primary-dark">
+          <View className="h-6 w-6 items-center justify-center rounded-full bg-primary">
             <Check
               size={14}
               color={colors.primaryForeground}
@@ -100,7 +100,7 @@ export function AppSelectableOption({
             />
           </View>
         ) : (
-          <View className="h-6 w-6 rounded-full border-[1.5px] border-border dark:border-border-dark" />
+          <View className="h-6 w-6 rounded-full border-[1.5px] border-border" />
         )}
       </Row>
     </Pressable>

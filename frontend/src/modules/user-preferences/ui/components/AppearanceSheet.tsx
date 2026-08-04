@@ -112,7 +112,7 @@ export function AppearanceSheet({
                     }
                     className={`h-9 w-9 items-center justify-center rounded-full ${
                       selected
-                        ? 'border-2 border-foreground dark:border-foreground-dark'
+                        ? 'border-2 border-foreground'
                         : 'border border-transparent'
                     }`}>
                     <View

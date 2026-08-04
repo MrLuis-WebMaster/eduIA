@@ -4,7 +4,7 @@ import { X } from 'lucide-react-native';
 
 import { Row } from '../primitives/Row';
 import { cn } from '../utils/cn';
-import { useTheme } from '../ThemeProvider';
+import { ThemeSurface, useTheme } from '../ThemeProvider';
 import { AppIconButton } from './AppIconButton';
 import { AppText } from './AppText';
 
@@ -36,51 +36,53 @@ export function AppBottomSheet({
       transparent
       animationType="fade"
       onRequestClose={onClose}>
-      <RNPressable
-        className="flex-1 justify-end bg-black/50"
-        onPress={onClose}
-        accessibilityRole="button"
-        accessibilityLabel="Cerrar">
+      <ThemeSurface>
         <RNPressable
-          className={cn(
-            'rounded-t-3xl border-t border-border bg-surface pb-6 pt-3 dark:border-border-dark dark:bg-surface-dark',
-            maxHeightClassName,
-          )}
-          onPress={(e) => e.stopPropagation()}
-          accessibilityLabel={accessibilityLabel ?? title}>
-          <View className="mb-2 items-center">
-            <View className="h-1 w-10 rounded-full bg-border dark:bg-border-dark" />
-          </View>
+          className="flex-1 justify-end bg-black/50"
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel="Cerrar">
+          <RNPressable
+            className={cn(
+              'rounded-t-3xl border-t border-border bg-surface pb-6 pt-3',
+              maxHeightClassName,
+            )}
+            onPress={(e) => e.stopPropagation()}
+            accessibilityLabel={accessibilityLabel ?? title}>
+            <View className="mb-2 items-center">
+              <View className="h-1 w-10 rounded-full bg-border" />
+            </View>
 
-          <Row
-            align="center"
-            justify="between"
-            className="mb-3 px-4"
-            gap="sm">
-            <AppText variant="subtitle" className="flex-1">
-              {title}
-            </AppText>
-            <AppIconButton
-              icon={X}
-              size="sm"
-              variant="ghost"
-              rounded
-              accessibilityLabel="Cerrar"
-              iconColor={colors.foregroundMuted}
-              onPress={onClose}
-            />
-          </Row>
+            <Row
+              align="center"
+              justify="between"
+              className="mb-3 px-4"
+              gap="sm">
+              <AppText variant="subtitle" className="flex-1">
+                {title}
+              </AppText>
+              <AppIconButton
+                icon={X}
+                size="sm"
+                variant="ghost"
+                rounded
+                accessibilityLabel="Cerrar"
+                iconColor={colors.foregroundMuted}
+                onPress={onClose}
+              />
+            </Row>
 
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 12 }}
-            showsVerticalScrollIndicator={false}>
-            {children}
-          </ScrollView>
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 12 }}
+              showsVerticalScrollIndicator={false}>
+              {children}
+            </ScrollView>
 
-          {footer ? <View className="mt-2 px-4">{footer}</View> : null}
+            {footer ? <View className="mt-2 px-4">{footer}</View> : null}
+          </RNPressable>
         </RNPressable>
-      </RNPressable>
+      </ThemeSurface>
     </Modal>
   );
 }
@@ -99,9 +101,7 @@ export function AppSheetStatus({
     <View
       className={cn(
         'mt-2 rounded-xl px-3 py-2.5',
-        tone === 'success'
-          ? 'bg-success/15 dark:bg-success-dark/20'
-          : 'bg-danger/15 dark:bg-danger-dark/20',
+        tone === 'success' ? 'bg-success/15' : 'bg-danger/15',
       )}>
       <AppText variant="caption" tone={tone} className="font-medium">
         {message}

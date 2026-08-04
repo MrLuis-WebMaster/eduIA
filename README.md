@@ -1,5 +1,7 @@
 # EduIA
 
+[![CI](https://github.com/MrLuis-WebMaster/eduIA/actions/workflows/ci.yml/badge.svg)](https://github.com/MrLuis-WebMaster/eduIA/actions/workflows/ci.yml)
+
 Aplicación móvil de tutoría educativa desarrollada como prueba técnica para Muyu Education.
 
 El proyecto incluye una aplicación en React Native con Expo y una API en Node.js con Express, organizados como monorepo con pnpm. La aplicación permite interactuar con un tutor educativo asistido por IA, configurar preferencias de usuario y consultar métricas derivadas de la actividad local.
@@ -50,6 +52,27 @@ pnpm dev:backend    # solo API
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm build          # compila la API (backend)
+pnpm verify         # gate local: lint + typecheck + test + build
+```
+
+## CI / calidad
+
+Cada push y pull request a `main` ejecuta [GitHub Actions](.github/workflows/ci.yml) en paralelo:
+
+| Check | Qué valida |
+| --- | --- |
+| **Lint** | TypeScript estricto (backend) + ESLint Expo (frontend) |
+| **Typecheck** | `tsc --noEmit` en ambos paquetes |
+| **Test** | Vitest (unitarios + API con Supertest) |
+| **Build API** | Compilación de producción del backend |
+
+El lockfile se instala con `--frozen-lockfile`. Dependabot abre PRs semanales de npm y de GitHub Actions. Los formularios de issues y el template de PR viven en [`.github/`](.github/).
+
+Para reproducir el gate en local:
+
+```bash
+pnpm verify
 ```
 
 ### Ejecución de la aplicación móvil

@@ -12,11 +12,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        solid: 'bg-primary dark:bg-primary-dark',
-        secondary: 'bg-secondary dark:bg-secondary-dark',
-        outline: 'border border-border dark:border-border-dark bg-transparent',
+        solid: 'bg-primary',
+        secondary: 'bg-secondary',
+        outline: 'border border-border bg-transparent',
         ghost: 'bg-transparent',
-        danger: 'bg-danger dark:bg-danger-dark',
+        danger: 'bg-danger',
       },
       size: {
         sm: 'h-9 px-3 gap-1.5',
@@ -44,11 +44,11 @@ const buttonVariants = cva(
 const buttonLabelVariants = cva('font-semibold', {
   variants: {
     variant: {
-      solid: 'text-primary-foreground dark:text-primary-dark-foreground',
-      secondary: 'text-secondary-foreground dark:text-secondary-dark-foreground',
-      outline: 'text-foreground dark:text-foreground-dark',
-      ghost: 'text-primary dark:text-primary-dark',
-      danger: 'text-danger-foreground dark:text-danger-dark-foreground',
+      solid: 'text-primary-foreground',
+      secondary: 'text-secondary-foreground',
+      outline: 'text-foreground',
+      ghost: 'text-primary',
+      danger: 'text-danger-foreground',
     },
     size: {
       sm: 'text-sm',

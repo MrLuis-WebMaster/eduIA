@@ -66,7 +66,7 @@ export function ConversationsSheet({
             loading={clearingHistory}
             disabled={clearingHistory || sessions.length === 0}
             fullWidth
-            className="border-danger dark:border-danger-dark"
+            className="border-danger"
             onPress={() => {
               Alert.alert(
                 'Borrar historial',
@@ -111,9 +111,9 @@ export function ConversationsSheet({
             return (
               <View
                 key={session.id}
-                className="rounded-xl border border-border bg-background-secondary px-3 py-3 dark:border-border-dark dark:bg-background-dark-secondary">
+                className="rounded-xl border border-border bg-background-secondary px-3 py-3">
                 <Row align="start" gap="md">
-                  <View className="mt-0.5 h-10 w-10 items-center justify-center rounded-xl bg-primary/15 dark:bg-primary-dark/15">
+                  <View className="mt-0.5 h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
                     <Icon size={18} color={colors.primary} strokeWidth={2} />
                   </View>
                   <Stack gap="none" className="min-w-0 flex-1">

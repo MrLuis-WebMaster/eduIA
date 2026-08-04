@@ -1,0 +1,86 @@
+name: Bug report
+description: Reporta un fallo reproducible en frontend, backend o CI.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar. Busca primero si ya existe un issue similar.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      description: ¿Dónde ocurre el problema?
+      options:
+        - Frontend (Expo / React Native)
+        - Backend (Express API)
+        - Monorepo / tooling / CI
+        - Documentación
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Qué pasó
+      description: Describe el comportamiento actual y el esperado.
+      placeholder: |
+        Actual: ...
+        Esperado: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Lista numerada lo más concreta posible.
+      placeholder: |
+        1. Abrir la pantalla Tutor
+        2. Enviar mensaje X
+        3. Observar...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Entorno
+      multiple: true
+      options:
+        - Expo Go (iOS)
+        - Expo Go (Android)
+        - Emulador Android
+        - Simulador iOS
+        - Web
+        - Backend local
+        - CI (GitHub Actions)
+    validations:
+      required: true
+
+  - type: input
+    id: tutor-mode
+    attributes:
+      label: Modo tutor
+      description: Valor de EXPO_PUBLIC_TUTOR_MODE / AI_PROVIDER si aplica.
+      placeholder: fake | remote + fake | remote + openai
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs relevantes
+      description: Pega salida de consola, Metro o API. Se formatea como código.
+      render: shell
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: Probé con `pnpm verify` (o el check fallido en CI) cuando aplica
+          required: false
+        - label: No incluí secretos (API keys, tokens) en este issue
+          required: true

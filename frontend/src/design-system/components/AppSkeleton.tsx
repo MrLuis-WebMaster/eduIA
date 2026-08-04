@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../utils/cn';
 
 const skeletonVariants = cva(
-  'animate-pulse bg-background-secondary dark:bg-background-dark-secondary',
+  'animate-pulse bg-background-secondary',
   {
     variants: {
       shape: {

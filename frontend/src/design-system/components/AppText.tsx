@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../utils/cn';
 
-const textVariants = cva('text-foreground dark:text-foreground-dark', {
+const textVariants = cva('text-foreground', {
   variants: {
     variant: {
       display: 'text-3xl font-bold',
@@ -16,12 +16,12 @@ const textVariants = cva('text-foreground dark:text-foreground-dark', {
     },
     tone: {
       default: '',
-      muted: 'text-foreground-muted dark:text-foreground-dark-muted',
+      muted: 'text-foreground-muted',
       inverse: 'text-foreground-inverse',
-      primary: 'text-primary dark:text-primary-dark',
-      danger: 'text-danger dark:text-danger-dark',
-      success: 'text-success dark:text-success-dark',
-      warning: 'text-warning dark:text-warning-dark',
+      primary: 'text-primary',
+      danger: 'text-danger',
+      success: 'text-success',
+      warning: 'text-warning',
     },
     align: {
       left: 'text-left',
