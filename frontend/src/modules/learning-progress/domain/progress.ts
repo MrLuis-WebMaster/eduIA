@@ -1,11 +1,12 @@
 /** Pure helpers to derive learning-progress metrics. */
 
-import type {
-  Difficulty,
-  RecentTutoringSessionDto,
-  Subject,
-} from '@/modules/tutoring/domain';
-import { DIFFICULTY_OPTIONS, SUBJECT_LABELS } from '@/modules/tutoring/domain';
+import type { RecentTutoringSessionDto } from '@/modules/tutoring';
+import {
+  DIFFICULTY_OPTIONS,
+  SUBJECT_LABELS,
+  type Difficulty,
+  type Subject,
+} from '@/shared/domain';
 
 import type {
   LevelUsage,

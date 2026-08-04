@@ -1,5 +1,5 @@
 import type { UserPreferences } from '../../domain';
-import type { PreferencesRepository } from '../../adapters/ports';
+import type { PreferencesRepository } from '../ports';
 import { defaultUserPreferences } from '../defaults';
 
 export function createResetPreferences(deps: {

@@ -11,6 +11,7 @@ export { buildPedagogicalSystemPrompt } from './domain/policies/pedagogical-poli
 export type {
   AIChatMessage,
   AIProvider,
+  GenerateCompletionContext,
   GenerateCompletionInput,
   GenerateCompletionResult,
 } from './application/ports/ai-provider.js';

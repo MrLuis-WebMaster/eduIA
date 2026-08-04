@@ -22,9 +22,9 @@ import {
 } from '@/design-system';
 import {
   DIFFICULTY_OPTIONS,
+  useRecentTutoringSessions,
   type Subject,
-} from '@/modules/tutoring/domain';
-import { useRecentTutoringSessions } from '@/modules/tutoring/ui/hooks/useRecentTutoringSessions';
+} from '@/modules/tutoring';
 
 type ConversationsSheetProps = {
   visible: boolean;

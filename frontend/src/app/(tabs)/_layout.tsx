@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import { ChartColumn, GraduationCap, User } from 'lucide-react-native';
 
 import { AppHeader, useTheme } from '@/design-system';
-import { usePreferencesStore } from '@/modules/user-preferences/ui/store/preferences-store';
+import { usePreferencesStore } from '@/modules/user-preferences';
 
 export default function TabsLayout() {
   const { colors } = useTheme();

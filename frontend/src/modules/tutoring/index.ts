@@ -32,9 +32,10 @@ export type {
   SendTutorMessageCommand,
   SendTutorMessageOutcome,
   StartNewSessionInput,
+  EnsureActiveSessionInput,
 } from './application';
 
-export type { TutorEngine, ConversationRepository } from './adapters/ports';
+export type { TutorEngine, ConversationRepository } from './application/ports';
 export {
   FakeTutorEngine,
   HttpTutorEngine,

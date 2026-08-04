@@ -4,7 +4,6 @@ import type { AIProvider } from '../application/ports/ai-provider.js';
 import { GenerateTutorResponse } from '../application/use-cases/generate-tutor-response.js';
 import { createTutorRouter } from '../adapters/inbound/http/tutor.router.js';
 import { FakeAIProvider } from '../adapters/outbound/ai/fake-ai-provider.js';
-import { GeminiAIProvider } from '../adapters/outbound/ai/gemini-provider.js';
 import { OpenAIProvider } from '../adapters/outbound/ai/openai-provider.js';
 
 export interface TutoringModule {
@@ -18,17 +17,10 @@ export function createAIProvider(env: Env): AIProvider {
     case 'fake':
       return new FakeAIProvider();
     case 'openai':
-      if (!env.OPENAI_API_KEY) {
-        throw AppError.configuration(
-          'OPENAI_API_KEY is required when AI_PROVIDER=openai',
-        );
-      }
       return new OpenAIProvider({
         apiKey: env.OPENAI_API_KEY,
         model: env.OPENAI_MODEL,
       });
-    case 'gemini':
-      return new GeminiAIProvider();
     default:
       throw AppError.configuration(
         `Unsupported AI_PROVIDER: ${String(env.AI_PROVIDER)}`,

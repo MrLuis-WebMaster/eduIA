@@ -11,7 +11,7 @@ Gestionar sesiones de tutoría: enviar mensajes, persistir historial local, list
 Importar solo desde `@/modules/tutoring` (`index.ts`):
 
 - Domain: tipos/constantes de sesión, materias, acciones rápidas.
-- Ports: `TutorEngine`, `ConversationRepository`.
+- Application ports: `TutorEngine`, `ConversationRepository` (`application/ports.ts`).
 - Adapters: `FakeTutorEngine`, `HttpTutorEngine`, repositorios AsyncStorage / in-memory.
 - Composition: `createTutoringModule`.
 - UI: `TutorScreen`, `useTutorSession`, `useRecentTutoringSessions`.

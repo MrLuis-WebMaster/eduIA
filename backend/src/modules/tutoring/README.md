@@ -14,7 +14,7 @@ Importar desde el barrel del módulo (`index.ts`):
 - Port: `AIProvider`.
 - Use case: `GenerateTutorResponse`.
 - Composition: `composeTutoring`, `createAIProvider`.
-- Providers: `FakeAIProvider`, `OpenAIProvider` (`gemini` no listo para uso).
+- Providers: `FakeAIProvider`, `OpenAIProvider`.
 
 ## HTTP
 

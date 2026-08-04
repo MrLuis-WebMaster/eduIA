@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { MemoryStorage } from '@/shared/storage';
-import { AsyncStoragePreferencesRepository } from '@/modules/user-preferences/adapters';
 import { defaultUserPreferences } from '@/modules/user-preferences/application';
-import { STORAGE_KEYS } from '@/modules/user-preferences/domain';
+
+import { AsyncStoragePreferencesRepository } from './outbound/async-storage-preferences-repository';
+import { STORAGE_KEYS } from './storage-keys';
 
 describe('preferences persistence (critical)', () => {
   it('saves and reloads profile + theme from storage', async () => {
@@ -78,8 +79,12 @@ describe('preferences persistence (critical)', () => {
     expect(loaded.role).toBe(defaultUserPreferences.role);
     expect(loaded.preferredLevel).toBe(defaultUserPreferences.preferredLevel);
     expect(loaded.favoriteSubjects).toEqual(['math']);
-    expect(loaded.explanationStyle).toBe(defaultUserPreferences.explanationStyle);
-    expect(loaded.tutorPersonality).toBe(defaultUserPreferences.tutorPersonality);
+    expect(loaded.explanationStyle).toBe(
+      defaultUserPreferences.explanationStyle,
+    );
+    expect(loaded.tutorPersonality).toBe(
+      defaultUserPreferences.tutorPersonality,
+    );
     expect(loaded.theme).toBe(defaultUserPreferences.theme);
     expect(loaded.weeklyQuestionGoal).toBe(
       defaultUserPreferences.weeklyQuestionGoal,

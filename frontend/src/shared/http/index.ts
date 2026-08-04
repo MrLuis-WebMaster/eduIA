@@ -101,6 +101,19 @@ async function toHttpAppError(response: Response): Promise<AppError> {
   });
 }
 
+/** Soft probe — resolves when `/api/v1/health` responds OK. */
+export async function probeApiHealth(
+  apiUrl: string,
+  options: { timeoutMs?: number; signal?: AbortSignal } = {},
+): Promise<void> {
+  const base = apiUrl.replace(/\/+$/, '');
+  await httpJson(`${base}/api/v1/health`, {
+    method: 'GET',
+    timeoutMs: options.timeoutMs ?? 4_000,
+    signal: options.signal,
+  });
+}
+
 function mapApiErrorCode(
   apiCode: string | undefined,
   status: number,

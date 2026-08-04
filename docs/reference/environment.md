@@ -49,7 +49,7 @@ EXPO_PUBLIC_TUTOR_MODE=remote
 | `NODE_ENV` | `development` | Entorno |
 | `CORS_ORIGIN` | `*` | Origen CORS |
 | `LOG_LEVEL` | `info` | Nivel de log |
-| `AI_PROVIDER` | `fake` | Proveedor de IA (`fake` \| `openai`; `gemini` no implementado en P0) |
+| `AI_PROVIDER` | `fake` | Proveedor de IA (`fake` \| `openai`) |
 | `OPENAI_API_KEY` | — | Obligatorio si `AI_PROVIDER=openai` |
 | `OPENAI_MODEL` | `gpt-4o-mini` | Modelo OpenAI |
 | `AI_REQUEST_TIMEOUT_MS` | `20000` | Timeout llamada IA |
@@ -64,7 +64,6 @@ Aplica cuando el frontend usa `remote`:
 | --- | --- |
 | `fake` | Respuestas deterministas sin API key. |
 | `openai` | OpenAI real (`OPENAI_API_KEY` obligatorio). |
-| `gemini` | **No implementado en P0.** Zod lo acepta, pero el provider lanza en runtime. No lo uses. |
 
 ## Recetas combinadas
 

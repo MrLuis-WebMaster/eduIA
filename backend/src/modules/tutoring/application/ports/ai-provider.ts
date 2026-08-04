@@ -5,9 +5,15 @@ export interface AIChatMessage {
   content: string;
 }
 
+export interface GenerateCompletionContext {
+  /** Subject focus for the tutoring turn (structured; do not parse prompts). */
+  subject: string;
+}
+
 export interface GenerateCompletionInput {
   messages: AIChatMessage[];
   signal?: AbortSignal;
+  context?: GenerateCompletionContext;
 }
 
 export interface GenerateCompletionResult {

@@ -1,5 +1,5 @@
 import type { TutorSession } from '../../domain';
-import type { ConversationRepository } from '../../adapters/ports';
+import type { ConversationRepository } from '../ports';
 
 export function createLoadConversation(deps: {
   conversationRepository: ConversationRepository;

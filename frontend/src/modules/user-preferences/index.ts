@@ -22,7 +22,6 @@ export {
   WEEKLY_QUESTION_GOAL_OPTIONS,
   WEEKLY_QUESTION_GOAL_MIN,
   WEEKLY_QUESTION_GOAL_MAX,
-  STORAGE_KEYS,
 } from './domain';
 
 export {
@@ -31,10 +30,11 @@ export {
   defaultAppPreferences,
 } from './application';
 
-export type { PreferencesRepository } from './adapters';
+export type { PreferencesRepository } from './application/ports';
 export {
   AsyncStoragePreferencesRepository,
   InMemoryPreferencesRepository,
+  STORAGE_KEYS,
 } from './adapters';
 
 export {

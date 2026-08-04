@@ -6,7 +6,7 @@ import {
   computeStreak,
   toDateKey,
 } from './index';
-import type { RecentTutoringSessionDto } from '@/modules/tutoring/domain';
+import type { RecentTutoringSessionDto } from '@/modules/tutoring';
 
 function session(
   overrides: Partial<RecentTutoringSessionDto> &

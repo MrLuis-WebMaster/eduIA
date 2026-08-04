@@ -1,15 +1,2 @@
-import type {
-  AppPreferences,
-  UserPreferences,
-  UserProfile,
-} from '../domain';
-
-export interface PreferencesRepository {
-  loadProfile(): Promise<UserProfile>;
-  saveProfile(profile: UserProfile): Promise<void>;
-  loadPreferences(): Promise<AppPreferences>;
-  savePreferences(preferences: AppPreferences): Promise<void>;
-  loadAll(): Promise<UserPreferences>;
-  saveAll(prefs: UserPreferences): Promise<void>;
-  clear(): Promise<void>;
-}
+/** Re-export application ports for adapter implementations. */
+export type { PreferencesRepository } from '../application/ports';

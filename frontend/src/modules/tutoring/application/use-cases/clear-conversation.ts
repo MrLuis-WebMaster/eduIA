@@ -1,4 +1,4 @@
-import type { ConversationRepository } from '../../adapters/ports';
+import type { ConversationRepository } from '../ports';
 
 export function createClearConversation(deps: {
   conversationRepository: ConversationRepository;

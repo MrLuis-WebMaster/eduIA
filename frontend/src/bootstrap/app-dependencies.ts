@@ -1,6 +1,8 @@
-import { createLearningProgressModule } from '@/modules/learning-progress/composition';
-import { createTutoringModule } from '@/modules/tutoring/composition';
-import { createUserPreferencesModule } from '@/modules/user-preferences/composition';
+import { createContext, useContext, type Context } from 'react';
+
+import { createLearningProgressModule } from '@/modules/learning-progress';
+import { createTutoringModule } from '@/modules/tutoring';
+import { createUserPreferencesModule } from '@/modules/user-preferences';
 import {
   AsyncStorageAdapter,
   getAppConfig,
@@ -15,6 +17,9 @@ export type AppDependencies = {
 };
 
 let dependencies: AppDependencies | null = null;
+
+export const DependenciesContext: Context<AppDependencies | null> =
+  createContext(null as AppDependencies | null);
 
 /** Manual composition root — single place to wire adapters. */
 export function createDependencies(): AppDependencies {
@@ -38,6 +43,7 @@ export function createDependencies(): AppDependencies {
   };
 }
 
+/** Singleton accessor for non-React code (Zustand store, tests). */
 export function getDependencies(): AppDependencies {
   if (!dependencies) {
     dependencies = createDependencies();
@@ -48,4 +54,11 @@ export function getDependencies(): AppDependencies {
 /** Test helper — reset singleton between suites. */
 export function resetDependencies(): void {
   dependencies = null;
+}
+
+/** React tree should prefer this over getDependencies(). */
+export function useAppDependencies(): AppDependencies {
+  const fromContext = useContext(DependenciesContext);
+  if (fromContext) return fromContext;
+  return getDependencies();
 }

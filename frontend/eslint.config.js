@@ -17,4 +17,35 @@ module.exports = defineConfig([
       'react-hooks/incompatible-library': 'warn',
     },
   },
+  {
+    // ADR 0002 — cross-module imports only via public @/modules/<name>.
+    // Same-module tests may use deep paths; exclude *.test.*.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@/modules/*/ui',
+                '@/modules/*/ui/*',
+                '@/modules/*/domain',
+                '@/modules/*/domain/*',
+                '@/modules/*/application',
+                '@/modules/*/application/*',
+                '@/modules/*/adapters',
+                '@/modules/*/adapters/*',
+                '@/modules/*/composition',
+                '@/modules/*/composition/*',
+              ],
+              message:
+                'Import the module public API (@/modules/<name>) instead of internal paths (ADR 0002).',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);

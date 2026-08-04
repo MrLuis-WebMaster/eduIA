@@ -1,6 +1,6 @@
 import type { RecentTutoringSessionDto } from '../../domain';
 import { toRecentTutoringSessionDto } from '../../domain';
-import type { ConversationRepository } from '../../adapters/ports';
+import type { ConversationRepository } from '../ports';
 
 const DEFAULT_LIMIT = 20;
 

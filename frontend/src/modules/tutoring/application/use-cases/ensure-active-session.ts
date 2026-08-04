@@ -6,19 +6,20 @@ import {
 } from '../../domain';
 import type { ConversationRepository } from '../ports';
 
-export type StartNewSessionInput = {
+export type EnsureActiveSessionInput = {
   subject?: Subject;
   difficulty?: Difficulty;
 };
 
-export function createStartNewSession(deps: {
+/** Load the active session, or persist a fresh empty one (no archive). */
+export function createEnsureActiveSession(deps: {
   conversationRepository: ConversationRepository;
 }) {
-  return async function startNewSession(
-    input: StartNewSessionInput = {},
+  return async function ensureActiveSession(
+    input: EnsureActiveSessionInput = {},
   ): Promise<TutorSession> {
-    const current = await deps.conversationRepository.load();
-    await deps.conversationRepository.archiveIfMeaningful(current);
+    const existing = await deps.conversationRepository.load();
+    if (existing) return existing;
 
     const session = createEmptySession(
       input.subject ?? 'math',

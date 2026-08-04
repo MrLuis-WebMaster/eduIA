@@ -13,11 +13,24 @@ Por qué EduIA está organizado así. Para el contrato HTTP usa [reference/api.m
 Módulos por capacidad (`tutoring`, `learning-progress`, `user-preferences`) con **hexagonal pragmático**:
 
 - Dominio independiente de React, Express y SDKs de terceros.
-- Puertos en application; adaptadores driving (HTTP/UI) y driven (OpenAI, Fake, AsyncStorage).
-- Composition root manual en `frontend/src/bootstrap/` y en `*/composition/`.
-- Cada módulo expone su API pública vía `index.ts` (ver `README.md` del módulo).
+- Puertos en **application** (`application/ports.ts`); adaptadores driving (HTTP/UI) y driven (OpenAI, Fake, AsyncStorage).
+- Composition root manual en `frontend/src/bootstrap/` y en `*/composition/`. React UI obtiene deps vía `DependenciesProvider` / `useAppDependencies()`; código no-React (Zustand) usa `getDependencies()`.
+- Cada módulo expone su API pública vía `index.ts` (ver `README.md` del módulo); imports cross-módulo solo por esa API (regla ESLint en frontend).
+- Vocabulario compartido de perfil tutor (`Subject`, `Difficulty`, `UserRole`, …) en `frontend/src/shared/domain/`.
 
 Tutoring lleva capas completas; Progress y Preferences son más delgados (ver [ADR 0002](../adr/0002-hexagonal-pragmatic.md)).
+
+## SOLID y patrones (pragmático)
+
+| Principio / patrón | Dónde se ve |
+| --- | --- |
+| DIP + Port/Adapter | `TutorEngine`, `AIProvider`, repositorios en `application/ports` |
+| Strategy | Fake vs Http / OpenAI vía composition root |
+| Composition Root | `bootstrap/dependencies.ts`, `composeTutoring` |
+| Policy | `PedagogicalPolicy` (BE) |
+| Repository | conversaciones y preferencias en AsyncStorage |
+
+HTTP status de errores de aplicación se deriva en el edge (`HttpStatusByErrorCode`), no en los use cases. Fake AI usa `GenerateCompletionInput.context` (no parsea el system prompt).
 
 ## Árbol relevante
 

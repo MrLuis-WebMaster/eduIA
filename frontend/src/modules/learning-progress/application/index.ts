@@ -1,6 +1,6 @@
 /** Learning progress application use-cases. */
 
-import type { RecentTutoringSessionDto } from '@/modules/tutoring/domain';
+import type { RecentTutoringSessionDto } from '@/modules/tutoring';
 
 import {
   computeProgressSummary,

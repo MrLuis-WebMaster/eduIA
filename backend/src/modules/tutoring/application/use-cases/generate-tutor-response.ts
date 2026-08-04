@@ -42,6 +42,7 @@ export class GenerateTutorResponse {
       const result = await this.aiProvider.generateCompletion({
         messages,
         signal: controller.signal,
+        context: { subject: request.subject },
       });
 
       return {

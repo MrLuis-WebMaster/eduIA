@@ -7,6 +7,7 @@ import type {
 
 /**
  * Deterministic provider for local demos and automated tests.
+ * Uses structured `input.context` — never parses the system prompt.
  */
 export class FakeAIProvider implements AIProvider {
   readonly name = 'fake';
@@ -20,17 +21,12 @@ export class FakeAIProvider implements AIProvider {
 
     const userMessages = input.messages.filter((m) => m.role === 'user');
     const lastUser = userMessages.at(-1)?.content?.trim() ?? '';
-    const system = input.messages.find((m) => m.role === 'system')?.content ?? '';
-
-    const subjectMatch = /Subject focus:\s*(.+)\./i.exec(system);
-    const subject = subjectMatch?.[1]?.trim() ?? 'tu materia';
+    const subject = input.context?.subject?.trim() || 'tu materia';
 
     const reply = [
       `**(Fake EduIA)** Entiendo tu duda sobre **${subject}**.`,
       '',
-      lastUser
-        ? `Sobre: _"${truncate(lastUser, 160)}"_\n`
-        : '',
+      lastUser ? `Sobre: _"${truncate(lastUser, 160)}"_\n` : '',
       '1. Identifica lo que ya sabes.',
       '2. Divide el problema en pasos pequeños.',
       '3. Prueba un ejemplo sencillo y compara el resultado.',
