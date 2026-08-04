@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getDependencies } from '@/bootstrap/dependencies';
+import { useAppDependencies } from '@/bootstrap/app-dependencies';
 import { useTheme, useToast } from '@/design-system';
-import { TUTOR_SESSION_QUERY_KEY } from '@/modules/tutoring/ui/hooks/useTutorSession';
-import { RECENT_TUTORING_SESSIONS_QUERY_KEY } from '@/modules/tutoring/ui/hooks/useRecentTutoringSessions';
+import {
+  RECENT_TUTORING_SESSIONS_QUERY_KEY,
+  TUTOR_SESSION_QUERY_KEY,
+} from '@/modules/tutoring';
 
 import type { UserPreferences } from '../../domain';
 import { usePreferencesStore } from '../store/preferences-store';
@@ -12,6 +14,7 @@ import { usePreferencesStore } from '../store/preferences-store';
 export function usePreferences() {
   const queryClient = useQueryClient();
   const toast = useToast();
+  const { tutoring } = useAppDependencies();
   const { preference, setPreference } = useTheme();
   const prefs = usePreferencesStore((s) => s.prefs);
   const hydrated = usePreferencesStore((s) => s.hydrated);
@@ -81,7 +84,7 @@ export function usePreferences() {
   const clearHistory = useCallback(async () => {
     setClearingHistory(true);
     try {
-      await getDependencies().tutoring.clearConversation();
+      await tutoring.clearConversation();
       await queryClient.invalidateQueries({ queryKey: TUTOR_SESSION_QUERY_KEY });
       await queryClient.invalidateQueries({
         queryKey: RECENT_TUTORING_SESSIONS_QUERY_KEY,
@@ -95,7 +98,7 @@ export function usePreferences() {
     } finally {
       setClearingHistory(false);
     }
-  }, [queryClient, toast]);
+  }, [queryClient, toast, tutoring]);
 
   return {
     prefs,

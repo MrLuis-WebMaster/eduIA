@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import NetInfo from '@react-native-community/netinfo';
 
-import { getDependencies } from '@/bootstrap/dependencies';
-import { AppError, getAppConfig, httpJson } from '@/shared';
+import { useAppDependencies } from '@/bootstrap/app-dependencies';
+import { AppError } from '@/shared';
 
 import {
   createEmptySession,
@@ -16,6 +15,11 @@ import {
   type TutorSession,
   type UserRole,
 } from '../../domain';
+import {
+  classifyTutorSendError,
+  tutorSendErrorMessage,
+} from './tutorSendErrors';
+import { useTutorConnectivity } from './useTutorConnectivity';
 import { RECENT_TUTORING_SESSIONS_QUERY_KEY } from './useRecentTutoringSessions';
 
 export const TUTOR_SESSION_QUERY_KEY = ['tutoring', 'session'] as const;
@@ -36,61 +40,23 @@ export function useTutorSession(
   tutorPersonality: TutorPersonality = 'friendly',
 ) {
   const queryClient = useQueryClient();
-  const tutoring = getDependencies().tutoring;
+  const { tutoring } = useAppDependencies();
   const abortRef = useRef<AbortController | null>(null);
   const lastFailedMessageRef = useRef<string | null>(null);
+  const { isOffline } = useTutorConnectivity();
 
   const [subject, setSubject] = useState<Subject>('math');
   const [difficulty, setDifficulty] = useState<Difficulty>(preferredLevel);
   const [draft, setDraft] = useState('');
   const [hydrated, setHydrated] = useState(false);
-  const [isOffline, setIsOffline] = useState(false);
   /** Shown immediately while waiting for the tutor reply (not persisted yet). */
   const [pendingUserMessage, setPendingUserMessage] =
     useState<ChatMessage | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      const offline =
-        state.isConnected === false || state.isInternetReachable === false;
-      setIsOffline(offline);
-    });
-    return unsubscribe;
-  }, []);
-
-  // Soft health probe when NetInfo says reachable but API may be down.
-  useEffect(() => {
-    if (getAppConfig().useFakeTutor) return;
-
-    let cancelled = false;
-    const probe = async () => {
-      try {
-        const { apiUrl } = getAppConfig();
-        await httpJson(`${apiUrl.replace(/\/+$/, '')}/api/v1/health`, {
-          method: 'GET',
-          timeoutMs: 4_000,
-        });
-        if (!cancelled) setIsOffline(false);
-      } catch {
-        // Keep NetInfo-driven offline flag; only mark offline on hard network loss.
-      }
-    };
-
-    void probe();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const sessionQuery = useQuery({
     queryKey: TUTOR_SESSION_QUERY_KEY,
-    queryFn: async (): Promise<TutorSession> => {
-      const existing = await tutoring.loadConversation();
-      if (existing) return existing;
-      const fresh = createEmptySession(subject, difficulty);
-      await tutoring.conversationRepository.save(fresh);
-      return fresh;
-    },
+    queryFn: (): Promise<TutorSession> =>
+      tutoring.ensureActiveSession({ subject, difficulty }),
   });
 
   const session = sessionQuery.data;
@@ -188,7 +154,6 @@ export function useTutorSession(
     },
     onError: (error, message) => {
       if (error instanceof AppError && error.code === 'CANCELLED') {
-        // User stopped generation — restore draft, never treat as a failure.
         setPendingUserMessage(null);
         setDraft(message);
         lastFailedMessageRef.current = null;
@@ -214,51 +179,13 @@ export function useTutorSession(
   });
 
   const sendErrorKind = useMemo((): TutorSendErrorKind | null => {
-    const err = sendMutation.error;
-    if (!err) return null;
-    if (err instanceof AppError && err.code === 'CANCELLED') {
-      return 'cancelled';
-    }
-    if (isOffline) return 'offline';
-    if (err instanceof AppError) {
-      switch (err.code) {
-        case 'TIMEOUT':
-          return 'timeout';
-        case 'NETWORK':
-          return 'network';
-        case 'VALIDATION':
-          return 'validation';
-        case 'SERVER':
-          return 'server';
-        default:
-          return 'unknown';
-      }
-    }
-    return 'unknown';
+    return classifyTutorSendError(sendMutation.error, isOffline);
   }, [sendMutation.error, isOffline]);
 
-  const sendErrorMessage = useMemo(() => {
-    const err = sendMutation.error;
-    if (!err) return null;
-    if (err instanceof AppError && err.code === 'CANCELLED') {
-      return null;
-    }
-    if (isOffline) {
-      return 'Sin conexión. Revisa tu red e inténtalo de nuevo.';
-    }
-    if (err instanceof AppError) {
-      switch (err.code) {
-        case 'TIMEOUT':
-          return 'La respuesta tardó demasiado. Puedes reintentar.';
-        case 'NETWORK':
-          return 'No hay conexión con el tutor. Revisa la red o la API.';
-        default:
-          return err.message;
-      }
-    }
-    if (err instanceof Error) return err.message;
-    return 'No se pudo enviar el mensaje';
-  }, [sendMutation.error, isOffline]);
+  const sendErrorMessage = useMemo(
+    () => tutorSendErrorMessage(sendMutation.error, isOffline),
+    [sendMutation.error, isOffline],
+  );
 
   const send = useCallback(
     (overrideMessage?: string) => {
@@ -284,11 +211,14 @@ export function useTutorSession(
     sendMutation.mutate(message);
   }, [draft, sendMutation, showPendingUserMessage]);
 
-  const applyQuickAction = useCallback((prompt: string) => {
-    lastFailedMessageRef.current = null;
-    sendMutation.reset();
-    setDraft(prompt);
-  }, [sendMutation]);
+  const applyQuickAction = useCallback(
+    (prompt: string) => {
+      lastFailedMessageRef.current = null;
+      sendMutation.reset();
+      setDraft(prompt);
+    },
+    [sendMutation],
+  );
 
   const startNewSession = useCallback(() => {
     if (sendMutation.isPending) {

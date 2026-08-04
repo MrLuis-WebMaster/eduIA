@@ -40,12 +40,14 @@ const ACTION_ICONS: Record<QuickActionId, LucideIcon> = {
   formative: CircleHelp,
 };
 
-const ACCENT_COLORS: Record<QuickAction['accent'], string> = {
-  violet: '#A78BFA',
-  pink: '#F472B6',
-  orange: '#FB923C',
-  green: '#4ADE80',
-  teal: '#2DD4BF',
+const ACCENT_COLORS: Record<QuickActionId, string> = {
+  explain: '#A78BFA',
+  example: '#F472B6',
+  question: '#FB923C',
+  steps: '#4ADE80',
+  'class-ideas': '#A78BFA',
+  'common-errors': '#FB923C',
+  formative: '#2DD4BF',
 };
 
 const CARD_CLASS = 'h-[84px] w-[100px] justify-between rounded-xl';
@@ -179,7 +181,7 @@ function QuickActionCard({
       <AppCard variant="elevated" padding="sm" className={CARD_CLASS}>
         <Icon
           size={18}
-          color={ACCENT_COLORS[action.accent] ?? colors.primary}
+          color={ACCENT_COLORS[action.id] ?? colors.primary}
           strokeWidth={2}
         />
         <AppText variant="caption" numberOfLines={3}>

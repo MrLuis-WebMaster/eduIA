@@ -1,26 +1,22 @@
 /** User preferences domain value objects. */
 
+import type {
+  Difficulty,
+  ExplanationStyle,
+  Subject,
+  TutorPersonality,
+  UserRole,
+} from '@/shared/domain';
+
+export type { ExplanationStyle, TutorPersonality, UserRole } from '@/shared/domain';
+
+/** Alias — preferences UI historically used PreferredLevel. */
+export type PreferredLevel = Difficulty;
+
+/** Alias — preferences UI historically used FavoriteSubject. */
+export type FavoriteSubject = Subject;
+
 export type ThemePreference = 'system' | 'light' | 'dark';
-
-export type UserRole = 'student' | 'teacher';
-
-export type PreferredLevel = 'basic' | 'intermediate' | 'advanced';
-
-export type ExplanationStyle = 'simple' | 'detailed' | 'socratic';
-
-export type TutorPersonality =
-  | 'friendly'
-  | 'formal'
-  | 'motivating'
-  | 'patient'
-  | 'direct';
-
-export type FavoriteSubject =
-  | 'math'
-  | 'science'
-  | 'language'
-  | 'history'
-  | 'other';
 
 export type UserProfile = {
   displayName: string;

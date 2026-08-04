@@ -7,3 +7,5 @@ export {
 export { createLoadPreferences } from './use-cases/load-preferences';
 export { createSavePreferences } from './use-cases/save-preferences';
 export { createResetPreferences } from './use-cases/reset-preferences';
+
+export type { PreferencesRepository } from './ports';

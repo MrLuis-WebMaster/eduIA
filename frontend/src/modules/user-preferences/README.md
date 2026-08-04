@@ -10,15 +10,15 @@ Nombre, rol, nivel, materias, estilo del tutor, tema y meta semanal. Hidratar Zu
 
 Importar solo desde `@/modules/user-preferences`:
 
-- Domain: `UserPreferences`, opciones de tema/rol/estilo, `STORAGE_KEYS`.
-- Ports: `PreferencesRepository`.
-- Adapters: `AsyncStoragePreferencesRepository`, `InMemoryPreferencesRepository`.
+- Domain: `UserPreferences`, opciones de tema/rol/estilo.
+- Application ports: `PreferencesRepository`.
+- Adapters: `AsyncStoragePreferencesRepository`, `InMemoryPreferencesRepository`, `STORAGE_KEYS`.
 - Composition: `createUserPreferencesModule`.
 - UI: `PreferencesScreen`, `PreferencesHydrator`, `usePreferences`, `usePreferencesStore`.
 
 ## Wiring
 
-Composition root en `bootstrap/`. Sin variables de entorno; claves de storage en dominio.
+Composition root en `bootstrap/` (`DependenciesProvider`). Claves de storage viven en adapters.
 
 ## Depends on
 

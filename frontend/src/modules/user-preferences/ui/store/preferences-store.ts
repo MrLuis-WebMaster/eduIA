@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { getDependencies } from '@/bootstrap/dependencies';
+import { getDependencies } from '@/bootstrap/app-dependencies';
 
 import { defaultUserPreferences } from '../../application';
 import type { UserPreferences } from '../../domain';

@@ -4,5 +4,7 @@ export {
   createDependencies,
   getDependencies,
   resetDependencies,
+  useAppDependencies,
   type AppDependencies,
-} from './dependencies';
+} from './app-dependencies';
+export { DependenciesProvider } from './DependenciesProvider';

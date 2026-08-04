@@ -22,11 +22,6 @@ export {
 } from './application';
 
 export {
-  InMemoryProgressRepository,
-  type ProgressRepository,
-} from './adapters';
-
-export {
   createLearningProgressModule,
   type LearningProgressDependencies,
   type LearningProgressModuleOptions,

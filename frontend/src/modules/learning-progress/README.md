@@ -12,13 +12,12 @@ Importar solo desde `@/modules/learning-progress`:
 
 - Domain: helpers puros (`computeProgressSummary`, `computeStreak`, …).
 - Application: `createGetProgressSummary`, tipo `ListRecentSessions`.
-- Ports/adapters: `ProgressRepository`, `InMemoryProgressRepository`.
 - Composition: `createLearningProgressModule`.
 - UI: `ProgressScreen`, `useLearningProgress`.
 
 ## Wiring
 
-El composition root inyecta `ListRecentSessions` desde tutoring. La meta semanal puede leerse desde preferencias en la UI.
+El composition root inyecta `ListRecentSessions` desde tutoring. La UI consume `getProgressSummary` vía `useLearningProgress`. La meta semanal se lee desde preferencias.
 
 ## Depends on
 

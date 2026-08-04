@@ -9,7 +9,7 @@ import {
   Box,
   layout,
 } from '@/design-system';
-import { usePreferencesStore } from '@/modules/user-preferences/ui/store/preferences-store';
+import { usePreferencesStore } from '@/modules/user-preferences';
 
 import { ChatMessageList } from './components/ChatMessageList';
 import { MessageComposer } from './components/MessageComposer';

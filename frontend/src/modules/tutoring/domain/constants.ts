@@ -1,40 +1,25 @@
 /** Domain catalogs, limits, and option lists for tutoring. */
 
+import {
+  DIFFICULTY_OPTIONS,
+  ROLE_OPTIONS,
+  SUBJECT_LABELS,
+  SUBJECT_OPTIONS,
+} from '@/shared/domain';
+import type { UserRole } from '@/shared/domain';
+
 import type {
-  Difficulty,
   FollowUpKind,
   FollowUpSuggestion,
   QuickAction,
-  Subject,
-  UserRole,
 } from './types';
 
-export const SUBJECT_OPTIONS: { value: Subject; label: string }[] = [
-  { value: 'math', label: 'Matemáticas' },
-  { value: 'science', label: 'Ciencias' },
-  { value: 'language', label: 'Lengua' },
-  { value: 'history', label: 'Historia' },
-  { value: 'other', label: 'Otro' },
-];
-
-export const DIFFICULTY_OPTIONS: { value: Difficulty; label: string }[] = [
-  { value: 'basic', label: 'Básico' },
-  { value: 'intermediate', label: 'Intermedio' },
-  { value: 'advanced', label: 'Avanzado' },
-];
-
-export const SUBJECT_LABELS: Record<Subject, string> = {
-  math: 'Matemáticas',
-  science: 'Ciencias',
-  language: 'Lengua',
-  history: 'Historia',
-  other: 'Otro',
+export {
+  SUBJECT_OPTIONS,
+  DIFFICULTY_OPTIONS,
+  SUBJECT_LABELS,
+  ROLE_OPTIONS,
 };
-
-export const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
-  { value: 'student', label: 'Estudiante' },
-  { value: 'teacher', label: 'Docente' },
-];
 
 export const MESSAGE_MAX_LENGTH = 2000;
 export const MESSAGE_MIN_LENGTH = 2;
@@ -46,25 +31,21 @@ export const QUICK_ACTIONS: Record<UserRole, QuickAction[]> = {
       id: 'explain',
       label: 'Explícame un concepto',
       prompt: 'Explícame este concepto con un ejemplo',
-      accent: 'violet',
     },
     {
       id: 'example',
       label: 'Dame un ejemplo',
       prompt: 'Dame un ejemplo claro de esto',
-      accent: 'pink',
     },
     {
       id: 'question',
       label: 'Hazme una pregunta',
       prompt: 'Hazme una pregunta para practicar',
-      accent: 'orange',
     },
     {
       id: 'steps',
       label: 'Ayúdame paso a paso',
       prompt: '¿Cómo lo resuelvo paso a paso?',
-      accent: 'green',
     },
   ],
   teacher: [
@@ -72,19 +53,16 @@ export const QUICK_ACTIONS: Record<UserRole, QuickAction[]> = {
       id: 'class-ideas',
       label: 'Ideas para clase',
       prompt: 'Dame ideas para explicar esto en clase',
-      accent: 'violet',
     },
     {
       id: 'common-errors',
       label: 'Errores comunes',
       prompt: '¿Cuáles son los errores comunes?',
-      accent: 'orange',
     },
     {
       id: 'formative',
       label: 'Evaluación corta',
       prompt: 'Sugiere una evaluación formativa corta',
-      accent: 'teal',
     },
   ],
 };

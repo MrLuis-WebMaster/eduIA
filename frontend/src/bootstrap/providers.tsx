@@ -4,8 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ThemeProvider, ToastProvider, useTheme, type ThemePreference } from '@/design-system';
-import { PreferencesHydrator } from '@/modules/user-preferences/ui/PreferencesHydrator';
+import { PreferencesHydrator } from '@/modules/user-preferences';
 
+import { DependenciesProvider } from './DependenciesProvider';
 import { createQueryClient } from './query-client';
 
 type AppProvidersProps = {
@@ -26,15 +27,17 @@ export function AppProviders({
 
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider initialPreference={initialThemePreference}>
-          <ToastProvider>
-            <PreferencesHydrator />
-            <StatusBarFromTheme />
-            {children}
-          </ToastProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <DependenciesProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider initialPreference={initialThemePreference}>
+            <ToastProvider>
+              <PreferencesHydrator />
+              <StatusBarFromTheme />
+              {children}
+            </ToastProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </DependenciesProvider>
     </SafeAreaProvider>
   );
 }

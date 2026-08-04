@@ -1,6 +1,6 @@
 /** Learning progress domain value objects. */
 
-import type { Difficulty, Subject } from '@/modules/tutoring/domain';
+import type { Difficulty, Subject } from '@/shared/domain';
 
 export type WeeklyActivityDay = {
   /** ISO date YYYY-MM-DD */

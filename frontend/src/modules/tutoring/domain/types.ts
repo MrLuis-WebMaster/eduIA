@@ -1,24 +1,14 @@
 /** Tutoring domain value objects and entities. */
 
-export type Subject =
-  | 'math'
-  | 'science'
-  | 'language'
-  | 'history'
-  | 'other';
+import type { Difficulty, Subject } from '@/shared/domain';
 
-export type Difficulty = 'basic' | 'intermediate' | 'advanced';
-
-export type UserRole = 'student' | 'teacher';
-
-export type ExplanationStyle = 'simple' | 'detailed' | 'socratic';
-
-export type TutorPersonality =
-  | 'friendly'
-  | 'formal'
-  | 'motivating'
-  | 'patient'
-  | 'direct';
+export type {
+  Subject,
+  Difficulty,
+  UserRole,
+  ExplanationStyle,
+  TutorPersonality,
+} from '@/shared/domain';
 
 export type ChatRole = 'user' | 'assistant' | 'system';
 
@@ -50,7 +40,6 @@ export type QuickAction = {
   id: QuickActionId;
   label: string;
   prompt: string;
-  accent: 'violet' | 'pink' | 'orange' | 'green' | 'teal';
 };
 
 /** Contextual chip shown under the latest assistant reply. */

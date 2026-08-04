@@ -16,7 +16,7 @@ import type {
   ConversationRepository,
   SendTutorMessageResult,
   TutorEngine,
-} from '../../adapters/ports';
+} from '../ports';
 
 export type SendTutorMessageCommand = {
   message: string;

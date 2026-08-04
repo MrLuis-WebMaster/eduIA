@@ -9,10 +9,12 @@ import {
 } from '../adapters';
 import {
   createClearConversation,
+  createEnsureActiveSession,
   createListRecentSessions,
   createLoadConversation,
   createSendTutorMessage,
   createStartNewSession,
+  type EnsureActiveSessionInput,
   type SendTutorMessageCommand,
   type SendTutorMessageOutcome,
   type StartNewSessionInput,
@@ -28,9 +30,13 @@ export type TutoringModuleOptions = {
 
 export type TutoringDependencies = {
   tutorEngine: TutorEngine;
+  /** Exposed for tests/adapters; UI should use use cases. */
   conversationRepository: ConversationRepository;
   sendMessage: (command: SendTutorMessageCommand) => Promise<SendTutorMessageOutcome>;
   loadConversation: () => Promise<TutorSession | null>;
+  ensureActiveSession: (
+    input?: EnsureActiveSessionInput,
+  ) => Promise<TutorSession>;
   startNewSession: (input?: StartNewSessionInput) => Promise<TutorSession>;
   clearConversation: () => Promise<void>;
   listRecentSessions: (limit?: number) => Promise<RecentTutoringSessionDto[]>;
@@ -56,6 +62,7 @@ export function createTutoringModule(
       conversationRepository,
     }),
     loadConversation: createLoadConversation({ conversationRepository }),
+    ensureActiveSession: createEnsureActiveSession({ conversationRepository }),
     startNewSession: createStartNewSession({ conversationRepository }),
     clearConversation: createClearConversation({ conversationRepository }),
     listRecentSessions: createListRecentSessions({ conversationRepository }),

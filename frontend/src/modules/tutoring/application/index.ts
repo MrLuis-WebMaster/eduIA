@@ -9,6 +9,11 @@ export {
 export { createLoadConversation } from './use-cases/load-conversation';
 
 export {
+  createEnsureActiveSession,
+  type EnsureActiveSessionInput,
+} from './use-cases/ensure-active-session';
+
+export {
   createStartNewSession,
   type StartNewSessionInput,
 } from './use-cases/start-new-session';
@@ -17,8 +22,9 @@ export { createClearConversation } from './use-cases/clear-conversation';
 
 export { createListRecentSessions } from './use-cases/list-recent-sessions';
 
-/** Re-export port DTOs for convenience (public API / composition). */
 export type {
   SendTutorMessageInput,
   SendTutorMessageResult,
-} from '../adapters/ports';
+  TutorEngine,
+  ConversationRepository,
+} from './ports';

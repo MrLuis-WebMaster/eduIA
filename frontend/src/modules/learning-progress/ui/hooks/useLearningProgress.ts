@@ -1,12 +1,14 @@
-import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { useRecentTutoringSessions } from '@/modules/tutoring/ui/hooks/useRecentTutoringSessions';
-import { usePreferencesStore } from '@/modules/user-preferences/ui/store/preferences-store';
-
+import { useAppDependencies } from '@/bootstrap/app-dependencies';
 import {
-  computeProgressSummary,
-  emptyProgressSummary,
-} from '../../domain';
+  RECENT_TUTORING_SESSIONS_QUERY_KEY,
+} from '@/modules/tutoring';
+import { usePreferencesStore } from '@/modules/user-preferences';
+
+import { emptyProgressSummary } from '../../domain';
+
+const DEFAULT_LIMIT = 50;
 
 export function useLearningProgress() {
   const role = usePreferencesStore((s) => s.prefs.role);
@@ -16,12 +18,13 @@ export function useLearningProgress() {
     (s) => s.prefs.weeklyQuestionGoal,
   );
   const hydrated = usePreferencesStore((s) => s.hydrated);
-  const sessionsQuery = useRecentTutoringSessions(50);
+  const { learningProgress } = useAppDependencies();
 
-  const summary = useMemo(() => {
-    if (!sessionsQuery.data) return emptyProgressSummary();
-    return computeProgressSummary(sessionsQuery.data);
-  }, [sessionsQuery.data]);
+  // Share prefix with tutoring recent-sessions so invalidations stay coherent.
+  const summaryQuery = useQuery({
+    queryKey: [...RECENT_TUTORING_SESSIONS_QUERY_KEY, 'summary', DEFAULT_LIMIT],
+    queryFn: () => learningProgress.getProgressSummary(DEFAULT_LIMIT),
+  });
 
   return {
     role,
@@ -29,10 +32,10 @@ export function useLearningProgress() {
     preferredLevel,
     weeklyQuestionGoal,
     hydrated,
-    summary,
-    isLoading: !hydrated || sessionsQuery.isLoading,
-    isError: sessionsQuery.isError,
-    refetch: sessionsQuery.refetch,
-    isFetching: sessionsQuery.isFetching,
+    summary: summaryQuery.data ?? emptyProgressSummary(),
+    isLoading: !hydrated || summaryQuery.isLoading,
+    isError: summaryQuery.isError,
+    refetch: summaryQuery.refetch,
+    isFetching: summaryQuery.isFetching,
   };
 }

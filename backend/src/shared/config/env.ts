@@ -6,7 +6,7 @@ const envSchema = z.object({
     .enum(['development', 'test', 'production'])
     .default('development'),
   CORS_ORIGIN: z.string().default('*'),
-  AI_PROVIDER: z.enum(['openai', 'fake', 'gemini']).default('fake'),
+  AI_PROVIDER: z.enum(['openai', 'fake']).default('fake'),
   OPENAI_API_KEY: z.string().optional().default(''),
   OPENAI_MODEL: z.string().default('gpt-4o-mini'),
   AI_REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(20_000),

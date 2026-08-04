@@ -1,7 +1,7 @@
 import type { KeyValueStorage } from '@/shared';
 
+import { STORAGE_KEYS } from '../storage-keys';
 import {
-  STORAGE_KEYS,
   WEEKLY_QUESTION_GOAL_MAX,
   WEEKLY_QUESTION_GOAL_MIN,
   type AppPreferences,
@@ -19,7 +19,7 @@ import {
   defaultUserPreferences,
   defaultUserProfile,
 } from '../../application/defaults';
-import type { PreferencesRepository } from '../ports';
+import type { PreferencesRepository } from '../../application/ports';
 
 const VALID_ROLES: UserRole[] = ['student', 'teacher'];
 const VALID_LEVELS: PreferredLevel[] = ['basic', 'intermediate', 'advanced'];
