@@ -13,8 +13,42 @@ updates:
     groups:
       production-dependencies:
         dependency-type: production
+        update-types:
+          - "minor"
+          - "patch"
       development-dependencies:
         dependency-type: development
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Expo SDK 57 pins — bump only via `pnpm expo install`
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      - dependency-name: "react-native"
+      - dependency-name: "react-native-gesture-handler"
+      - dependency-name: "react-native-reanimated"
+      - dependency-name: "react-native-worklets"
+      - dependency-name: "react-native-safe-area-context"
+      - dependency-name: "react-native-screens"
+      - dependency-name: "react-native-svg"
+      - dependency-name: "react-native-web"
+      - dependency-name: "@react-native-async-storage/async-storage"
+      - dependency-name: "@shopify/flash-list"
+      - dependency-name: "expo"
+      - dependency-name: "expo-*"
+      - dependency-name: "@expo/*"
+      # Major tooling migrations need a dedicated PR
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tailwindcss"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript/native"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
