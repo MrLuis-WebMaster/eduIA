@@ -16,6 +16,8 @@ web-build/
 expo-env.d.ts
 *.tsbuildinfo
 coverage/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
 
 # Native
 .kotlin/

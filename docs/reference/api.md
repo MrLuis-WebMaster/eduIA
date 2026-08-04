@@ -1,6 +1,17 @@
+---
+title: "Referencia: API HTTP"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Referencia: API HTTP
 
-Fuente de verdad del contrato HTTP del backend. El README enlaza aquí; no duplicar tablas.
+Contrato HTTP del backend. La fuente de verdad de shapes request/response es Zod; el artefacto generado es [`openapi.json`](./openapi.json).
+
+```bash
+pnpm openapi:generate   # regenera openapi.json desde Zod
+pnpm openapi:check      # falla si el JSON está desfasado
+```
 
 Base URL por defecto: `http://localhost:3001` (ver `PORT` en [environment.md](./environment.md)).
 
@@ -13,15 +24,19 @@ Base URL por defecto: `http://localhost:3001` (ver `PORT` en [environment.md](./
 
 ## `POST /api/v1/tutor/messages`
 
-Body validado con Zod:
+Body (`tutorMessageBodySchema`):
 
 | Campo | Notas |
 | --- | --- |
-| `message` | Mensaje del usuario |
+| `message` | 2–2000 caracteres |
 | `subject` | Materia |
-| `difficulty` | Dificultad |
-| `userRole` | Rol (estudiante/docente) |
+| `difficulty` | `basic` \| `intermediate` \| `advanced` |
+| `userRole` | `student` \| `teacher` |
+| `explanationStyle` | `simple` \| `detailed` \| `socratic` (default `simple`) |
+| `tutorPersonality` | `friendly` \| `formal` \| `motivating` \| `patient` \| `direct` (default `friendly`) |
 | `conversation` | Historial; máximo 10 mensajes |
+
+Respuesta 200: `reply`, `provider`, `model`, `requestId`.
 
 ### Errores normalizados
 
@@ -35,6 +50,8 @@ Body validado con Zod:
   }
 }
 ```
+
+Códigos relevantes: `VALIDATION_ERROR`, `RATE_LIMIT_EXCEEDED` (429), `AI_PROVIDER_ERROR` (502), `AI_PROVIDER_TIMEOUT` (504).
 
 ### Timeouts y límites
 

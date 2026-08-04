@@ -1,3 +1,9 @@
+---
+title: "ADR 0005 — NativeWind + design system propio"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # ADR 0005 — NativeWind + design system propio
 
 - Status: Accepted

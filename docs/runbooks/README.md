@@ -1,3 +1,9 @@
+---
+title: "Runbooks"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Runbooks
 
 Procedimientos operativos: síntomas → chequeos → resolución.

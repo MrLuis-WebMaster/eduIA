@@ -1,3 +1,9 @@
+---
+title: "Getting started"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Getting started
 
 Tutorial para tener EduIA corriendo en ~15 minutos. Si ya conoces el proyecto y solo necesitas un procedimiento concreto, usa [how-to/](./how-to/).

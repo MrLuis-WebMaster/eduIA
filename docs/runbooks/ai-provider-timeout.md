@@ -1,3 +1,9 @@
+---
+title: "Runbook: timeout del proveedor de IA"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Runbook: timeout del proveedor de IA
 
 ## Síntomas

@@ -33,6 +33,12 @@ jobs:
             command: pnpm test
           - name: Build API
             command: pnpm --filter backend build
+          - name: OpenAPI
+            command: pnpm openapi:check
+          - name: Docs links
+            command: pnpm docs:links
+          - name: Docs site
+            command: pnpm docs:build
 
     steps:
       - name: Checkout

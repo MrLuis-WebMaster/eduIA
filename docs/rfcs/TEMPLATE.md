@@ -1,3 +1,9 @@
+---
+title: "RFC template"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # RFC template
 
 Usa un RFC **antes** de features o cambios que afecten arquitectura, contrato público, datos o DX de todo el equipo. Si se acepta una decisión duradera, crea un [ADR](../adr/).

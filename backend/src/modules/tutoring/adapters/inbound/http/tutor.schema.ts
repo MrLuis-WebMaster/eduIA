@@ -31,3 +31,25 @@ export const tutorMessageBodySchema = z.object({
 });
 
 export type TutorMessageBody = z.infer<typeof tutorMessageBodySchema>;
+
+/** Success body for POST /api/v1/tutor/messages (OpenAPI + docs). */
+export const tutorMessageResponseSchema = z.object({
+  reply: z.string(),
+  provider: z.string(),
+  model: z.string().nullable(),
+  requestId: z.string(),
+});
+
+export type TutorMessageResponse = z.infer<typeof tutorMessageResponseSchema>;
+
+/** Normalized API error envelope. */
+export const apiErrorBodySchema = z.object({
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    retryable: z.boolean(),
+    requestId: z.string(),
+  }),
+});
+
+export type ApiErrorBody = z.infer<typeof apiErrorBodySchema>;

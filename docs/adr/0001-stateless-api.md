@@ -1,3 +1,9 @@
+---
+title: "ADR 0001 — API sin autenticación ni base de datos; estado en el dispositivo"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # ADR 0001 — API sin autenticación ni base de datos; estado en el dispositivo
 
 - Status: Accepted

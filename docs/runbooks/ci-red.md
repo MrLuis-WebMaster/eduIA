@@ -1,8 +1,14 @@
+---
+title: "Runbook: CI rojo"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Runbook: CI rojo
 
 ## Síntomas
 
-- Check Lint / Typecheck / Test / Build API falla en GitHub Actions.
+- Check Lint / Typecheck / Test / Build API / OpenAPI / Docs falla en GitHub Actions.
 - `pnpm verify` falla en local.
 
 ## Chequeos rápidos
@@ -14,6 +20,9 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm --filter backend build
+pnpm openapi:check
+pnpm docs:links
+pnpm docs:build
 # o el gate completo:
 pnpm verify
 ```
@@ -31,6 +40,8 @@ pnpm verify
 | Typecheck | Paths `@/*`, tipos Expo/NativeWind | Alinea imports y `tsconfig` |
 | Test | Env/mocks; backend debe usar `createApp` sin `listen` | Reproduce con `pnpm --filter … test` |
 | Build API | `tsc` incluye tests o errores de tipos | `pnpm --filter backend build` |
+| OpenAPI | `openapi.json` desfasado vs Zod | `pnpm openapi:generate` |
+| Docs links / site | Links rotos o VitePress | `pnpm docs:links` / `pnpm docs:build` |
 
 ## Resolución
 

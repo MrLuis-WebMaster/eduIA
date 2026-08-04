@@ -1,3 +1,9 @@
+---
+title: "Runbook: rate limit 429 en el tutor"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Runbook: rate limit 429 en el tutor
 
 ## Síntomas

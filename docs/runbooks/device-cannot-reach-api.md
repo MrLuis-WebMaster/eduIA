@@ -1,3 +1,9 @@
+---
+title: "Runbook: el dispositivo no alcanza la API"
+owner: platform
+last_reviewed: 2026-08-04
+---
+
 # Runbook: el dispositivo no alcanza la API
 
 ## Síntomas
