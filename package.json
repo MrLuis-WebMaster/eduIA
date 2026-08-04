@@ -30,7 +30,7 @@
   "devDependencies": {
     "concurrently": "^10.0.4",
     "markdown-link-check": "^3.15.0",
-    "typescript": "~5.9.3",
+    "typescript": "~7.0.2",
     "vitepress": "^1.6.4"
   },
   "engines": {
