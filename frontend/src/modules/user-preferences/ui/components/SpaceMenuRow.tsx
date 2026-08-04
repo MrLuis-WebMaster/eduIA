@@ -45,7 +45,7 @@ export function SpaceMenuRow({
         <Stack gap="none" className="min-w-0 flex-1">
           <AppText
             variant="label"
-            className={danger ? 'text-danger dark:text-danger-dark' : undefined}>
+            className={danger ? 'text-danger' : undefined}>
             {title}
           </AppText>
           <AppText variant="caption" tone="muted" numberOfLines={2}>

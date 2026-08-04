@@ -248,12 +248,12 @@ function HeroCard({
   return (
     <AppCard
       padding="md"
-      className="overflow-hidden border-primary/20 bg-primary/5 dark:border-primary-dark/30 dark:bg-primary-dark/10"
+      className="overflow-hidden border-primary/20 bg-primary/5"
       accessibilityLabel={`${title}. ${weeklyDetail}`}>
       <Stack gap="sm">
         <Row align="start" gap="md">
           <Stack gap="sm" className="min-w-0 flex-1">
-            <View className="h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 dark:bg-primary-dark/25">
+            <View className="h-10 w-10 items-center justify-center rounded-2xl bg-primary/20">
               <Sparkles size={20} color={colors.primary} strokeWidth={2} />
             </View>
             <AppText variant="subtitle">{title}</AppText>
@@ -289,7 +289,7 @@ function HeroCard({
           className="active:opacity-80">
           <AppText
             variant="caption"
-            className="font-semibold text-primary dark:text-primary-dark">
+            className="font-semibold text-primary">
             Cambiar meta semanal →
           </AppText>
         </Pressable>
@@ -353,7 +353,7 @@ function QuickStats({ summary }: { summary: ProgressSummary }) {
             {item.hint ? (
               <AppText
                 variant="caption"
-                className="mt-0.5 text-primary dark:text-primary-dark">
+                className="mt-0.5 text-primary">
                 {item.hint}
               </AppText>
             ) : (
@@ -402,7 +402,7 @@ function SubjectActivityCard({ rows }: { rows: SubjectActivityRow[] }) {
                     {row.relativePct}%
                   </AppText>
                 </Row>
-                <View className="h-2 overflow-hidden rounded-full bg-background-secondary dark:bg-background-dark-secondary">
+                <View className="h-2 overflow-hidden rounded-full bg-background-secondary">
                   <View
                     className="h-full rounded-full"
                     style={{
@@ -484,7 +484,7 @@ function ReinforceCard({
   return (
     <AppCard
       padding="sm"
-      className="min-w-0 flex-1 border-warning/40 dark:border-warning-dark/40"
+      className="min-w-0 flex-1 border-warning/40"
       accessibilityLabel="Necesitas reforzar">
       <Stack gap="sm" className="min-h-[120px] justify-between">
         <Stack gap="xs">
@@ -502,7 +502,7 @@ function ReinforceCard({
           className="active:opacity-80">
           <AppText
             variant="caption"
-            className="font-semibold text-primary dark:text-primary-dark">
+            className="font-semibold text-primary">
             Practicar ahora →
           </AppText>
         </Pressable>
@@ -533,7 +533,7 @@ function GoalCard({
   return (
     <AppCard
       padding="sm"
-      className="min-w-0 flex-1 border-primary/40 dark:border-primary-dark/40"
+      className="min-w-0 flex-1 border-primary/40"
       accessibilityLabel="Próximo objetivo">
       <Stack gap="sm" className="min-h-[120px] justify-between">
         <Stack gap="xs">
@@ -545,9 +545,9 @@ function GoalCard({
           </AppText>
         </Stack>
         <Stack gap="xs">
-          <View className="h-2 w-full overflow-hidden rounded-full border border-border bg-background-secondary dark:border-border-dark dark:bg-background-dark-secondary">
+          <View className="h-2 w-full overflow-hidden rounded-full border border-border bg-background-secondary">
             <View
-              className="h-full rounded-full bg-primary dark:bg-primary-dark"
+              className="h-full rounded-full bg-primary"
               style={{ width: `${fill}%` }}
             />
           </View>
@@ -561,7 +561,7 @@ function GoalCard({
             className="active:opacity-80">
             <AppText
               variant="caption"
-              className="font-semibold text-primary dark:text-primary-dark">
+              className="font-semibold text-primary">
               Cambiar meta →
             </AppText>
           </Pressable>
@@ -609,7 +609,7 @@ function InsightsCard({
           className="active:opacity-80">
           <AppText
             variant="caption"
-            className="font-semibold text-primary dark:text-primary-dark">
+            className="font-semibold text-primary">
             Ver recomendaciones →
           </AppText>
         </Pressable>
@@ -661,10 +661,10 @@ function RecentTimeline({
           items.slice(0, 5).map((item, index) => (
             <Row key={item.id} align="start" gap="md">
               <Stack align="center" gap="none" className="w-4">
-                <View className="h-2.5 w-2.5 rounded-full bg-primary dark:bg-primary-dark" />
+                <View className="h-2.5 w-2.5 rounded-full bg-primary" />
                 {index < Math.min(items.length, 5) - 1 ? (
                   <View
-                    className="mt-1 w-px flex-1 bg-border dark:bg-border-dark"
+                    className="mt-1 w-px flex-1 bg-border"
                     style={{ minHeight: 28 }}
                   />
                 ) : null}
@@ -716,8 +716,8 @@ function AchievementsRow({
                 className={cn(
                   'h-12 w-12 items-center justify-center rounded-2xl border',
                   item.unlocked
-                    ? 'border-primary bg-primary/15 dark:border-primary-dark dark:bg-primary-dark/20'
-                    : 'border-border bg-background-secondary dark:border-border-dark dark:bg-background-dark-secondary',
+                    ? 'border-primary bg-primary/15'
+                    : 'border-border bg-background-secondary',
                 )}>
                 <Trophy
                   size={18}
@@ -735,12 +735,12 @@ function AchievementsRow({
                   {item.label}
                 </AppText>
               </View>
-              <View className="h-1 w-10 overflow-hidden rounded-full bg-border dark:bg-border-dark">
+              <View className="h-1 w-10 overflow-hidden rounded-full bg-border">
                 {item.unlocked ? (
-                  <View className="h-full w-full rounded-full bg-primary dark:bg-primary-dark" />
+                  <View className="h-full w-full rounded-full bg-primary" />
                 ) : (
                   <View
-                    className="h-full rounded-full bg-primary dark:bg-primary-dark"
+                    className="h-full rounded-full bg-primary"
                     style={{ width: `${Math.max(item.progress * 100, 6)}%` }}
                   />
                 )}
@@ -763,7 +763,7 @@ function RecommendationCard({
   return (
     <AppCard
       padding="md"
-      className="border-chat-user/30 bg-chat-user/10 dark:border-chat-user-dark/30 dark:bg-chat-user-dark/10"
+      className="border-chat-user/30 bg-chat-user/10"
       accessibilityLabel="Recomendación para ti">
       <Stack gap="sm">
         <AppText variant="label">Recomendación para ti</AppText>
@@ -779,7 +779,7 @@ function RecommendationCard({
           className="active:opacity-80">
           <AppText
             variant="caption"
-            className="font-semibold text-primary dark:text-primary-dark">
+            className="font-semibold text-primary">
             Comenzar ahora →
           </AppText>
         </Pressable>

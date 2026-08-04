@@ -5,16 +5,16 @@ import { Text } from '../primitives/Text';
 import { cn } from '../utils/cn';
 
 const areaVariants = cva(
-  'min-h-[96px] rounded-lg border px-3 py-2.5 text-base text-foreground dark:text-foreground-dark',
+  'min-h-[96px] rounded-lg border px-3 py-2.5 text-base text-foreground',
   {
     variants: {
       invalid: {
-        true: 'border-danger dark:border-danger-dark',
-        false: 'border-border dark:border-border-dark',
+        true: 'border-danger',
+        false: 'border-border',
       },
       disabled: {
-        true: 'opacity-50 bg-background-secondary dark:bg-background-dark-secondary',
-        false: 'bg-surface dark:bg-surface-dark',
+        true: 'opacity-50 bg-background-secondary',
+        false: 'bg-surface',
       },
     },
     defaultVariants: {
@@ -50,7 +50,7 @@ export function AppTextArea({
   return (
     <View className={cn('gap-1.5', containerClassName)}>
       {label ? (
-        <Text className="text-sm font-medium text-foreground dark:text-foreground-dark">
+        <Text className="text-sm font-medium text-foreground">
           {label}
         </Text>
       ) : null}
@@ -66,9 +66,9 @@ export function AppTextArea({
         {...props}
       />
       {error ? (
-        <Text className="text-xs text-danger dark:text-danger-dark">{error}</Text>
+        <Text className="text-xs text-danger">{error}</Text>
       ) : hint ? (
-        <Text className="text-xs text-foreground-muted dark:text-foreground-dark-muted">
+        <Text className="text-xs text-foreground-muted">
           {hint}
         </Text>
       ) : null}

@@ -85,10 +85,10 @@ export function AppHeader({ displayName = '', avatarUri }: AppHeaderProps) {
                 onPress={openDrawer}
               />
               <Text
-                className="text-xl font-semibold tracking-tight text-foreground dark:text-foreground-dark"
+                className="text-xl font-semibold tracking-tight text-foreground"
                 numberOfLines={1}>
                 Tutor Edu
-                <Text className="text-xl font-semibold text-primary dark:text-primary-dark">
+                <Text className="text-xl font-semibold text-primary">
                   IA
                 </Text>
               </Text>
@@ -178,7 +178,7 @@ export function AppHeader({ displayName = '', avatarUri }: AppHeaderProps) {
           description="Sesiones y chat de estudio"
           icon={GraduationCap}
           iconColor={colors.primary}
-          iconBgClassName="bg-primary/15 dark:bg-primary-dark/15"
+          iconBgClassName="bg-primary/15"
           active={isRouteActive(pathname, '/(tabs)')}
           onPress={() => goTo('/(tabs)')}
         />

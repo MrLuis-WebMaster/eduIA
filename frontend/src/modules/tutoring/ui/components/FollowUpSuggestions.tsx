@@ -34,7 +34,7 @@ export function FollowUpSuggestions({
             accessibilityLabel={suggestion.label}
             disabled={disabled}
             onPress={() => onSelect(suggestion.prompt)}
-            className="rounded-full border border-border bg-surface px-3.5 py-2 active:opacity-80 dark:border-border-dark dark:bg-surface-dark">
+            className="rounded-full border border-border bg-surface px-3.5 py-2 active:opacity-80">
             <AppText variant="caption" className="text-[13px]">
               {suggestion.label}
             </AppText>

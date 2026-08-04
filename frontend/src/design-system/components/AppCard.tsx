@@ -7,11 +7,11 @@ const cardVariants = cva('rounded-xl border', {
   variants: {
     variant: {
       elevated:
-        'border-border dark:border-border-dark bg-surface dark:bg-surface-dark',
+        'border-border bg-surface',
       outlined:
-        'border-border-strong dark:border-border-dark-strong bg-transparent',
+        'border-border-strong bg-transparent',
       muted:
-        'border-transparent bg-background-secondary dark:bg-background-dark-secondary',
+        'border-transparent bg-background-secondary',
     },
     padding: {
       none: 'p-0',

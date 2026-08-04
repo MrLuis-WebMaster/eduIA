@@ -8,7 +8,7 @@ import { cn } from '../utils/cn';
 const segmentVariants = cva('flex-1 items-center justify-center rounded-md px-2 py-2', {
   variants: {
     active: {
-      true: 'bg-surface dark:bg-surface-dark-elevated',
+      true: 'bg-surface',
       false: 'bg-transparent',
     },
   },
@@ -41,7 +41,7 @@ export function AppSegmentedControl<T extends string = string>({
   return (
     <View
       className={cn(
-        'flex-row rounded-lg bg-background-secondary p-1 dark:bg-background-dark-secondary',
+        'flex-row rounded-lg bg-background-secondary p-1',
         disabled && 'opacity-50',
         className,
       )}>
@@ -60,8 +60,8 @@ export function AppSegmentedControl<T extends string = string>({
               className={cn(
                 'text-sm font-medium',
                 active
-                  ? 'text-foreground dark:text-foreground-dark'
-                  : 'text-foreground-muted dark:text-foreground-dark-muted',
+                  ? 'text-foreground'
+                  : 'text-foreground-muted',
               )}>
               {option.label}
             </Text>

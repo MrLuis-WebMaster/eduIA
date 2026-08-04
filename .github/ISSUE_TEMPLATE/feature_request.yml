@@ -1,0 +1,56 @@
+name: Feature request
+description: Propón una mejora o nueva capacidad para EduIA.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe el problema que quieres resolver antes que la solución ideal.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema / oportunidad
+      description: ¿Qué necesidad no cubre hoy el producto?
+      placeholder: Como estudiante/docente, necesito... porque...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Cómo imaginas que debería funcionar.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área principal
+      options:
+        - Tutoría / chat
+        - Preferencias de usuario
+        - Progreso / métricas
+        - Design system / UX
+        - Backend / proveedores IA
+        - CI / DX
+        - Otro
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      description: Lista verificable de “hecho”.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Opcional. Otras opciones que evaluaste.

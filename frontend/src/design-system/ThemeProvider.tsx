@@ -9,6 +9,7 @@ import {
 import { useColorScheme as useSystemColorScheme, View } from 'react-native';
 
 import { darkTheme, lightTheme, type ThemeColors } from './themes';
+import { themeVars } from './themeVars';
 import { cn } from './utils/cn';
 
 export type ThemePreference = 'system' | 'light' | 'dark';
@@ -46,6 +47,8 @@ export function ThemeProvider({
     return preference;
   }, [preference, systemScheme]);
 
+  const colors = colorScheme === 'dark' ? darkTheme : lightTheme;
+
   const setPreference = useCallback((next: ThemePreference) => {
     setPreferenceState((prev) => (prev === next ? prev : next));
   }, []);
@@ -62,19 +65,39 @@ export function ThemeProvider({
     () => ({
       preference,
       colorScheme,
-      colors: colorScheme === 'dark' ? darkTheme : lightTheme,
+      colors,
       setPreference,
       toggleColorScheme,
     }),
-    [preference, colorScheme, setPreference, toggleColorScheme],
+    [preference, colorScheme, colors, setPreference, toggleColorScheme],
   );
 
   return (
     <ThemeContext.Provider value={value}>
-      <View className={cn('flex-1', colorScheme === 'dark' && 'dark', className)}>
+      <View
+        style={themeVars(colors)}
+        className={cn('flex-1', className)}>
         {children}
       </View>
     </ThemeContext.Provider>
+  );
+}
+
+export type ThemeSurfaceProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+/**
+ * Re-applies theme CSS variables. Required inside RN Modal roots, which do not
+ * inherit the ThemeProvider view tree / vars.
+ */
+export function ThemeSurface({ children, className }: ThemeSurfaceProps) {
+  const { colors } = useTheme();
+  return (
+    <View style={themeVars(colors)} className={cn('flex-1', className)}>
+      {children}
+    </View>
   );
 }
 

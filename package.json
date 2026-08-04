@@ -17,7 +17,9 @@
     "expo": "pnpm --filter frontend exec expo",
     "lint": "pnpm -r run lint",
     "test": "pnpm -r run test",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "build": "pnpm --filter backend build",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "concurrently": "^10.0.4",

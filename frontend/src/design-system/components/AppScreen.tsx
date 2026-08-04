@@ -89,7 +89,7 @@ export function AppScreen({
   );
 
   return (
-    <Box className={cn('flex-1 bg-background dark:bg-background-dark', className)}>
+    <Box className={cn('flex-1 bg-background', className)}>
       <SafeAreaView style={{ flex: 1 }} edges={edges}>
         {framed}
       </SafeAreaView>

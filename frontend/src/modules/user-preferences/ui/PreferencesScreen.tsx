@@ -107,7 +107,7 @@ export function PreferencesScreen() {
               initials={initials}
               accessibilityLabel={displayName}
             />
-            <View className="absolute -bottom-0.5 -right-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-surface bg-primary dark:border-surface-dark dark:bg-primary-dark">
+            <View className="absolute -bottom-0.5 -right-0.5 h-7 w-7 items-center justify-center rounded-full border-2 border-surface bg-primary">
               <Pencil size={12} color={colors.primaryForeground} strokeWidth={2.5} />
             </View>
           </Pressable>
@@ -119,11 +119,11 @@ export function PreferencesScreen() {
             <Row
               align="center"
               gap="xs"
-              className="self-start rounded-full bg-primary/15 px-2.5 py-1 dark:bg-primary-dark/15">
+              className="self-start rounded-full bg-primary/15 px-2.5 py-1">
               <GraduationCap size={12} color={colors.primary} strokeWidth={2} />
               <AppText
                 variant="caption"
-                className="font-medium text-primary dark:text-primary-dark">
+                className="font-medium text-primary">
                 {roleLabel}
               </AppText>
             </Row>
@@ -168,7 +168,7 @@ export function PreferencesScreen() {
           description="Nivel, materias y estilo de explicación"
           icon={SlidersHorizontal}
           iconColor={colors.primary}
-          iconBgClassName="bg-primary/15 dark:bg-primary-dark/15"
+          iconBgClassName="bg-primary/15"
           onPress={() => openSheet('tutor')}
         />
         <Divider />
@@ -197,7 +197,7 @@ export function PreferencesScreen() {
           description="Vuelve a las preferencias por defecto"
           icon={RotateCcw}
           iconColor={colors.danger}
-          iconBgClassName="bg-danger/15 dark:bg-danger-dark/15"
+          iconBgClassName="bg-danger/15"
           danger
           onPress={() => {
             Alert.alert(
@@ -322,7 +322,7 @@ function StatCard({
       </Row>
       <AppText
         variant="label"
-        className="text-primary dark:text-primary-dark"
+        className="text-primary"
         numberOfLines={1}>
         {value}
       </AppText>
@@ -331,7 +331,7 @@ function StatCard({
 }
 
 function Divider() {
-  return <View className="mx-3 h-px bg-border dark:bg-border-dark" />;
+  return <View className="mx-3 h-px bg-border" />;
 }
 
 function initialsFromName(name: string): string {

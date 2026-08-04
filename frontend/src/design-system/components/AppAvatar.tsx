@@ -16,10 +16,10 @@ const avatarVariants = cva('items-center justify-center rounded-full', {
       xl: 'h-16 w-16',
     },
     tone: {
-      primary: 'bg-primary dark:bg-primary-dark',
+      primary: 'bg-primary',
       surface:
-        'bg-background-secondary dark:bg-background-dark-secondary border border-border dark:border-border-dark',
-      muted: 'bg-surface-elevated dark:bg-surface-dark-elevated',
+        'bg-background-secondary border border-border',
+      muted: 'bg-surface-elevated',
     },
   },
   defaultVariants: {
@@ -66,8 +66,8 @@ export function AppAvatar({
           className={cn(
             INITIALS_CLASS[resolvedSize],
             tone === 'primary'
-              ? 'text-primary-foreground dark:text-primary-dark-foreground'
-              : 'text-foreground dark:text-foreground-dark',
+              ? 'text-primary-foreground'
+              : 'text-foreground',
           )}>
           {initials.slice(0, 2).toUpperCase()}
         </Text>

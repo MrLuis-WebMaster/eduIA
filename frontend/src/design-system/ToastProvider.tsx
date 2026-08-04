@@ -18,7 +18,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTheme } from './ThemeProvider';
+import { ThemeSurface } from './ThemeProvider';
 import { AppToast, type AppToastTone } from './components/AppToast';
 
 const DEFAULT_DURATION_MS = 3200;
@@ -167,7 +167,6 @@ function ToastHost({
   onDismiss: () => void;
 }) {
   const insets = useSafeAreaInsets();
-  const { colorScheme } = useTheme();
   const topOffset = Math.max(insets.top, 12) + 8;
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
@@ -179,7 +178,7 @@ function ToastHost({
   }));
 
   // Dedicated Modal so toasts stack above AppBottomSheet (also a Modal).
-  // Re-apply `dark` here — RN Modal roots do not inherit ThemeProvider's class.
+  // ThemeSurface re-applies CSS vars — RN Modal roots do not inherit them.
   return (
     <Modal
       transparent
@@ -188,27 +187,26 @@ function ToastHost({
       statusBarTranslucent
       presentationStyle="overFullScreen"
       onRequestClose={onDismiss}>
-      <View
-        pointerEvents="box-none"
-        className={colorScheme === 'dark' ? 'dark' : undefined}
-        style={styles.host}>
-        {toast ? (
-          <Animated.View
-            pointerEvents="box-none"
-            style={[
-              styles.toastAnchor,
-              { top: topOffset },
-              animatedStyle,
-            ]}>
-            <AppToast
-              key={toast.id}
-              message={toast.message}
-              tone={toast.tone}
-              onDismiss={onDismiss}
-            />
-          </Animated.View>
-        ) : null}
-      </View>
+      <ThemeSurface className="justify-start">
+        <View pointerEvents="box-none" style={styles.host}>
+          {toast ? (
+            <Animated.View
+              pointerEvents="box-none"
+              style={[
+                styles.toastAnchor,
+                { top: topOffset },
+                animatedStyle,
+              ]}>
+              <AppToast
+                key={toast.id}
+                message={toast.message}
+                tone={toast.tone}
+                onDismiss={onDismiss}
+              />
+            </Animated.View>
+          ) : null}
+        </View>
+      </ThemeSurface>
     </Modal>
   );
 }

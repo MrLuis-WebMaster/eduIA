@@ -105,7 +105,7 @@ export function ProfileSheet({
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Cambiar foto"
-              className="absolute -bottom-0.5 -right-0.5 h-8 w-8 items-center justify-center rounded-full border-2 border-surface bg-primary dark:border-surface-dark dark:bg-primary-dark"
+              className="absolute -bottom-0.5 -right-0.5 h-8 w-8 items-center justify-center rounded-full border-2 border-surface bg-primary"
               onPress={() => {
                 Alert.alert(
                   'Foto de perfil',

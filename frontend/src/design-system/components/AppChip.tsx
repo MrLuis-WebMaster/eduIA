@@ -9,9 +9,9 @@ const chipVariants = cva(
   {
     variants: {
       selected: {
-        true: 'border-primary bg-primary-muted dark:border-primary-dark dark:bg-primary-dark-muted',
+        true: 'border-primary bg-primary-muted',
         false:
-          'border-border dark:border-border-dark bg-surface dark:bg-surface-dark',
+          'border-border bg-surface',
       },
       disabled: {
         true: 'opacity-50',
@@ -28,8 +28,8 @@ const chipVariants = cva(
 const chipLabelVariants = cva('text-sm font-medium', {
   variants: {
     selected: {
-      true: 'text-primary dark:text-primary-dark',
-      false: 'text-foreground dark:text-foreground-dark',
+      true: 'text-primary',
+      false: 'text-foreground',
     },
   },
   defaultVariants: {

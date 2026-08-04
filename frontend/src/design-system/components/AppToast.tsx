@@ -24,13 +24,13 @@ export type AppToastProps = {
 
 const TONE_SURFACE: Record<AppToastTone, string> = {
   success:
-    'border-success/40 bg-surface dark:border-success-dark/40 dark:bg-surface-dark',
+    'border-success/40 bg-surface',
   danger:
-    'border-danger/40 bg-surface dark:border-danger-dark/40 dark:bg-surface-dark',
+    'border-danger/40 bg-surface',
   warning:
-    'border-warning/40 bg-surface dark:border-warning-dark/40 dark:bg-surface-dark',
+    'border-warning/40 bg-surface',
   default:
-    'border-border bg-surface dark:border-border-dark dark:bg-surface-dark',
+    'border-border bg-surface',
 };
 
 const TONE_TEXT: Record<
