@@ -13,6 +13,14 @@
 - [ ] CI / tooling
 - [ ] Dependencias
 
+## Documentation
+
+<!-- Índice: docs/README.md — una fuente de verdad; no duplicar tablas en el README raíz. -->
+
+- [ ] Sin impacto en docs
+- [ ] Actualicé `docs/` (API, env, how-to, architecture, ADR/RFC)
+- [ ] Nuevo ADR o RFC:
+
 ## Test plan
 
 <!-- Cómo verificar el cambio. Marca lo que corriste. -->
