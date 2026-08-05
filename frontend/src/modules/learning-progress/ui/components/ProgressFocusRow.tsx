@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { AppCard, AppText, Pressable, Row, Stack } from '@/design-system';
+import { AppCard, AppText, Pressable, Row, Stack, useTheme } from '@/design-system';
 
 export type ProgressFocusRowProps = {
   topic: string | null;
@@ -42,10 +42,13 @@ function ReinforceCard({
   topic: string | null;
   onPress: () => void;
 }) {
+  const { colors } = useTheme();
+
   return (
     <AppCard
       padding="sm"
-      className="min-w-0 flex-1 border-warning/40"
+      className="min-w-0 flex-1"
+      style={{ borderColor: `${colors.warning}66` }}
       accessibilityLabel="Necesitas reforzar">
       <Stack gap="sm" className="min-h-[120px] justify-between">
         <Stack gap="xs">
@@ -83,6 +86,7 @@ function GoalCard({
   weeklyTarget: number;
   onEditGoal: () => void;
 }) {
+  const { colors } = useTheme();
   const goalLabel =
     streakDays >= 3
       ? `Mantén tu racha (${streakDays}d)`
@@ -92,7 +96,8 @@ function GoalCard({
   return (
     <AppCard
       padding="sm"
-      className="min-w-0 flex-1 border-primary/40"
+      className="min-w-0 flex-1"
+      style={{ borderColor: `${colors.primary}66` }}
       accessibilityLabel="Próximo objetivo">
       <Stack gap="sm" className="min-h-[120px] justify-between">
         <Stack gap="xs">
