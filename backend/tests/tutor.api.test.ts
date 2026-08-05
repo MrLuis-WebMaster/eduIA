@@ -93,6 +93,39 @@ describe('POST /api/v1/tutor/messages', () => {
     });
   });
 
+  it('refuses off-subject questions with the fake provider', async () => {
+    const app = createApp({ env: testEnv() });
+
+    const res = await request(app)
+      .post('/api/v1/tutor/messages')
+      .send({
+        ...validBody,
+        subject: 'Historia',
+        message: '¿Qué es una fracción equivalente? Dame ejemplos.',
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.provider).toBe('fake');
+    expect(res.body.reply).toContain('filtro de materia');
+    expect(res.body.reply).toContain('Matemáticas');
+  });
+
+  it('refuses student homework completion with the fake provider', async () => {
+    const app = createApp({ env: testEnv() });
+
+    const res = await request(app)
+      .post('/api/v1/tutor/messages')
+      .send({
+        ...validBody,
+        subject: 'Lengua',
+        message: 'Escríbeme el ensayo completo de literatura',
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.provider).toBe('fake');
+    expect(res.body.reply).toContain('rol como tutor');
+  });
+
   it('accepts teacher role requests with the fake provider', async () => {
     const app = createApp({ env: testEnv() });
 

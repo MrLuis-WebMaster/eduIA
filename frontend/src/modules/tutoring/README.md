@@ -18,6 +18,12 @@ Importar desde `@/modules/tutoring` (`index.ts`) para dominio/aplicación/adapte
 
 Pantallas (`TutorScreen`, `useTutorSession`): importar desde `@/modules/tutoring/ui` solo desde `src/app/` (evita require cycles).
 
+Los filtros del chat (materia, dificultad, rol) son de **sesión**: las preferencias del perfil solo aportan valores iniciales; no se sincronizan en ambos sentidos.
+
+Alcance pedagógico: OpenAI decide semánticamente (JSON `action`/`reply` con schema estricto). El modo fake usa `assessTutorScope` / `assessLocalTutorScope` solo para demos deterministas.
+
+Markdown del tutor: además de listas y LaTeX (`$…$` / `$$…$$`), los fences ` ```mermaid ` se renderizan como diagrama (SVG). Si el render falla, se muestra el código fuente.
+
 ## Wiring
 
 Composition root: `frontend/src/bootstrap/` elige `fake` vs `remote` según `EXPO_PUBLIC_TUTOR_MODE`.

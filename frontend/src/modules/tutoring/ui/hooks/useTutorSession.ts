@@ -37,8 +37,8 @@ export type TutorSendErrorKind =
   | 'unknown';
 
 export function useTutorSession(
-  userRole: UserRole = 'student',
-  preferredLevel: Difficulty = 'basic',
+  initialUserRole: UserRole = 'student',
+  initialDifficulty: Difficulty = 'basic',
   explanationStyle: ExplanationStyle = 'simple',
   tutorPersonality: TutorPersonality = 'friendly',
 ) {
@@ -46,15 +46,46 @@ export function useTutorSession(
   const { tutoring } = useAppDependencies();
   const abortRef = useRef<AbortController | null>(null);
   const lastFailedMessageRef = useRef<string | null>(null);
+  const filtersLockedRef = useRef(false);
   const { isOffline } = useTutorConnectivity();
 
-  const [subject, setSubject] = useState<Subject>('math');
-  const [difficulty, setDifficulty] = useState<Difficulty>(preferredLevel);
+  const [userRole, setUserRoleState] = useState<UserRole>(initialUserRole);
+  const [subject, setSubjectState] = useState<Subject>('math');
+  const [difficulty, setDifficultyState] =
+    useState<Difficulty>(initialDifficulty);
   const [draft, setDraft] = useState('');
-  const [hydrated, setHydrated] = useState(false);
+  const [filtersReady, setFiltersReady] = useState(false);
   /** Shown immediately while waiting for the tutor reply (not persisted yet). */
   const [pendingUserMessage, setPendingUserMessage] =
     useState<ChatMessage | null>(null);
+
+  const lockFilters = useCallback(() => {
+    filtersLockedRef.current = true;
+  }, []);
+
+  const setUserRole = useCallback(
+    (next: UserRole) => {
+      lockFilters();
+      setUserRoleState(next);
+    },
+    [lockFilters],
+  );
+
+  const setSubject = useCallback(
+    (next: Subject) => {
+      lockFilters();
+      setSubjectState(next);
+    },
+    [lockFilters],
+  );
+
+  const setDifficulty = useCallback(
+    (next: Difficulty) => {
+      lockFilters();
+      setDifficultyState(next);
+    },
+    [lockFilters],
+  );
 
   const sessionQuery = useQuery({
     queryKey: TUTOR_SESSION_QUERY_KEY,
@@ -63,6 +94,23 @@ export function useTutorSession(
   });
 
   const session = sessionQuery.data;
+
+  const sendParamsRef = useRef({
+    subject,
+    difficulty,
+    userRole,
+    explanationStyle,
+    tutorPersonality,
+    session,
+  });
+  sendParamsRef.current = {
+    subject,
+    difficulty,
+    userRole,
+    explanationStyle,
+    tutorPersonality,
+    session,
+  };
 
   const displaySession = useMemo((): TutorSession | undefined => {
     if (!pendingUserMessage) return session;
@@ -99,18 +147,19 @@ export function useTutorSession(
     setDraft('');
   }, []);
 
+  // Preferences only seed filters before the active session (or user) takes over.
   useEffect(() => {
-    if (!session || hydrated) return;
-    setSubject(session.subject);
-    setDifficulty(session.difficulty);
-    setHydrated(true);
-  }, [session, hydrated]);
+    if (filtersReady || filtersLockedRef.current) return;
+    setUserRoleState(initialUserRole);
+    setDifficultyState(initialDifficulty);
+  }, [initialUserRole, initialDifficulty, filtersReady]);
 
   useEffect(() => {
-    if (!hydrated && !session) {
-      setDifficulty(preferredLevel);
-    }
-  }, [preferredLevel, hydrated, session]);
+    if (!session || filtersReady) return;
+    setSubjectState(session.subject);
+    setDifficultyState(session.difficulty);
+    setFiltersReady(true);
+  }, [session, filtersReady]);
 
   const sendMutation = useMutation({
     mutationFn: async (message: string) => {
@@ -120,23 +169,24 @@ export function useTutorSession(
       const controller = new AbortController();
       abortRef.current = controller;
 
+      const params = sendParamsRef.current;
       const current =
         queryClient.getQueryData<TutorSession>(TUTOR_SESSION_QUERY_KEY) ??
-        session ??
-        createEmptySession(subject, difficulty);
+        params.session ??
+        createEmptySession(params.subject, params.difficulty);
 
       try {
         return await tutoring.sendMessage({
           message,
-          subject,
-          difficulty,
-          userRole,
-          explanationStyle,
-          tutorPersonality,
+          subject: params.subject,
+          difficulty: params.difficulty,
+          userRole: params.userRole,
+          explanationStyle: params.explanationStyle,
+          tutorPersonality: params.tutorPersonality,
           session: {
             ...current,
-            subject,
-            difficulty,
+            subject: params.subject,
+            difficulty: params.difficulty,
           },
           signal: controller.signal,
         });
@@ -236,6 +286,8 @@ export function useTutorSession(
   }, [sendMutation]);
 
   return {
+    userRole,
+    setUserRole,
     subject,
     setSubject,
     difficulty,
@@ -266,3 +318,4 @@ export function useTutorSession(
     isStartingSession: newSessionMutation.isPending,
   };
 }
+

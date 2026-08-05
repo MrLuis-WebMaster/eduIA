@@ -25,6 +25,7 @@ import {
 
 import type { ChatMessage, FollowUpSuggestion } from '../../domain';
 import { FollowUpSuggestions } from './FollowUpSuggestions';
+import { prepareTutorMarkdown } from '../normalizeTutorMath';
 import {
   createTutorMarkdownRenderer,
   createTutorMarkdownStyles,
@@ -67,6 +68,19 @@ export function ChatMessageList({
     [colors],
   );
 
+  const mermaidPalette = useMemo(
+    () => ({
+      bg: colors.surface,
+      fg: colors.foreground,
+      line: colors.borderStrong,
+      accent: colors.primary,
+      muted: colors.foregroundMuted,
+      surface: colors.backgroundSecondary,
+      border: colors.border,
+    }),
+    [colors],
+  );
+
   const markdownTheme = useMemo(
     () => createTutorMarkdownTheme(markdownPalette),
     [markdownPalette],
@@ -78,8 +92,8 @@ export function ChatMessageList({
   );
 
   const markdownRenderer = useMemo(
-    () => createTutorMarkdownRenderer(markdownPalette.text),
-    [markdownPalette.text],
+    () => createTutorMarkdownRenderer(markdownPalette.text, mermaidPalette),
+    [markdownPalette.text, mermaidPalette],
   );
 
   const items = useMemo(() => buildListItems(messages), [messages]);
@@ -234,6 +248,10 @@ function MessageBubble({
   const isUser = message.role === 'user';
   const timeLabel = formatTime(message.createdAt);
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
+  const markdownValue = useMemo(
+    () => prepareTutorMarkdown(message.content),
+    [message.content],
+  );
 
   if (isUser) {
     return (
@@ -267,7 +285,7 @@ function MessageBubble({
         <View className="overflow-hidden rounded-2xl rounded-tl-md border border-border bg-surface">
           <View className="px-4 pb-1.5 pt-3.5">
             <Markdown
-              value={message.content}
+              value={markdownValue}
               theme={markdownTheme}
               styles={markdownStyles}
               renderer={markdownRenderer}

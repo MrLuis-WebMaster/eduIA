@@ -6,6 +6,7 @@ import type {
   TutorEngine,
 } from '../ports';
 import { SUBJECT_LABELS, createMessageId } from '../../domain';
+import { assessLocalTutorScope } from '../../domain/scope-policy';
 
 const DELAY_MS = 600;
 
@@ -31,19 +32,71 @@ export class FakeTutorEngine implements TutorEngine {
       throw error;
     }
 
+    const scope = assessLocalTutorScope({
+      subject: input.subject,
+      userRole: input.userRole,
+      message: input.message,
+    });
+
+    if (!scope.ok) {
+      return {
+        reply: {
+          id: createMessageId('fake'),
+          role: 'assistant',
+          content: scope.reply,
+          createdAt: new Date().toISOString(),
+        },
+        provider: 'fake',
+        model: 'fake-tutor-v1',
+        requestId: `fake-${Date.now()}`,
+      };
+    }
+
     const subjectLabel = SUBJECT_LABELS[input.subject];
+    const opening =
+      input.tutorPersonality === 'direct'
+        ? 'Idea clave:'
+        : input.tutorPersonality === 'formal'
+          ? 'Explicación estructurada:'
+          : input.tutorPersonality === 'motivating'
+            ? '¡Vamos! Construyamos desde aquí:'
+            : 'Te acompaño con esto:';
+    const depth =
+      input.difficulty === 'advanced'
+        ? 'Incluyo un matiz / caso límite (nivel avanzado).'
+        : input.difficulty === 'intermediate'
+          ? 'Incluyo un ejemplo trabajado (nivel intermedio).'
+          : 'Lo dejo en lenguaje sencillo (nivel básico).';
+    const styleSteps =
+      input.explanationStyle === 'socratic'
+        ? [
+            '1. ¿Qué parte del problema ya tienes clara?',
+            '2. ¿Qué pasaría si cambias un dato?',
+            '3. Luego esbozamos la solución juntos.',
+          ]
+        : input.explanationStyle === 'detailed'
+          ? [
+              '1. Contexto breve.',
+              '2. Ejemplo con pasos.',
+              '3. Variación o matiz.',
+              '4. Pregunta de comprobación.',
+            ]
+          : [
+              '1. Idea principal.',
+              '2. Un ejemplo corto.',
+              '3. Cierre.',
+            ];
+
     const content = [
       `### Respuesta de práctica (${subjectLabel})`,
       '',
-      `Nivel: **${input.difficulty}** · Rol: **${input.userRole}** · Estilo: **${input.explanationStyle}** · Personalidad: **${input.tutorPersonality}**`,
-      '',
-      `Recibí tu mensaje:`,
+      opening,
+      depth,
+      `Controles: **${input.difficulty}** · **${input.userRole}** · **${input.explanationStyle}** · **${input.tutorPersonality}**`,
       '',
       `> ${input.message}`,
       '',
-      '1. Identifica lo que ya sabes.',
-      '2. Divide el problema en pasos pequeños.',
-      '3. Comprueba el resultado con un ejemplo concreto.',
+      ...styleSteps,
       '',
       '_Modo fake — sin llamada a la API._',
     ].join('\n');

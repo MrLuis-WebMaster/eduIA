@@ -10,7 +10,7 @@ API stateless: validar el body, aplicar política pedagógica, llamar al `AIProv
 
 Importar desde el barrel del módulo (`index.ts`):
 
-- Domain: tipos + `buildPedagogicalSystemPrompt`.
+- Domain: tipos + `buildPedagogicalSystemPrompt`, decisión JSON del agente (`parseTutorAgentDecision`). `assessTutorScope` solo para el provider fake.
 - Port: `AIProvider`.
 - Use case: `GenerateTutorResponse`.
 - Composition: `composeTutoring`, `createAIProvider`.

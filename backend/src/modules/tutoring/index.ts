@@ -7,7 +7,20 @@ export type {
   TutorResponse,
   UserRole,
 } from './domain/types.js';
-export { buildPedagogicalSystemPrompt } from './domain/policies/pedagogical-policy.js';
+export {
+  buildPedagogicalSystemPrompt,
+  buildTurnControlReminder,
+  assessTutorScope,
+  resolveSubjectKey,
+  parseTutorAgentDecision,
+} from './domain/policies/pedagogical-policy.js';
+export type {
+  PedagogicalContext,
+  ScopeAssessment,
+  TutorSubjectKey,
+  TutorAgentAction,
+  TutorAgentDecision,
+} from './domain/policies/pedagogical-policy.js';
 export type {
   AIChatMessage,
   AIProvider,

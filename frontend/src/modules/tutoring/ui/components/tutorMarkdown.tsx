@@ -1,10 +1,18 @@
 import { type ReactNode } from 'react';
 import type { TextStyle, ViewStyle } from 'react-native';
+import { MathView } from 'expo-mathjax';
 import {
   Renderer,
   type MarkedStyles,
   type RendererInterface,
 } from 'react-native-marked';
+
+import { parseMathMarker } from '../normalizeTutorMath';
+import {
+  isMermaidCodeBlock,
+  type TutorMermaidPalette,
+} from '../tutorMermaid';
+import { TutorMermaidDiagram } from './TutorMermaidDiagram';
 
 const BODY_SIZE = 15;
 const BODY_LINE = 23;
@@ -21,13 +29,25 @@ type TutorMarkdownColors = {
  * Separates list marker styles from list-item content styles.
  * react-native-marked reuses `li` for both, and its default `flexShrink: 1`
  * collapses ordered markers into tiny “superscript” numbers.
+ *
+ * Math is encoded as marked codespans by `prepareTutorMarkdown` (dollar
+ * delimiters are not tokenized by marked v15+).
+ * Mermaid fences (` ```mermaid `) render as SVG diagrams.
  */
 class TutorMarkdownRenderer extends Renderer implements RendererInterface {
   private markerColor: string;
+  private mathColor: string;
+  private mermaidColors: TutorMermaidPalette;
 
-  constructor(markerColor: string) {
+  constructor(
+    markerColor: string,
+    mathColor: string,
+    mermaidColors: TutorMermaidPalette,
+  ) {
     super();
     this.markerColor = markerColor;
+    this.mathColor = mathColor;
+    this.mermaidColors = mermaidColors;
   }
 
   list(
@@ -68,10 +88,54 @@ class TutorMarkdownRenderer extends Renderer implements RendererInterface {
       paddingTop: 0,
     });
   }
+
+  code(
+    text: string,
+    language?: string,
+    containerStyle?: ViewStyle,
+    textStyle?: TextStyle,
+  ): ReactNode {
+    if (isMermaidCodeBlock(language, text)) {
+      return (
+        <TutorMermaidDiagram
+          key={this.getKey()}
+          source={text}
+          colors={this.mermaidColors}
+        />
+      );
+    }
+
+    return super.code(text, language, containerStyle, textStyle);
+  }
+
+  codespan(text: string, styles?: TextStyle): ReactNode {
+    const math = parseMathMarker(text);
+    if (math) {
+      return (
+        <MathView
+          key={this.getKey()}
+          tex={math.tex}
+          display={math.display}
+          color={this.mathColor}
+          fontSize={BODY_SIZE}
+          style={
+            math.display
+              ? { marginVertical: 8, alignSelf: 'center' }
+              : { marginHorizontal: 1 }
+          }
+        />
+      );
+    }
+
+    return super.codespan(text, styles);
+  }
 }
 
-export function createTutorMarkdownRenderer(textColor: string) {
-  return new TutorMarkdownRenderer(textColor);
+export function createTutorMarkdownRenderer(
+  textColor: string,
+  mermaidColors: TutorMermaidPalette,
+) {
+  return new TutorMarkdownRenderer(textColor, textColor, mermaidColors);
 }
 
 export function createTutorMarkdownTheme(colors: TutorMarkdownColors) {

@@ -1,5 +1,9 @@
 import { AppError } from '@/shared/errors/app-error.js';
-import { buildPedagogicalSystemPrompt } from '../../domain/policies/pedagogical-policy.js';
+import {
+  buildPedagogicalSystemPrompt,
+  buildTurnControlReminder,
+  parseTutorAgentDecision,
+} from '../../domain/policies/pedagogical-policy.js';
 import type { TutorRequest, TutorResponse } from '../../domain/types.js';
 import type { AIChatMessage, AIProvider } from '../ports/ai-provider.js';
 
@@ -18,20 +22,22 @@ export class GenerateTutorResponse {
   }
 
   async execute(request: TutorRequest): Promise<TutorResponse> {
-    const systemPrompt = buildPedagogicalSystemPrompt({
+    const pedagogicalCtx = {
       subject: request.subject,
       difficulty: request.difficulty,
       userRole: request.userRole,
       explanationStyle: request.explanationStyle,
       tutorPersonality: request.tutorPersonality,
-    });
+    };
 
     const messages: AIChatMessage[] = [
-      { role: 'system', content: systemPrompt },
+      { role: 'system', content: buildPedagogicalSystemPrompt(pedagogicalCtx) },
       ...request.conversation.map((msg) => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content,
       })),
+      // Keep controls salient on every turn so chat history cannot freeze tone.
+      { role: 'system', content: buildTurnControlReminder(pedagogicalCtx) },
       { role: 'user', content: request.message },
     ];
 
@@ -42,11 +48,21 @@ export class GenerateTutorResponse {
       const result = await this.aiProvider.generateCompletion({
         messages,
         signal: controller.signal,
-        context: { subject: request.subject },
+        json: true,
+        context: {
+          subject: request.subject,
+          userRole: request.userRole,
+          difficulty: request.difficulty,
+          explanationStyle: request.explanationStyle,
+          tutorPersonality: request.tutorPersonality,
+        },
       });
 
+      const decision = parseTutorAgentDecision(result.content);
+      const reply = decision?.reply ?? result.content;
+
       return {
-        reply: result.content,
+        reply,
         provider: result.provider,
         model: result.model,
       };

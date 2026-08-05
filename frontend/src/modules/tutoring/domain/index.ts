@@ -35,3 +35,6 @@ export {
 
 export type { RecentTutoringSessionDto } from './session-summary';
 export { toRecentTutoringSessionDto } from './session-summary';
+
+export type { LocalScopeAssessment } from './scope-policy';
+export { assessLocalTutorScope } from './scope-policy';

@@ -20,24 +20,22 @@ import { useTutorSession } from './hooks/useTutorSession';
 import {
   getFollowUpSuggestions,
   type ChatMessage,
-  type UserRole,
 } from '../domain';
 
 const EMPTY_MESSAGES: ChatMessage[] = [];
 
 export function TutorScreen() {
   const prefs = usePreferencesStore((s) => s.prefs);
-  const savePrefs = usePreferencesStore((s) => s.save);
   const [actionsOpen, setActionsOpen] = useState(false);
 
-  const role = prefs.role;
   const tutor = useTutorSession(
-    role,
+    prefs.role,
     prefs.preferredLevel,
     prefs.explanationStyle,
     prefs.tutorPersonality,
   );
   const busy = tutor.isSending || tutor.isStartingSession;
+  const role = tutor.userRole;
 
   const messages = tutor.session?.messages ?? EMPTY_MESSAGES;
   const hasMessages = messages.length > 0;
@@ -57,10 +55,6 @@ export function TutorScreen() {
     isEmptyConversation &&
     !tutor.isSessionError &&
     !tutor.isLoadingSession;
-
-  const handleRoleChange = (nextRole: UserRole) => {
-    void savePrefs({ ...prefs, role: nextRole });
-  };
 
   const handleQuickAction = (prompt: string) => {
     tutor.applyQuickAction(prompt);
@@ -109,7 +103,7 @@ export function TutorScreen() {
         role={role}
         onSubjectChange={tutor.setSubject}
         onDifficultyChange={tutor.setDifficulty}
-        onRoleChange={handleRoleChange}
+        onRoleChange={tutor.setUserRole}
         disabled={busy}
       />
 

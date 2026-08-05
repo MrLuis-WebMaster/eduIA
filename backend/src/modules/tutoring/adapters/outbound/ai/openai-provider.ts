@@ -12,6 +12,22 @@ export interface OpenAIProviderOptions {
   model?: string;
 }
 
+const TUTOR_DECISION_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['action', 'reply'],
+  properties: {
+    action: {
+      type: 'string',
+      enum: ['answer', 'refuse_off_subject', 'refuse_role'],
+    },
+    reply: {
+      type: 'string',
+      description: 'User-facing Markdown reply in the user language.',
+    },
+  },
+} as const;
+
 export class OpenAIProvider implements AIProvider {
   readonly name = 'openai';
   private readonly client: OpenAI;
@@ -34,11 +50,23 @@ export class OpenAIProvider implements AIProvider {
       const response = await this.client.responses.create(
         {
           model: this.model,
-          temperature: 0.6,
+          temperature: input.json ? 0.2 : 0.6,
           input: input.messages.map((message) => ({
             role: message.role === 'system' ? 'developer' : message.role,
             content: message.content,
           })),
+          ...(input.json
+            ? {
+                text: {
+                  format: {
+                    type: 'json_schema',
+                    name: 'eduia_tutor_decision',
+                    strict: true,
+                    schema: TUTOR_DECISION_SCHEMA,
+                  },
+                },
+              }
+            : {}),
         },
         { signal: input.signal },
       );
