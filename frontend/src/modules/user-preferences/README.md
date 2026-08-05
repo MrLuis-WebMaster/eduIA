@@ -8,13 +8,15 @@ Nombre, rol, nivel, materias, estilo del tutor, tema y meta semanal. Hidratar Zu
 
 ## Public API
 
-Importar solo desde `@/modules/user-preferences`:
+Importar desde `@/modules/user-preferences`:
 
 - Domain: `UserPreferences`, opciones de tema/rol/estilo.
 - Application ports: `PreferencesRepository`.
 - Adapters: `AsyncStoragePreferencesRepository`, `InMemoryPreferencesRepository`, `STORAGE_KEYS`.
-- Composition: `createUserPreferencesModule`.
-- UI: `PreferencesScreen`, `PreferencesHydrator`, `usePreferences`, `usePreferencesStore`.
+- Composition: `createUserPreferencesModule` (bootstrap puede importar `./composition` directo).
+- Shared UI API: `PreferencesHydrator`, `usePreferences`, `usePreferencesStore`, `ROLE_SELECT_OPTIONS`.
+
+`PreferencesScreen`: importar desde `@/modules/user-preferences/ui` solo desde `src/app/`.
 
 ## Wiring
 

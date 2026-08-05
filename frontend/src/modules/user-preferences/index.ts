@@ -1,4 +1,4 @@
-/** Public API — user-preferences module. */
+/** Public API — user-preferences module (non-screen boundary). Screens live under `./ui`. */
 
 export type {
   ThemePreference,
@@ -43,10 +43,8 @@ export {
   type UserPreferencesModuleOptions,
 } from './composition';
 
-export {
-  PreferencesScreen,
-  PreferencesHydrator,
-  usePreferences,
-  usePreferencesStore,
-  ROLE_SELECT_OPTIONS,
-} from './ui';
+/** Hydration + store — needed at app root without loading PreferencesScreen. */
+export { PreferencesHydrator } from './ui/PreferencesHydrator';
+export { usePreferences } from './ui/hooks/usePreferences';
+export { usePreferencesStore } from './ui/store/preferences-store';
+export { ROLE_SELECT_OPTIONS } from './ui/roleOptions';

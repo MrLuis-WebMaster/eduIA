@@ -3,11 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useAppDependencies } from '@/bootstrap/app-dependencies';
 
 import type { RecentTutoringSessionDto } from '../../domain';
+import { RECENT_TUTORING_SESSIONS_QUERY_KEY } from '../query-keys';
 
-export const RECENT_TUTORING_SESSIONS_QUERY_KEY = [
-  'tutoring',
-  'recent-sessions',
-] as const;
+export { RECENT_TUTORING_SESSIONS_QUERY_KEY };
 
 /** Public hook — recent local tutoring sessions for progress dashboards. */
 export function useRecentTutoringSessions(limit = 20) {

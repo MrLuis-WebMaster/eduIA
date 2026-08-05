@@ -1,10 +1,10 @@
 export { TutorScreen } from './TutorScreen';
 export {
   useTutorSession,
-  TUTOR_SESSION_QUERY_KEY,
   type TutorSendErrorKind,
 } from './hooks/useTutorSession';
+export { useRecentTutoringSessions } from './hooks/useRecentTutoringSessions';
 export {
-  useRecentTutoringSessions,
+  TUTOR_SESSION_QUERY_KEY,
   RECENT_TUTORING_SESSIONS_QUERY_KEY,
-} from './hooks/useRecentTutoringSessions';
+} from './query-keys';

@@ -20,9 +20,12 @@ import {
   tutorSendErrorMessage,
 } from './tutorSendErrors';
 import { useTutorConnectivity } from './useTutorConnectivity';
-import { RECENT_TUTORING_SESSIONS_QUERY_KEY } from './useRecentTutoringSessions';
+import {
+  RECENT_TUTORING_SESSIONS_QUERY_KEY,
+  TUTOR_SESSION_QUERY_KEY,
+} from '../query-keys';
 
-export const TUTOR_SESSION_QUERY_KEY = ['tutoring', 'session'] as const;
+export { TUTOR_SESSION_QUERY_KEY };
 
 export type TutorSendErrorKind =
   | 'timeout'

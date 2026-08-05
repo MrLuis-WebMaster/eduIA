@@ -8,13 +8,15 @@ Gestionar sesiones de tutoría: enviar mensajes, persistir historial local, list
 
 ## Public API
 
-Importar solo desde `@/modules/tutoring` (`index.ts`):
+Importar desde `@/modules/tutoring` (`index.ts`) para dominio/aplicación/adapters/hooks compartidos:
 
 - Domain: tipos/constantes de sesión, materias, acciones rápidas.
 - Application ports: `TutorEngine`, `ConversationRepository` (`application/ports.ts`).
 - Adapters: `FakeTutorEngine`, `HttpTutorEngine`, repositorios AsyncStorage / in-memory.
-- Composition: `createTutoringModule`.
-- UI: `TutorScreen`, `useTutorSession`, `useRecentTutoringSessions`.
+- Composition: `createTutoringModule` (el composition root puede importar `./composition` directo).
+- Shared UI API: query keys, `useRecentTutoringSessions`.
+
+Pantallas (`TutorScreen`, `useTutorSession`): importar desde `@/modules/tutoring/ui` solo desde `src/app/` (evita require cycles).
 
 ## Wiring
 

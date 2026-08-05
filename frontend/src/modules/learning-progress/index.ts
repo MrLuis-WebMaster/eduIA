@@ -1,4 +1,4 @@
-/** Public API — learning-progress module. */
+/** Public API — learning-progress module (non-UI boundary). Screens live under `./ui`. */
 
 export type {
   ProgressSummary,
@@ -26,5 +26,3 @@ export {
   type LearningProgressDependencies,
   type LearningProgressModuleOptions,
 } from './composition';
-
-export { ProgressScreen, useLearningProgress } from './ui';

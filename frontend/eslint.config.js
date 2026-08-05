@@ -21,7 +21,14 @@ module.exports = defineConfig([
     // ADR 0002 — cross-module imports only via public @/modules/<name>.
     // Same-module tests may use deep paths; exclude *.test.*.
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    ignores: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx',
+      // Composition root may wire factories without loading module UI barrels.
+      'src/bootstrap/**/*.{ts,tsx}',
+      // Expo Router screens re-export module UI entrypoints.
+      'src/app/**/*.{ts,tsx}',
+    ],
     rules: {
       'no-restricted-imports': [
         'error',

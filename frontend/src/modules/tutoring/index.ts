@@ -1,4 +1,4 @@
-/** Public API — tutoring module. */
+/** Public API — tutoring module (non-UI boundary). Screens live under `./ui`. */
 
 export type {
   Subject,
@@ -49,11 +49,11 @@ export {
   type TutoringModuleOptions,
 } from './composition';
 
+/** Query keys — safe for cross-module imports (no React hooks). */
 export {
-  TutorScreen,
-  useTutorSession,
   TUTOR_SESSION_QUERY_KEY,
-  useRecentTutoringSessions,
   RECENT_TUTORING_SESSIONS_QUERY_KEY,
-} from './ui';
-export type { TutorSendErrorKind } from './ui/hooks/useTutorSession';
+} from './ui/query-keys';
+
+/** Hook used by other modules (e.g. conversation history sheet). */
+export { useRecentTutoringSessions } from './ui/hooks/useRecentTutoringSessions';

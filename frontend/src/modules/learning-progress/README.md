@@ -8,12 +8,13 @@ Calcular resumen de progreso (racha, actividad semanal, materias) a partir de la
 
 ## Public API
 
-Importar solo desde `@/modules/learning-progress`:
+Importar desde `@/modules/learning-progress`:
 
 - Domain: helpers puros (`computeProgressSummary`, `computeStreak`, …).
 - Application: `createGetProgressSummary`, tipo `ListRecentSessions`.
-- Composition: `createLearningProgressModule`.
-- UI: `ProgressScreen`, `useLearningProgress`.
+- Composition: `createLearningProgressModule` (bootstrap puede importar `./composition` directo).
+
+`ProgressScreen` / `useLearningProgress`: importar desde `@/modules/learning-progress/ui` solo desde `src/app/` (o relativo dentro del módulo).
 
 ## Wiring
 
