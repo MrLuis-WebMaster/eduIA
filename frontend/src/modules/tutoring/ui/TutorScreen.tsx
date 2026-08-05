@@ -17,7 +17,13 @@ import { QuickActions, QuickActionsSheet } from './components/QuickActions';
 import { SessionFilters } from './components/SessionFilters';
 import { TutorSessionBar } from './components/TutorHeader';
 import { useTutorSession } from './hooks/useTutorSession';
-import { getFollowUpSuggestions, type UserRole } from '../domain';
+import {
+  getFollowUpSuggestions,
+  type ChatMessage,
+  type UserRole,
+} from '../domain';
+
+const EMPTY_MESSAGES: ChatMessage[] = [];
 
 export function TutorScreen() {
   const prefs = usePreferencesStore((s) => s.prefs);
@@ -33,7 +39,7 @@ export function TutorScreen() {
   );
   const busy = tutor.isSending || tutor.isStartingSession;
 
-  const messages = tutor.session?.messages ?? [];
+  const messages = tutor.session?.messages ?? EMPTY_MESSAGES;
   const hasMessages = messages.length > 0;
   const isEmptyConversation = !hasMessages && !tutor.isSending;
 
@@ -43,15 +49,13 @@ export function TutorScreen() {
     return getFollowUpSuggestions(role, last.content);
   }, [messages, role]);
 
-  const showSendErrorBanner =
-    tutor.isSendError && Boolean(tutor.sendErrorMessage) && hasMessages;
-
+  // Send failed: banner above the thread, or full pane when the chat is still empty.
+  const sendFailed = Boolean(tutor.isSendError && tutor.sendErrorMessage);
+  const showSendErrorBanner = sendFailed && hasMessages;
   const showSendErrorPane =
+    sendFailed &&
+    isEmptyConversation &&
     !tutor.isSessionError &&
-    tutor.isSendError &&
-    Boolean(tutor.sendErrorMessage) &&
-    !hasMessages &&
-    !tutor.isSending &&
     !tutor.isLoadingSession;
 
   const handleRoleChange = (nextRole: UserRole) => {
