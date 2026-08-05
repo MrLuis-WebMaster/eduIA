@@ -14,7 +14,7 @@ import {
   apiErrorBodySchema,
   tutorMessageBodySchema,
   tutorMessageResponseSchema,
-} from '../src/modules/tutoring/adapters/inbound/http/tutor.schema.js';
+} from '../src/modules/tutoring/infrastructure/inbound/http/tutor.schema.js';
 import { healthResponseSchema } from '../src/modules/health/health.schema.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

@@ -1,3 +1,5 @@
+/** Tutoring domain public surface. */
+
 export type {
   Subject,
   Difficulty,
@@ -22,19 +24,30 @@ export {
   CONVERSATION_CONTEXT_LIMIT,
   QUICK_ACTIONS,
   ROLE_OPTIONS,
-  detectFollowUpKind,
-  getFollowUpSuggestions,
 } from './constants';
+
+export { DomainError } from './errors';
 
 export {
   createMessageId,
+  createChatMessage,
+} from './entities/chat-message';
+export {
+  TutorSessionAggregate,
   createSessionId,
   createEmptySession,
   toApiConversation,
-} from './session';
+} from './entities/tutor-session';
+
+export type { TutoringDomainEvent, SessionStarted, MessageAppended } from './events/tutoring-events';
 
 export type { RecentTutoringSessionDto } from './session-summary';
 export { toRecentTutoringSessionDto } from './session-summary';
 
-export type { LocalScopeAssessment } from './scope-policy';
-export { assessLocalTutorScope } from './scope-policy';
+export type { LocalScopeAssessment } from './policies/scope-policy';
+export { assessLocalTutorScope } from './policies/scope-policy';
+
+export {
+  detectFollowUpKind,
+  getFollowUpSuggestions,
+} from './policies/follow-up-policy';

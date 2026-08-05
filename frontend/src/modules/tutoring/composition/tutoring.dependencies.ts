@@ -6,7 +6,7 @@ import {
   HttpTutorEngine,
   type ConversationRepository,
   type TutorEngine,
-} from '../adapters';
+} from '../infrastructure';
 import {
   createClearConversation,
   createEnsureActiveSession,
@@ -30,7 +30,7 @@ export type TutoringModuleOptions = {
 
 export type TutoringDependencies = {
   tutorEngine: TutorEngine;
-  /** Exposed for tests/adapters; UI should use use cases. */
+  /** Exposed for tests/infrastructure; UI should use use cases. */
   conversationRepository: ConversationRepository;
   sendMessage: (command: SendTutorMessageCommand) => Promise<SendTutorMessageOutcome>;
   loadConversation: () => Promise<TutorSession | null>;

@@ -2,27 +2,32 @@
 
 Preferencias de perfil y de app con persistencia local.
 
+## Layers
+
+| Capa | Rol |
+| --- | --- |
+| **domain/** | Types/VOs, defaults, `normalizeUserPreferences` |
+| **application/** | load/save/reset use cases + `PreferencesRepository` port |
+| **infrastructure/** | AsyncStorage / in-memory repos |
+| **composition/** | `createUserPreferencesModule` |
+| **ui/** | `PreferencesScreen`, store, hydrator |
+
 ## Responsibility
 
-Nombre, rol, nivel, materias, estilo del tutor, tema y meta semanal. Hidratar Zustand desde AsyncStorage y exponer la UI de preferencias / “Mi espacio”.
+Nombre, rol, nivel, materias, estilo del tutor, tema y meta semanal. Hidratar Zustand desde AsyncStorage.
 
 ## Public API
 
 Importar desde `@/modules/user-preferences`:
 
-- Domain: `UserPreferences`, opciones de tema/rol/estilo.
+- Domain: `UserPreferences`, opciones, normalización.
 - Application ports: `PreferencesRepository`.
-- Adapters: `AsyncStoragePreferencesRepository`, `InMemoryPreferencesRepository`, `STORAGE_KEYS`.
-- Composition: `createUserPreferencesModule` (bootstrap puede importar `./composition` directo).
-- Shared UI API: `PreferencesHydrator`, `usePreferences`, `usePreferencesStore`, `ROLE_SELECT_OPTIONS`.
+- Infrastructure: `AsyncStoragePreferencesRepository`, `InMemoryPreferencesRepository`, `STORAGE_KEYS`.
+- Composition: `createUserPreferencesModule`.
+- Shared UI API: `PreferencesHydrator`, `usePreferences`, `usePreferencesStore`.
 
-`PreferencesScreen`: importar desde `@/modules/user-preferences/ui` solo desde `src/app/`.
+`PreferencesScreen`: desde `@/modules/user-preferences/ui` solo en `src/app/`.
 
 ## Wiring
 
-Composition root en `bootstrap/` (`DependenciesProvider`). Claves de storage viven en adapters.
-
-## Depends on
-
-- AsyncStorage (driven adapter).
-- Design system (sheets, selects, theme).
+Composition root en `bootstrap/` (`DependenciesProvider`). Claves de storage viven en infrastructure; la validación/normalización vive en domain.

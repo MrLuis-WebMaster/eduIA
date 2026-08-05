@@ -6,21 +6,21 @@ export type {
   TutorRequest,
   TutorResponse,
   UserRole,
-} from './domain/types.js';
+} from './domain/index.js';
 export {
   buildPedagogicalSystemPrompt,
   buildTurnControlReminder,
   assessTutorScope,
   resolveSubjectKey,
   parseTutorAgentDecision,
-} from './domain/policies/pedagogical-policy.js';
+} from './domain/index.js';
 export type {
   PedagogicalContext,
   ScopeAssessment,
   TutorSubjectKey,
   TutorAgentAction,
   TutorAgentDecision,
-} from './domain/policies/pedagogical-policy.js';
+} from './domain/index.js';
 export type {
   AIChatMessage,
   AIProvider,
@@ -30,5 +30,5 @@ export type {
 } from './application/ports/ai-provider.js';
 export { GenerateTutorResponse } from './application/use-cases/generate-tutor-response.js';
 export { composeTutoring, createAIProvider } from './composition/compose-tutoring.js';
-export { FakeAIProvider } from './adapters/outbound/ai/fake-ai-provider.js';
-export { OpenAIProvider } from './adapters/outbound/ai/openai-provider.js';
+export { FakeAIProvider } from './infrastructure/outbound/ai/fake-ai-provider.js';
+export { OpenAIProvider } from './infrastructure/outbound/ai/openai-provider.js';

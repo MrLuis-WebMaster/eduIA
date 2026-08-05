@@ -14,7 +14,7 @@ import type {
   RecentProgressItem,
   SubjectProgress,
   WeeklyActivityDay,
-} from './types';
+} from '../types';
 
 const WEEKDAY_LABELS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] as const;
 

@@ -3,7 +3,7 @@ import type { KeyValueStorage } from '@/shared';
 import {
   AsyncStoragePreferencesRepository,
   type PreferencesRepository,
-} from '../adapters';
+} from '../infrastructure';
 import {
   createLoadPreferences,
   createResetPreferences,

@@ -1,7 +1,7 @@
 /** Lightweight session-scope checks for the offline FakeTutorEngine. */
 
-import type { Subject, UserRole } from './types';
-import { SUBJECT_LABELS } from './constants';
+import type { Subject, UserRole } from '../types';
+import { SUBJECT_LABELS } from '../constants';
 
 export type LocalScopeAssessment =
   | { ok: true }

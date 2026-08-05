@@ -5,7 +5,7 @@ import {
   computeProgressSummary,
   computeStreak,
   toDateKey,
-} from './index';
+} from './compute-progress-summary';
 import type { RecentTutoringSessionDto } from '@/modules/tutoring';
 
 function session(

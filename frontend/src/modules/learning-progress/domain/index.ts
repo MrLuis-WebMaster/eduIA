@@ -1,3 +1,5 @@
+/** Learning-progress domain public surface. */
+
 export type {
   WeeklyActivityDay,
   SubjectProgress,
@@ -12,4 +14,4 @@ export {
   toDateKey,
   computeStreak,
   buildWeeklyActivity,
-} from './progress';
+} from './services/compute-progress-summary';

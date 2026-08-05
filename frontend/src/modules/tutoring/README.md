@@ -2,40 +2,46 @@
 
 Chat del tutor educativo en el dispositivo.
 
+## Layers
+
+| Capa | Rol |
+| --- | --- |
+| **domain/** | Agregado `TutorSessionAggregate`, messages, policies (scope/follow-up), domain events (records) |
+| **application/** | Use cases + ports (`TutorEngine`, `ConversationRepository`) |
+| **infrastructure/** | `HttpTutorEngine`, `FakeTutorEngine`, AsyncStorage repos |
+| **composition/** | `createTutoringModule` — Fake vs HTTP |
+| **ui/** | `TutorScreen`, hooks (solo desde `src/app/`) |
+
 ## Responsibility
 
 Gestionar sesiones de tutoría: enviar mensajes, persistir historial local, listar sesiones recientes y renderizar la UI del tab Tutor.
 
 ## Public API
 
-Importar desde `@/modules/tutoring` (`index.ts`) para dominio/aplicación/adapters/hooks compartidos:
+Importar desde `@/modules/tutoring` (`index.ts`):
 
-- Domain: tipos/constantes de sesión, materias, acciones rápidas.
-- Application ports: `TutorEngine`, `ConversationRepository` (`application/ports.ts`).
-- Adapters: `FakeTutorEngine`, `HttpTutorEngine`, repositorios AsyncStorage / in-memory.
-- Composition: `createTutoringModule` (el composition root puede importar `./composition` directo).
+- Domain: tipos/constantes de sesión, `TutorSessionAggregate`, materias, acciones rápidas.
+- Application ports: `TutorEngine`, `ConversationRepository`.
+- Infrastructure: `FakeTutorEngine`, `HttpTutorEngine`, repositorios AsyncStorage / in-memory.
+- Composition: `createTutoringModule`.
 - Shared UI API: query keys, `useRecentTutoringSessions`.
 
-Pantallas (`TutorScreen`, `useTutorSession`): importar desde `@/modules/tutoring/ui` solo desde `src/app/` (evita require cycles).
+Pantallas (`TutorScreen`, `useTutorSession`): importar desde `@/modules/tutoring/ui` solo desde `src/app/`.
 
-Los filtros del chat (materia, dificultad, rol) son de **sesión**: las preferencias del perfil solo aportan valores iniciales; no se sincronizan en ambos sentidos.
+Los filtros del chat (materia, dificultad, rol) son de **sesión**: las preferencias del perfil solo aportan valores iniciales.
 
-Alcance pedagógico: OpenAI decide semánticamente (JSON `action`/`reply` con schema estricto). El modo fake usa `assessTutorScope` / `assessLocalTutorScope` solo para demos deterministas.
-
-Markdown del tutor: además de listas y LaTeX (`$…$` / `$$…$$`), los fences ` ```mermaid ` se renderizan como diagrama (SVG). Si el render falla, se muestra el código fuente.
+Alcance pedagógico: OpenAI decide semánticamente (JSON `action`/`reply`). El modo fake usa `assessTutorScope` / `assessLocalTutorScope` para demos deterministas.
 
 ## Wiring
 
-Composition root: `frontend/src/bootstrap/` elige `fake` vs `remote` según `EXPO_PUBLIC_TUTOR_MODE`.
-
-| Modo | Adapter |
+| Modo | Infrastructure |
 | --- | --- |
-| `fake` | `FakeTutorEngine` (sin red) |
+| `fake` | `FakeTutorEngine` |
 | `remote` | `HttpTutorEngine` → `POST /api/v1/tutor/messages` |
 
 Env: [docs/reference/environment.md](../../../../docs/reference/environment.md).
 
 ## Depends on
 
-- `shared/http`, `shared/config`, design system (UI).
-- Backend tutoring cuando `remote` ([backend module](../../../../backend/src/modules/tutoring/README.md)).
+- `shared/http`, `shared/config`, `shared/domain` (shared kernel), design system.
+- Backend tutoring cuando `remote`.

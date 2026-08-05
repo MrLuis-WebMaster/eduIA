@@ -4,7 +4,7 @@ import type {
   UserProfile,
 } from '../domain';
 
-/** Preferences persistence port — outbound adapters implement this. */
+/** Preferences persistence port — infrastructure (outbound) implements this. */
 export interface PreferencesRepository {
   loadProfile(): Promise<UserProfile>;
   saveProfile(profile: UserProfile): Promise<void>;

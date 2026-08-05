@@ -2,9 +2,9 @@ import type { Env } from '@/shared/config/env.js';
 import { AppError } from '@/shared/errors/app-error.js';
 import type { AIProvider } from '../application/ports/ai-provider.js';
 import { GenerateTutorResponse } from '../application/use-cases/generate-tutor-response.js';
-import { createTutorRouter } from '../adapters/inbound/http/tutor.router.js';
-import { FakeAIProvider } from '../adapters/outbound/ai/fake-ai-provider.js';
-import { OpenAIProvider } from '../adapters/outbound/ai/openai-provider.js';
+import { createTutorRouter } from '../infrastructure/inbound/http/tutor.router.js';
+import { FakeAIProvider } from '../infrastructure/outbound/ai/fake-ai-provider.js';
+import { OpenAIProvider } from '../infrastructure/outbound/ai/openai-provider.js';
 
 export interface TutoringModule {
   router: ReturnType<typeof createTutorRouter>;

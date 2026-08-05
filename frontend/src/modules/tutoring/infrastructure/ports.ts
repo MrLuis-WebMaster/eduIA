@@ -1,4 +1,4 @@
-/** Re-export application ports for adapter implementations. */
+/** Re-export application ports for infrastructure implementations. */
 export type {
   SendTutorMessageInput,
   SendTutorMessageResult,

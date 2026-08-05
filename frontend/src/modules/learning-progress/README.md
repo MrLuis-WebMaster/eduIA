@@ -1,26 +1,27 @@
 # Module: learning-progress (frontend)
 
-Métricas de progreso derivadas del historial de tutoría en el dispositivo.
+Métricas y resumen de aprendizaje derivados del historial local de tutoring.
+
+## Layers
+
+| Capa | Rol |
+| --- | --- |
+| **domain/** | Read models + service `computeProgressSummary` |
+| **application/** | `getProgressSummary` + port `ListRecentSessions` (anti-corruption) |
+| **infrastructure/** | Sin adapters propios — ver README en la carpeta |
+| **composition/** | `createLearningProgressModule` |
+| **ui/** | `ProgressScreen` |
 
 ## Responsibility
 
-Calcular resumen de progreso (racha, actividad semanal, materias) a partir de las sesiones recientes del módulo tutoring. No llama a la API remota.
+Calcular rachas, actividad por materia, meta semanal y recomendaciones a partir de `RecentTutoringSessionDto` (contexto tutoring).
 
 ## Public API
 
 Importar desde `@/modules/learning-progress`:
 
-- Domain: helpers puros (`computeProgressSummary`, `computeStreak`, …).
-- Application: `createGetProgressSummary`, tipo `ListRecentSessions`.
-- Composition: `createLearningProgressModule` (bootstrap puede importar `./composition` directo).
+- Domain: `ProgressSummary`, `computeProgressSummary`, …
+- Application: `createGetProgressSummary`, `ListRecentSessions`
+- Composition: `createLearningProgressModule`
 
-`ProgressScreen` / `useLearningProgress`: importar desde `@/modules/learning-progress/ui` solo desde `src/app/` (o relativo dentro del módulo).
-
-## Wiring
-
-El composition root inyecta `ListRecentSessions` desde tutoring. La UI consume `getProgressSummary` vía `useLearningProgress`. La meta semanal se lee desde preferencias.
-
-## Depends on
-
-- Historial de `tutoring` (sesiones locales).
-- Design system para la pantalla de progreso.
+`ProgressScreen`: desde `@/modules/learning-progress/ui` solo en `src/app/`.

@@ -8,7 +8,7 @@ import {
   type SendTutorMessageInput,
   type SendTutorMessageResult,
   type TutorEngine,
-} from '@/modules/tutoring/adapters';
+} from '@/modules/tutoring/infrastructure';
 import { createEmptySession } from '@/modules/tutoring/domain';
 import {
   createListRecentSessions,

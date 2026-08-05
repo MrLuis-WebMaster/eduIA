@@ -5,7 +5,7 @@ import {
   buildPedagogicalSystemPrompt,
   parseTutorAgentDecision,
   resolveSubjectKey,
-} from '../src/modules/tutoring/domain/policies/pedagogical-policy.js';
+} from '../src/modules/tutoring/domain/index.js';
 
 const baseCtx = {
   subject: 'Historia',

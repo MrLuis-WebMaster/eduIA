@@ -1,9 +1,8 @@
 import { AppError } from '@/shared';
 
 import {
-  MESSAGE_MAX_LENGTH,
-  MESSAGE_MIN_LENGTH,
-  createMessageId,
+  DomainError,
+  TutorSessionAggregate,
   type ChatMessage,
   type Difficulty,
   type ExplanationStyle,
@@ -45,64 +44,61 @@ export function createSendTutorMessage(deps: {
   return async function sendTutorMessage(
     command: SendTutorMessageCommand,
   ): Promise<SendTutorMessageOutcome> {
-    const trimmed = command.message.trim();
-    if (trimmed.length < MESSAGE_MIN_LENGTH) {
-      throw new AppError(
-        'VALIDATION',
-        `El mensaje debe tener al menos ${MESSAGE_MIN_LENGTH} caracteres`,
-        { retryable: false },
-      );
-    }
-    if (trimmed.length > MESSAGE_MAX_LENGTH) {
-      throw new AppError(
-        'VALIDATION',
-        `El mensaje no puede superar ${MESSAGE_MAX_LENGTH} caracteres`,
-        { retryable: false },
-      );
+    const aggregate = TutorSessionAggregate.fromSnapshot(command.session)
+      .withSubjectDifficulty(command.subject, command.difficulty);
+
+    let userMessage: ChatMessage;
+    try {
+      userMessage = aggregate.appendUserMessage(command.message);
+    } catch (error) {
+      throw mapDomainError(error);
     }
 
-    const userMessage: ChatMessage = {
-      id: createMessageId('user'),
-      role: 'user',
-      content: trimmed,
-      createdAt: new Date().toISOString(),
-    };
+    // Engine sees prior turns only (exclude the message just appended).
+    const priorMessages = aggregate.toSnapshot().messages.slice(0, -1);
 
     let result: SendTutorMessageResult;
     try {
       result = await deps.tutorEngine.sendMessage({
-        message: trimmed,
+        message: userMessage.content,
         subject: command.subject,
         difficulty: command.difficulty,
         userRole: command.userRole,
         explanationStyle: command.explanationStyle,
         tutorPersonality: command.tutorPersonality,
-        conversation: command.session.messages,
+        conversation: priorMessages,
         signal: command.signal,
       });
     } catch (error) {
       throw mapSendError(error, command.signal);
     }
 
-    const session: TutorSession = {
-      ...command.session,
-      subject: command.subject,
-      difficulty: command.difficulty,
-      messages: [...command.session.messages, userMessage, result.reply],
-      updatedAt: new Date().toISOString(),
-    };
+    const assistantMessage = aggregate.appendAssistantMessage(result.reply);
+    const session = aggregate.toSnapshot();
+    aggregate.pullEvents();
 
     await deps.conversationRepository.save(session);
 
     return {
       session,
       userMessage,
-      assistantMessage: result.reply,
+      assistantMessage,
       provider: result.provider,
       model: result.model,
       requestId: result.requestId,
     };
   };
+}
+
+function mapDomainError(error: unknown): AppError {
+  if (error instanceof DomainError) {
+    return new AppError('VALIDATION', error.message, { retryable: false });
+  }
+  if (error instanceof AppError) return error;
+  return new AppError('UNKNOWN', 'Error de dominio al enviar el mensaje', {
+    retryable: false,
+    cause: error,
+  });
 }
 
 function mapSendError(error: unknown, signal?: AbortSignal): AppError {

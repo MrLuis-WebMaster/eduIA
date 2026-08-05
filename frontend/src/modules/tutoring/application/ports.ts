@@ -1,4 +1,4 @@
-/** Tutoring application ports — outbound adapters implement these. */
+/** Tutoring application ports — infrastructure (outbound) implements these. */
 
 import type {
   ChatMessage,

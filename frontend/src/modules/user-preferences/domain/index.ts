@@ -21,3 +21,23 @@ export {
   WEEKLY_QUESTION_GOAL_MIN,
   WEEKLY_QUESTION_GOAL_MAX,
 } from './constants';
+
+export {
+  defaultUserProfile,
+  defaultAppPreferences,
+  defaultUserPreferences,
+} from './defaults';
+
+export {
+  DISPLAY_NAME_MAX_LENGTH,
+  normalizeProfile,
+  normalizeAppPreferences,
+  normalizeUserPreferences,
+  emptyUserProfile,
+  emptyAppPreferences,
+} from './entities/user-preferences';
+
+export {
+  parseThemePreference,
+  parseWeeklyQuestionGoal,
+} from './value-objects/theme-and-goal';

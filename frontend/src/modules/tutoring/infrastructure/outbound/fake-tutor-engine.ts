@@ -6,7 +6,7 @@ import type {
   TutorEngine,
 } from '../ports';
 import { SUBJECT_LABELS, createMessageId } from '../../domain';
-import { assessLocalTutorScope } from '../../domain/scope-policy';
+import { assessLocalTutorScope } from '../../domain/policies/scope-policy';
 
 const DELAY_MS = 600;
 

@@ -2,15 +2,24 @@
 
 Generación de respuestas del tutor vía HTTP.
 
+## Layers
+
+| Capa | Rol |
+| --- | --- |
+| **domain/** | Tipos/VOs, `PedagogicalPolicy`, `parseTutorAgentDecision` |
+| **application/** | `GenerateTutorResponse` + port `AIProvider` |
+| **infrastructure/** | inbound HTTP (router/controller/Zod), outbound OpenAI/Fake |
+| **composition/** | `composeTutoring` — elige provider |
+
+Sin entidad de sesión: API **stateless** ([ADR 0001](../../../../docs/adr/0001-stateless-api.md)). El agregado de chat vive en el dispositivo.
+
 ## Responsibility
 
-API stateless: validar el body, aplicar política pedagógica, llamar al `AIProvider` y devolver la respuesta completa (sin streaming).
+Validar el body, aplicar política pedagógica, llamar al `AIProvider` y devolver la respuesta completa (sin streaming).
 
 ## Public API
 
-Importar desde el barrel del módulo (`index.ts`):
-
-- Domain: tipos + `buildPedagogicalSystemPrompt`, decisión JSON del agente (`parseTutorAgentDecision`). `assessTutorScope` solo para el provider fake.
+- Domain: tipos + `buildPedagogicalSystemPrompt`, `parseTutorAgentDecision`. `assessTutorScope` solo para fake.
 - Port: `AIProvider`.
 - Use case: `GenerateTutorResponse`.
 - Composition: `composeTutoring`, `createAIProvider`.
@@ -24,13 +33,6 @@ Importar desde el barrel del módulo (`index.ts`):
 
 Contrato: [docs/reference/api.md](../../../../docs/reference/api.md).
 
-Rate limit y timeout: `TUTOR_RATE_LIMIT_*`, `AI_REQUEST_TIMEOUT_MS` — ver [environment](../../../../docs/reference/environment.md).
-
-## Runbooks
-
-- [rate-limit-429](../../../../docs/runbooks/rate-limit-429.md)
-- [ai-provider-timeout](../../../../docs/runbooks/ai-provider-timeout.md)
-
 ## ADRs
 
-- [0001](../../../../docs/adr/0001-stateless-api.md), [0003](../../../../docs/adr/0003-no-streaming-responses.md), [0004](../../../../docs/adr/0004-fake-providers-always-available.md)
+- [0001](../../../../docs/adr/0001-stateless-api.md), [0002](../../../../docs/adr/0002-hexagonal-pragmatic.md), [0003](../../../../docs/adr/0003-no-streaming-responses.md), [0004](../../../../docs/adr/0004-fake-providers-always-available.md)

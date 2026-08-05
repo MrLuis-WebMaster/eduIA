@@ -1,16 +1,13 @@
 /** Learning progress application use-cases. */
 
-import type { RecentTutoringSessionDto } from '@/modules/tutoring';
-
 import {
   computeProgressSummary,
   emptyProgressSummary,
   type ProgressSummary,
 } from '../domain';
+import type { ListRecentSessions } from './ports';
 
-export type ListRecentSessions = (
-  limit?: number,
-) => Promise<RecentTutoringSessionDto[]>;
+export type { ListRecentSessions } from './ports';
 
 export function createGetProgressSummary(deps: {
   listRecentSessions: ListRecentSessions;

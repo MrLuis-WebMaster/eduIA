@@ -35,7 +35,7 @@ export {
   AsyncStoragePreferencesRepository,
   InMemoryPreferencesRepository,
   STORAGE_KEYS,
-} from './adapters';
+} from './infrastructure';
 
 export {
   createUserPreferencesModule,

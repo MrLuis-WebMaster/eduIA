@@ -2,8 +2,8 @@ import { AppError } from '@/shared/errors/app-error.js';
 import {
   buildPedagogicalSystemPrompt,
   buildTurnControlReminder,
-  parseTutorAgentDecision,
 } from '../../domain/policies/pedagogical-policy.js';
+import { parseTutorAgentDecision } from '../../domain/services/tutor-agent-decision.js';
 import type { TutorRequest, TutorResponse } from '../../domain/types.js';
 import type { AIChatMessage, AIProvider } from '../ports/ai-provider.js';
 

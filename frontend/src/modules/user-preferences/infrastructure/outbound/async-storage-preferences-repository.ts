@@ -2,47 +2,19 @@ import type { KeyValueStorage } from '@/shared';
 
 import { STORAGE_KEYS } from '../storage-keys';
 import {
-  WEEKLY_QUESTION_GOAL_MAX,
-  WEEKLY_QUESTION_GOAL_MIN,
+  defaultAppPreferences,
+  defaultUserProfile,
+  normalizeAppPreferences,
+  normalizeProfile,
   type AppPreferences,
-  type FavoriteSubject,
-  type ExplanationStyle,
-  type PreferredLevel,
-  type ThemePreference,
-  type TutorPersonality,
   type UserPreferences,
   type UserProfile,
-  type UserRole,
 } from '../../domain';
-import {
-  defaultAppPreferences,
-  defaultUserPreferences,
-  defaultUserProfile,
-} from '../../application/defaults';
 import type { PreferencesRepository } from '../../application/ports';
-
-const VALID_ROLES: UserRole[] = ['student', 'teacher'];
-const VALID_LEVELS: PreferredLevel[] = ['basic', 'intermediate', 'advanced'];
-const VALID_STYLES: ExplanationStyle[] = ['simple', 'detailed', 'socratic'];
-const VALID_PERSONALITIES: TutorPersonality[] = [
-  'friendly',
-  'formal',
-  'motivating',
-  'patient',
-  'direct',
-];
-const VALID_SUBJECTS: FavoriteSubject[] = [
-  'math',
-  'science',
-  'language',
-  'history',
-  'other',
-];
-const VALID_THEMES: ThemePreference[] = ['system', 'light', 'dark'];
 
 /**
  * Persists profile and theme prefs in versioned AsyncStorage keys.
- * AsyncStorage is the source of truth; callers keep an in-memory mirror.
+ * Normalization belongs to the domain — this adapter only loads/saves snapshots.
  */
 export class AsyncStoragePreferencesRepository implements PreferencesRepository {
   constructor(private readonly storage: KeyValueStorage) {}
@@ -68,7 +40,9 @@ export class AsyncStoragePreferencesRepository implements PreferencesRepository 
     const raw = await this.storage.getItem(STORAGE_KEYS.preferences);
     if (!raw) return { ...defaultAppPreferences };
     try {
-      return normalizePreferences(JSON.parse(raw) as Partial<AppPreferences>);
+      return normalizeAppPreferences(
+        JSON.parse(raw) as Partial<AppPreferences>,
+      );
     } catch {
       return { ...defaultAppPreferences };
     }
@@ -77,7 +51,7 @@ export class AsyncStoragePreferencesRepository implements PreferencesRepository 
   async savePreferences(preferences: AppPreferences): Promise<void> {
     await this.storage.setItem(
       STORAGE_KEYS.preferences,
-      JSON.stringify(normalizePreferences(preferences)),
+      JSON.stringify(normalizeAppPreferences(preferences)),
     );
   }
 
@@ -134,7 +108,7 @@ export class InMemoryPreferencesRepository implements PreferencesRepository {
   }
 
   async savePreferences(preferences: AppPreferences): Promise<void> {
-    this.preferences = normalizePreferences(preferences);
+    this.preferences = normalizeAppPreferences(preferences);
   }
 
   async loadAll(): Promise<UserPreferences> {
@@ -142,70 +116,12 @@ export class InMemoryPreferencesRepository implements PreferencesRepository {
   }
 
   async saveAll(prefs: UserPreferences): Promise<void> {
-    await this.saveProfile(prefs);
-    await this.savePreferences({
-      theme: prefs.theme,
-      weeklyQuestionGoal: prefs.weeklyQuestionGoal,
-    });
+    this.profile = normalizeProfile(prefs);
+    this.preferences = normalizeAppPreferences(prefs);
   }
 
   async clear(): Promise<void> {
     this.profile = { ...defaultUserProfile };
     this.preferences = { ...defaultAppPreferences };
   }
-}
-
-function normalizeProfile(input: Partial<UserProfile>): UserProfile {
-  const role = VALID_ROLES.includes(input.role as UserRole)
-    ? (input.role as UserRole)
-    : defaultUserPreferences.role;
-  const preferredLevel = VALID_LEVELS.includes(input.preferredLevel as PreferredLevel)
-    ? (input.preferredLevel as PreferredLevel)
-    : defaultUserPreferences.preferredLevel;
-  const explanationStyle = VALID_STYLES.includes(
-    input.explanationStyle as ExplanationStyle,
-  )
-    ? (input.explanationStyle as ExplanationStyle)
-    : defaultUserPreferences.explanationStyle;
-  const tutorPersonality = VALID_PERSONALITIES.includes(
-    input.tutorPersonality as TutorPersonality,
-  )
-    ? (input.tutorPersonality as TutorPersonality)
-    : defaultUserPreferences.tutorPersonality;
-  const favoriteSubjects = Array.isArray(input.favoriteSubjects)
-    ? input.favoriteSubjects.filter((s): s is FavoriteSubject =>
-        VALID_SUBJECTS.includes(s as FavoriteSubject),
-      )
-    : [];
-
-  return {
-    displayName:
-      typeof input.displayName === 'string'
-        ? input.displayName.trim().slice(0, 80)
-        : '',
-    role,
-    preferredLevel,
-    favoriteSubjects,
-    explanationStyle,
-    tutorPersonality,
-  };
-}
-
-function normalizePreferences(
-  input: Partial<AppPreferences>,
-): AppPreferences {
-  const theme = VALID_THEMES.includes(input.theme as ThemePreference)
-    ? (input.theme as ThemePreference)
-    : defaultAppPreferences.theme;
-
-  const rawGoal = input.weeklyQuestionGoal;
-  const weeklyQuestionGoal =
-    typeof rawGoal === 'number' &&
-    Number.isFinite(rawGoal) &&
-    rawGoal >= WEEKLY_QUESTION_GOAL_MIN &&
-    rawGoal <= WEEKLY_QUESTION_GOAL_MAX
-      ? Math.round(rawGoal)
-      : defaultAppPreferences.weeklyQuestionGoal;
-
-  return { theme, weeklyQuestionGoal };
 }

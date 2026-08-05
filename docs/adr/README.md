@@ -11,7 +11,7 @@ Decisiones arquitectónicas versionadas. Formato corto: contexto → decisión �
 | ADR | Título | Estado |
 | --- | --- | --- |
 | [0001](./0001-stateless-api.md) | API sin auth ni base de datos; estado en dispositivo | Accepted |
-| [0002](./0002-hexagonal-pragmatic.md) | Hexagonal pragmático por módulo | Accepted |
+| [0002](./0002-hexagonal-pragmatic.md) | Hexagonal + DDD por módulo | Accepted |
 | [0003](./0003-no-streaming-responses.md) | Respuesta completa sin streaming | Accepted |
 | [0004](./0004-fake-providers-always-available.md) | Proveedores fake siempre disponibles | Accepted |
 | [0005](./0005-nativewind-design-system.md) | NativeWind + design system propio | Accepted |

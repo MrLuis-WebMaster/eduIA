@@ -24,6 +24,8 @@ export {
   ROLE_OPTIONS,
   createEmptySession,
   toRecentTutoringSessionDto,
+  TutorSessionAggregate,
+  DomainError,
 } from './domain';
 
 export type {
@@ -41,7 +43,7 @@ export {
   HttpTutorEngine,
   AsyncStorageConversationRepository,
   InMemoryConversationRepository,
-} from './adapters';
+} from './infrastructure';
 
 export {
   createTutoringModule,
