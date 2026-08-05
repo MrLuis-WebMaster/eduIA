@@ -46,13 +46,12 @@ export function ProgressQuickStats({ summary }: ProgressQuickStatsProps) {
   ];
 
   return (
-    <Row gap="sm" wrap>
+    <Row gap="sm" wrap align="stretch">
       {items.map((item) => {
         const Icon = item.icon;
         return (
           <AppCard
             key={item.label}
-            variant="muted"
             padding="sm"
             className="min-w-[46%] flex-1"
             accessibilityLabel={`${item.label}: ${item.value}`}>

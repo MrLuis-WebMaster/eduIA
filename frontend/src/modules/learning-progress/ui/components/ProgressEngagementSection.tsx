@@ -153,10 +153,15 @@ function RecommendationCard({
   subjectLabel: string | null;
   onPress: () => void;
 }) {
+  const { colors } = useTheme();
+
   return (
     <AppCard
       padding="md"
-      className="border-chat-user/30 bg-chat-user/10"
+      style={{
+        borderColor: `${colors.chatUser}4D`,
+        backgroundColor: `${colors.chatUser}1A`,
+      }}
       accessibilityLabel="Recomendación para ti">
       <Stack gap="sm">
         <AppText variant="label">Recomendación para ti</AppText>
