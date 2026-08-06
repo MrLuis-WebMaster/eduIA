@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { Box } from '../primitives/Box';
@@ -7,6 +7,7 @@ import { Stack, type StackProps } from '../primitives/Stack';
 import { layout } from '../tokens/layout';
 import { cn } from '../utils/cn';
 import { AppText } from './AppText';
+import { KeyboardSpacer } from './KeyboardSpacer';
 
 type AppScreenProps = {
   children: ReactNode;
@@ -16,7 +17,7 @@ type AppScreenProps = {
   footer?: ReactNode;
   /** Scrollable body. Default false. */
   scroll?: boolean;
-  /** Wrap body in KeyboardAvoidingView. */
+  /** Lift sticky footer above the software keyboard (device IME height). */
   keyboard?: boolean;
   /** Safe-area edges. Default none — tabs layout owns the top inset via AppHeader. */
   edges?: Edge[];
@@ -69,29 +70,15 @@ export function AppScreen({
     body
   );
 
-  const column = (
-    <View className="min-h-0 flex-1">
-      {header}
-      {main}
-      {footer}
-    </View>
-  );
-
-  const framed = keyboard ? (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}>
-      {column}
-    </KeyboardAvoidingView>
-  ) : (
-    column
-  );
-
   return (
     <Box className={cn('flex-1 bg-background', className)}>
       <SafeAreaView style={{ flex: 1 }} edges={edges}>
-        {framed}
+        <View className="min-h-0 flex-1">
+          {header}
+          {main}
+          {footer}
+          {keyboard ? <KeyboardSpacer /> : null}
+        </View>
       </SafeAreaView>
     </Box>
   );

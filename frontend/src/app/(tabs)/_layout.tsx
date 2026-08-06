@@ -16,6 +16,8 @@ export default function TabsLayout() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.foregroundMuted,
         tabBarStyle: { backgroundColor: colors.surface },
+        // Keep chat/composer above the IME; tab bar would otherwise sit on top of it.
+        tabBarHideOnKeyboard: true,
       }}>
       <Tabs.Screen
         name="index"

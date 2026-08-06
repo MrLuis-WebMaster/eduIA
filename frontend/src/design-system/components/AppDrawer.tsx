@@ -45,6 +45,7 @@ export function AppDrawer({
             className="w-[82%] max-w-sm border-r border-border bg-surface"
             style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
             onPress={(e) => e.stopPropagation()}
+            focusable={false}
             accessibilityLabel={accessibilityLabel ?? title}>
             <Row
               align="center"
@@ -78,6 +79,7 @@ export function AppDrawer({
           <RNPressable
             className="flex-1 bg-black/50"
             onPress={onClose}
+            focusable={false}
             accessibilityRole="button"
             accessibilityLabel="Cerrar menú"
           />
