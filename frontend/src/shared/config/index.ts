@@ -10,8 +10,9 @@ export type AppConfig = {
 };
 
 export function getAppConfig(): AppConfig {
-  const apiUrl =
-    process.env.EXPO_PUBLIC_API_URL?.trim() || 'http://localhost:3001';
+  const apiUrl = (
+    process.env.EXPO_PUBLIC_API_URL?.trim() || 'http://localhost:3001'
+  ).replace(/\/+$/, '');
 
   const tutorMode = resolveTutorMode();
 

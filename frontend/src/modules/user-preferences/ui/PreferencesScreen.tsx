@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import { Alert, View } from 'react-native';
 import {
   BookOpen,
@@ -17,6 +17,7 @@ import {
 import {
   AppAvatar,
   AppCard,
+  AppDivider,
   AppScreen,
   AppSpinner,
   AppText,
@@ -25,11 +26,19 @@ import {
   Stack,
   useTheme,
 } from '@/design-system';
+import { initialsFromName } from '@/shared/utils';
+import {
+  DIFFICULTY_LABELS,
+  ROLE_LABELS,
+  SUBJECT_LABELS,
+} from '@/shared/domain/tutor-profile';
 
-import { LEVEL_OPTIONS, ROLE_OPTIONS, THEME_OPTIONS } from '../domain';
+import { THEME_LABELS } from '../domain/constants';
 import { AppearanceSheet, THEME_STATUS } from './components/AppearanceSheet';
 import { ConversationsSheet } from './components/ConversationsSheet';
+import { PreferenceStatCard } from './components/PreferenceStatCard';
 import { ProfileSheet } from './components/ProfileSheet';
+import { SpaceMenuGroup } from './components/SpaceMenuGroup';
 import { SpaceMenuRow } from './components/SpaceMenuRow';
 import { TutorPreferencesSheet } from './components/TutorPreferencesSheet';
 import { usePreferences } from './hooks/usePreferences';
@@ -60,25 +69,17 @@ export function PreferencesScreen() {
   };
 
   const initials = useMemo(
-    () => initialsFromName(prefs.displayName),
+    () => initialsFromName(prefs.displayName, 'E'),
     [prefs.displayName],
   );
 
-  const roleLabel =
-    ROLE_OPTIONS.find((o) => o.value === prefs.role)?.label ?? prefs.role;
-  const levelLabel =
-    LEVEL_OPTIONS.find((o) => o.value === prefs.preferredLevel)?.label ??
-    prefs.preferredLevel;
-  const themeLabel =
-    THEME_OPTIONS.find((o) => o.value === prefs.theme)?.label ?? prefs.theme;
-  const subjectsLabel =
-    prefs.favoriteSubjects.length === 0
-      ? 'Sin elegir'
-      : prefs.favoriteSubjects.length === 1
-        ? '1 materia'
-        : `${prefs.favoriteSubjects.length} materias`;
+  const roleLabel = ROLE_LABELS[prefs.role];
+  const levelLabel = DIFFICULTY_LABELS[prefs.preferredLevel];
+  const themeLabel = THEME_LABELS[prefs.theme];
+  const subjectsLabel = prefs.favoriteSubjects.map((subject) => SUBJECT_LABELS[subject]).join(', ') || 'Sin elegir';
 
   const displayName = prefs.displayName.trim() || 'Tu espacio';
+  const ageLabel = prefs.age ? `${prefs.age} años` : '';
 
   if (!hydrated) {
     return (
@@ -114,7 +115,7 @@ export function PreferencesScreen() {
 
           <Stack gap="xs" className="min-w-0 flex-1">
             <AppText variant="subtitle" numberOfLines={1}>
-              {displayName}
+              {displayName} ({ageLabel})
             </AppText>
             <Row
               align="center"
@@ -135,25 +136,25 @@ export function PreferencesScreen() {
       </AppCard>
 
       <Row gap="sm" wrap>
-        <StatCard
+        <PreferenceStatCard
           icon={ChartColumn}
           label="Nivel preferido"
           value={levelLabel}
         />
-        <StatCard
+        <PreferenceStatCard
           icon={BookOpen}
           label="Materias favoritas"
           value={subjectsLabel}
         />
-        <StatCard icon={Moon} label="Tema actual" value={themeLabel} />
-        <StatCard
+        <PreferenceStatCard icon={Moon} label="Tema actual" value={themeLabel} />
+        <PreferenceStatCard
           icon={Clock3}
           label="Última sincronización"
           value="Hace unos segundos"
         />
       </Row>
 
-      <MenuGroup title="Personalización">
+      <SpaceMenuGroup title="Personalización">
         <SpaceMenuRow
           title="Perfil"
           description="Nombre, rol y cómo te presentas"
@@ -162,7 +163,7 @@ export function PreferencesScreen() {
           iconBgClassName="bg-[#A78BFA]/20"
           onPress={() => openSheet('profile')}
         />
-        <Divider />
+        <AppDivider />
         <SpaceMenuRow
           title="Preferencias del tutor"
           description="Nivel, materias y estilo de explicación"
@@ -171,7 +172,7 @@ export function PreferencesScreen() {
           iconBgClassName="bg-primary/15"
           onPress={() => openSheet('tutor')}
         />
-        <Divider />
+        <AppDivider />
         <SpaceMenuRow
           title="Apariencia"
           description="Tema y aspecto visual de la app"
@@ -180,9 +181,9 @@ export function PreferencesScreen() {
           iconBgClassName="bg-[#FB923C]/20"
           onPress={() => openSheet('appearance')}
         />
-      </MenuGroup>
+      </SpaceMenuGroup>
 
-      <MenuGroup title="Datos">
+      <SpaceMenuGroup title="Datos">
         <SpaceMenuRow
           title="Conversaciones"
           description="Revisa o borra el historial del tutor"
@@ -191,7 +192,7 @@ export function PreferencesScreen() {
           iconBgClassName="bg-[#60A5FA]/20"
           onPress={() => openSheet('conversations')}
         />
-        <Divider />
+        <AppDivider />
         <SpaceMenuRow
           title="Restablecer aplicación"
           description="Vuelve a las preferencias por defecto"
@@ -216,7 +217,7 @@ export function PreferencesScreen() {
             );
           }}
         />
-      </MenuGroup>
+      </SpaceMenuGroup>
 
       {resetting ? (
         <AppText variant="caption" tone="muted">
@@ -277,66 +278,4 @@ export function PreferencesScreen() {
       />
     </AppScreen>
   );
-}
-
-function MenuGroup({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <Stack gap="sm">
-      <AppText variant="caption" tone="muted" className="px-1 font-medium uppercase tracking-wide">
-        {title}
-      </AppText>
-      <AppCard padding="none" className="overflow-hidden">
-        {children}
-      </AppCard>
-    </Stack>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof ChartColumn;
-  label: string;
-  value: string;
-}) {
-  const { colors } = useTheme();
-  return (
-    <AppCard
-      variant="muted"
-      padding="sm"
-      className="min-w-[46%] flex-1"
-      accessibilityLabel={`${label}: ${value}`}>
-      <Row align="center" gap="xs" className="mb-1.5">
-        <Icon size={14} color={colors.foregroundMuted} strokeWidth={2} />
-        <AppText variant="caption" tone="muted" numberOfLines={1}>
-          {label}
-        </AppText>
-      </Row>
-      <AppText
-        variant="label"
-        className="text-primary"
-        numberOfLines={1}>
-        {value}
-      </AppText>
-    </AppCard>
-  );
-}
-
-function Divider() {
-  return <View className="mx-3 h-px bg-border" />;
-}
-
-function initialsFromName(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return 'E';
-  if (parts.length === 1) return parts[0]!.slice(0, 2);
-  return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`;
 }

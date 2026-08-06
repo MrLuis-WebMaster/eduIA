@@ -67,6 +67,7 @@ export class AsyncStoragePreferencesRepository implements PreferencesRepository 
     const profile: UserProfile = {
       displayName: prefs.displayName,
       role: prefs.role,
+      age: prefs.age,
       preferredLevel: prefs.preferredLevel,
       favoriteSubjects: prefs.favoriteSubjects,
       explanationStyle: prefs.explanationStyle,

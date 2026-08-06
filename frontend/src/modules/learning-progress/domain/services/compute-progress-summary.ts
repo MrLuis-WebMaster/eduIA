@@ -7,6 +7,7 @@ import {
   type Difficulty,
   type Subject,
 } from '@/shared/domain';
+import { addDays, parseDateKey, toDateKey } from '@/shared/utils';
 
 import type {
   LevelUsage,
@@ -163,13 +164,6 @@ export function computeProgressSummary(
   };
 }
 
-export function toDateKey(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
 export function computeStreak(activityDays: string[], now: Date): number {
   const unique = [...new Set(activityDays)].sort().reverse();
   if (unique.length === 0) return 0;
@@ -273,16 +267,4 @@ function buildTeacherActivities(
   return subjects.slice(0, 3).map((s) =>
     `Actividad de ${level} en ${s.label}: errores comunes + mini práctica (5 min).`,
   );
-}
-
-function addDays(date: Date, days: number): Date {
-  const next = new Date(date);
-  next.setHours(12, 0, 0, 0);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-
-function parseDateKey(key: string): Date {
-  const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d, 12, 0, 0, 0);
 }

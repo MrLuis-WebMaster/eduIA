@@ -14,11 +14,6 @@ export type ProgressAchievement = {
   progress: number;
 };
 
-export function firstNameFromDisplayName(displayName: string): string {
-  const part = displayName.trim().split(/\s+/).filter(Boolean)[0];
-  return part || 'estudiante';
-}
-
 export function weeklyActivityScore(
   summary: ProgressSummary,
   weeklyQuestionGoal: number = 7,
@@ -104,27 +99,6 @@ export function buildAchievements(
       progress: Math.min(1, summary.progressBySubject.length / 3),
     },
   ];
-}
-
-export function formatRelativeDay(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '';
-
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  const key = (d: Date) =>
-    `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-
-  if (key(date) === key(today)) return 'Hoy';
-  if (key(date) === key(yesterday)) return 'Ayer';
-
-  const diffMs = today.setHours(0, 0, 0, 0) - date.setHours(0, 0, 0, 0);
-  const days = Math.round(diffMs / (1000 * 60 * 60 * 24));
-  if (days > 1 && days < 7) return `Hace ${days} días`;
-
-  return date.toLocaleDateString('es', { day: 'numeric', month: 'short' });
 }
 
 export function heroCopy(summary: ProgressSummary, firstName: string): {

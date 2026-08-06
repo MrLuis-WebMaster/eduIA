@@ -44,12 +44,24 @@ export function createSendTutorMessage(deps: {
   return async function sendTutorMessage(
     command: SendTutorMessageCommand,
   ): Promise<SendTutorMessageOutcome> {
-    const aggregate = TutorSessionAggregate.fromSnapshot(command.session)
-      .withSubjectDifficulty(command.subject, command.difficulty);
+    
+    const { 
+      session, 
+      message, 
+      subject, 
+      difficulty, 
+      userRole, 
+      explanationStyle, 
+      tutorPersonality, 
+      signal 
+    } = command;
+    
+    const aggregate = TutorSessionAggregate.fromSnapshot(session)
+      .withSubjectDifficulty(subject, difficulty);
 
     let userMessage: ChatMessage;
     try {
-      userMessage = aggregate.appendUserMessage(command.message);
+      userMessage = aggregate.appendUserMessage(message);
     } catch (error) {
       throw mapDomainError(error);
     }
@@ -61,26 +73,26 @@ export function createSendTutorMessage(deps: {
     try {
       result = await deps.tutorEngine.sendMessage({
         message: userMessage.content,
-        subject: command.subject,
-        difficulty: command.difficulty,
-        userRole: command.userRole,
-        explanationStyle: command.explanationStyle,
-        tutorPersonality: command.tutorPersonality,
+        subject,
+        difficulty,
+        userRole,
+        explanationStyle,
+        tutorPersonality,
         conversation: priorMessages,
-        signal: command.signal,
+        signal,
       });
     } catch (error) {
       throw mapSendError(error, command.signal);
     }
 
     const assistantMessage = aggregate.appendAssistantMessage(result.reply);
-    const session = aggregate.toSnapshot();
+    const updatedSession = aggregate.toSnapshot();
     aggregate.pullEvents();
 
-    await deps.conversationRepository.save(session);
+    await deps.conversationRepository.save(updatedSession);
 
     return {
-      session,
+      session: updatedSession,
       userMessage,
       assistantMessage,
       provider: result.provider,

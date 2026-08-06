@@ -20,11 +20,17 @@ export {
 /** Alias of shared DIFFICULTY_OPTIONS for preferences screens. */
 export const LEVEL_OPTIONS = DIFFICULTY_OPTIONS;
 
-export const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
+export const THEME_OPTIONS = [
   { value: 'system', label: 'Sistema' },
   { value: 'light', label: 'Claro' },
   { value: 'dark', label: 'Oscuro' },
-];
+] as const satisfies ReadonlyArray<{ value: ThemePreference; label: string }>;
+
+export const THEME_LABELS: Record<ThemePreference, string> = {
+  system: 'Sistema',
+  light: 'Claro',
+  dark: 'Oscuro',
+};
 
 /** Preset weekly question goals for the progress ring. */
 export const WEEKLY_QUESTION_GOAL_OPTIONS: {

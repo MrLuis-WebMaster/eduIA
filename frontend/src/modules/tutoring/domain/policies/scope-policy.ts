@@ -93,9 +93,7 @@ export function assessLocalTutorScope(input: {
     history: 0,
   } as Record<Exclude<Subject, 'other'>, number>;
 
-  for (const key of Object.keys(SUBJECT_SIGNALS) as Array<
-    Exclude<Subject, 'other'>
-  >) {
+  for (const key of Object.keys(SUBJECT_SIGNALS) as Exclude<Subject, 'other'>[]) {
     for (const pattern of SUBJECT_SIGNALS[key]) {
       if (pattern.test(message)) scores[key] += 1;
     }
@@ -105,9 +103,7 @@ export function assessLocalTutorScope(input: {
   let bestOther: Exclude<Subject, 'other'> | null = null;
   let bestOtherScore = 0;
 
-  for (const key of Object.keys(SUBJECT_SIGNALS) as Array<
-    Exclude<Subject, 'other'>
-  >) {
+  for (const key of Object.keys(SUBJECT_SIGNALS) as Exclude<Subject, 'other'>[]) {
     if (key === input.subject) continue;
     if (scores[key] > bestOtherScore) {
       bestOtherScore = scores[key];

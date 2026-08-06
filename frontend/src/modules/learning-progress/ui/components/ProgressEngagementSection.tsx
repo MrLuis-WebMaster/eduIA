@@ -11,11 +11,10 @@ import {
   useTheme,
 } from '@/design-system';
 
+import { formatRelativeDay } from '@/shared/utils';
+
 import type { RecentProgressItem } from '../../domain';
-import {
-  formatRelativeDay,
-  type ProgressAchievement,
-} from '../progressPresentation';
+import type { ProgressAchievement } from '../progressPresentation';
 
 export type ProgressEngagementSectionProps = {
   recentItems: RecentProgressItem[];

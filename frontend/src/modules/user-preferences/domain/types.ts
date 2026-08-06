@@ -21,6 +21,7 @@ export type ThemePreference = 'system' | 'light' | 'dark';
 export type UserProfile = {
   displayName: string;
   role: UserRole;
+  age: number | null;
   preferredLevel: PreferredLevel;
   favoriteSubjects: FavoriteSubject[];
   explanationStyle: ExplanationStyle;

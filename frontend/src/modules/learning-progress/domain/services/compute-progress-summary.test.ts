@@ -4,9 +4,9 @@ import {
   buildWeeklyActivity,
   computeProgressSummary,
   computeStreak,
-  toDateKey,
 } from './compute-progress-summary';
 import type { RecentTutoringSessionDto } from '@/modules/tutoring';
+import { toDateKey } from '@/shared/utils';
 
 function session(
   overrides: Partial<RecentTutoringSessionDto> &

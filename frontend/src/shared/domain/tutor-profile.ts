@@ -34,14 +34,6 @@ export const DIFFICULTY_OPTIONS: { value: Difficulty; label: string }[] = [
   { value: 'advanced', label: 'Avanzado' },
 ];
 
-export const SUBJECT_LABELS: Record<Subject, string> = {
-  math: 'Matemáticas',
-  science: 'Ciencias',
-  language: 'Lengua',
-  history: 'Historia',
-  other: 'Otro',
-};
-
 export const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
   { value: 'student', label: 'Estudiante' },
   { value: 'teacher', label: 'Docente' },
@@ -52,6 +44,31 @@ export const STYLE_OPTIONS: { value: ExplanationStyle; label: string }[] = [
   { value: 'detailed', label: 'Detallado' },
   { value: 'socratic', label: 'Socrático' },
 ];
+
+export const SUBJECT_LABELS: Record<Subject, string> = {
+  math: 'Matemáticas',
+  science: 'Ciencias',
+  language: 'Lengua',
+  history: 'Historia',
+  other: 'Otro',
+};
+
+export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  basic: 'Básico',
+  intermediate: 'Intermedio',
+  advanced: 'Avanzado',
+};
+
+export const ROLE_LABELS: Record<UserRole, string> = {
+  student: 'Estudiante',
+  teacher: 'Docente',
+};
+
+export const STYLE_LABELS: Record<ExplanationStyle, string> = {
+  simple: 'Simple',
+  detailed: 'Detallado',
+  socratic: 'Socrático',
+};
 
 export const PERSONALITY_OPTIONS: {
   value: TutorPersonality;

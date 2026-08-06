@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Monitor, Moon, Sun } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 
@@ -14,7 +14,7 @@ import {
 } from '@/design-system';
 
 import {
-  THEME_OPTIONS,
+  THEME_LABELS,
   type ThemePreference,
   type UserPreferences,
 } from '../../domain';
@@ -45,6 +45,8 @@ const THEME_STATUS: Record<ThemePreference, string> = {
   dark: 'Guardado — Tema oscuro activado',
 };
 
+const THEME_VALUES: ThemePreference[] = ['system', 'light', 'dark'];
+
 export function AppearanceSheet({
   visible,
   prefs,
@@ -53,10 +55,15 @@ export function AppearanceSheet({
   onSave,
 }: AppearanceSheetProps) {
   const [theme, setTheme] = useState<ThemePreference>(prefs.theme);
+  const [prevVisible, setPrevVisible] = useState(visible);
 
-  useEffect(() => {
-    if (visible) setTheme(prefs.theme);
-  }, [visible, prefs.theme]);
+  // Reset draft theme when the sheet opens (avoid syncing via useEffect).
+  if (visible !== prevVisible) {
+    setPrevVisible(visible);
+    if (visible) {
+      setTheme(prefs.theme);
+    }
+  }
 
   const dirty = theme !== prefs.theme;
 
@@ -81,15 +88,15 @@ export function AppearanceSheet({
         <Stack gap="sm">
           <AppText variant="label">Tema</AppText>
           <Stack gap="sm">
-            {THEME_OPTIONS.map((option) => (
+            {THEME_VALUES.map((value) => (
               <AppSelectableOption
-                key={option.value}
-                label={option.label}
-                description={THEME_DESCRIPTIONS[option.value]}
-                icon={THEME_ICONS[option.value]}
-                selected={theme === option.value}
+                key={value}
+                label={THEME_LABELS[value]}
+                description={THEME_DESCRIPTIONS[value]}
+                icon={THEME_ICONS[value]}
+                selected={theme === value}
                 disabled={saving}
-                onPress={() => setTheme(option.value)}
+                onPress={() => setTheme(value)}
               />
             ))}
           </Stack>

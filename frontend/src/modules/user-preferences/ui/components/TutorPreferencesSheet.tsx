@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Atom,
   BookOpen,
@@ -138,8 +138,11 @@ export function TutorPreferencesSheet({
   const [weeklyQuestionGoal, setWeeklyQuestionGoal] = useState(
     prefs.weeklyQuestionGoal,
   );
+  const [prevVisible, setPrevVisible] = useState(visible);
 
-  useEffect(() => {
+  // Reset draft fields when the sheet opens (avoid syncing via useEffect).
+  if (visible !== prevVisible) {
+    setPrevVisible(visible);
     if (visible) {
       setPreferredLevel(prefs.preferredLevel);
       setFavoriteSubjects(prefs.favoriteSubjects);
@@ -147,14 +150,7 @@ export function TutorPreferencesSheet({
       setTutorPersonality(prefs.tutorPersonality);
       setWeeklyQuestionGoal(prefs.weeklyQuestionGoal);
     }
-  }, [
-    visible,
-    prefs.preferredLevel,
-    prefs.favoriteSubjects,
-    prefs.explanationStyle,
-    prefs.tutorPersonality,
-    prefs.weeklyQuestionGoal,
-  ]);
+  }
 
   const dirty =
     preferredLevel !== prefs.preferredLevel ||

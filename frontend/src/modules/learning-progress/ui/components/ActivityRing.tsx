@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import { AppText, Stack, useTheme } from '@/design-system';
+import { clamp } from '@/shared/utils';
 
 type ActivityRingProps = {
   percent: number;
@@ -22,7 +23,7 @@ export function ActivityRing({
   const stroke = 8;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
-  const clamped = Math.max(0, Math.min(100, percent));
+  const clamped = clamp(percent, 0, 100);
   const offset = circumference - (clamped / 100) * circumference;
 
   return (

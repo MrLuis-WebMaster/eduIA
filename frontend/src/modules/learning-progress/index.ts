@@ -13,7 +13,6 @@ export {
   emptyProgressSummary,
   computeStreak,
   buildWeeklyActivity,
-  toDateKey,
 } from './domain';
 
 export {

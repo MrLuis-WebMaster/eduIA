@@ -11,7 +11,6 @@ export type {
 export {
   emptyProgressSummary,
   computeProgressSummary,
-  toDateKey,
   computeStreak,
   buildWeeklyActivity,
 } from './services/compute-progress-summary';

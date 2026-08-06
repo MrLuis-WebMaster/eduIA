@@ -14,6 +14,7 @@ export type {
 
 export {
   THEME_OPTIONS,
+  THEME_LABELS,
   ROLE_OPTIONS,
   LEVEL_OPTIONS,
   STYLE_OPTIONS,

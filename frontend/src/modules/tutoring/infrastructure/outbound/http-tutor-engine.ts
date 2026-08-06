@@ -29,7 +29,7 @@ export class HttpTutorEngine implements TutorEngine {
   ) {}
 
   async sendMessage(input: SendTutorMessageInput): Promise<SendTutorMessageResult> {
-    const url = `${trimTrailingSlash(this.baseUrl)}/api/v1/tutor/messages`;
+    const url = `${this.baseUrl}/api/v1/tutor/messages`;
 
     try {
       const data = await httpJson<TutorApiResponse>(url, {
@@ -66,8 +66,4 @@ export class HttpTutorEngine implements TutorEngine {
       });
     }
   }
-}
-
-function trimTrailingSlash(url: string): string {
-  return url.replace(/\/+$/, '');
 }

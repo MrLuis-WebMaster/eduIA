@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { Alert, View } from 'react-native';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Camera } from 'lucide-react-native';
 import { z } from 'zod';
 
@@ -16,6 +15,8 @@ import {
   Stack,
   useTheme,
 } from '@/design-system';
+import { zodResolver } from '@/shared';
+import { initialsFromName } from '@/shared/utils';
 
 import type { UserPreferences } from '../../domain';
 import { ROLE_SELECT_OPTIONS } from '../roleOptions';
@@ -27,6 +28,7 @@ const profileSchema = z.object({
     .min(1, 'El nombre es obligatorio')
     .max(80, 'Máximo 80 caracteres'),
   role: z.enum(['student', 'teacher']),
+  age: z.number().nullable().refine((age) => age !== null && age >= 18 && age <= 99, 'La edad debe ser mayor o igual a 18 y menor o igual a 99'),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -36,7 +38,7 @@ type ProfileSheetProps = {
   prefs: UserPreferences;
   saving: boolean;
   onClose: () => void;
-  onSave: (patch: Pick<UserPreferences, 'displayName' | 'role'>) => Promise<void>;
+  onSave: (patch: Pick<UserPreferences, 'displayName' | 'role' | 'age'>) => Promise<void>;
 };
 
 export function ProfileSheet({
@@ -51,13 +53,13 @@ export function ProfileSheet({
     control,
     handleSubmit,
     reset,
-    watch,
     formState: { errors, isDirty },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       displayName: prefs.displayName,
       role: prefs.role,
+      age: prefs.age,
     },
   });
 
@@ -66,12 +68,13 @@ export function ProfileSheet({
       reset({
         displayName: prefs.displayName,
         role: prefs.role,
+        age: prefs.age,
       });
     }
-  }, [visible, prefs.displayName, prefs.role, reset]);
+  }, [visible, prefs.displayName, prefs.role, prefs.age, reset]);
 
-  const displayName = watch('displayName');
-  const initials = initialsFromName(displayName || prefs.displayName);
+  const displayName = useWatch({ control, name: 'displayName' });
+  const initials = initialsFromName(displayName || prefs.displayName, 'E');
 
   return (
     <AppBottomSheet
@@ -89,6 +92,7 @@ export function ProfileSheet({
             await onSave({
               displayName: values.displayName.trim(),
               role: values.role,
+              age: values.age,
             });
           })}
         />
@@ -158,14 +162,26 @@ export function ProfileSheet({
             )}
           />
         </Stack>
+        <Stack gap="sm">
+          <AppText variant="label">Edad</AppText>
+          <Controller
+            control={control}
+            name="age"
+            render={({ field: { onChange, value } }) => (
+              <AppInput
+                label="Edad"
+                value={value?.toString() || ''}
+                onChangeText={onChange}
+                placeholder="Tu edad"
+                error={errors.age?.message}
+                editable={!saving}
+                keyboardType="numeric"
+                maxLength={2}
+              />
+            )}
+          />
+        </Stack>
       </Stack>
     </AppBottomSheet>
   );
-}
-
-function initialsFromName(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return 'E';
-  if (parts.length === 1) return parts[0]!.slice(0, 2);
-  return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`;
 }

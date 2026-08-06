@@ -12,13 +12,14 @@ import { usePathname, useRouter } from 'expo-router';
 import { Alert, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { initialsFromName } from '@/shared/utils';
+
 import { Pressable } from '../primitives/Pressable';
 import { Row } from '../primitives/Row';
 import { Stack } from '../primitives/Stack';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../ThemeProvider';
-import { AppAvatar } from './AppAvatar';
-import { AppDrawer, AppDrawerItem } from './AppDrawer';
+import { AppAvatar } from './AppAvatar';import { AppDrawer, AppDrawerItem } from './AppDrawer';
 import { AppIconButton } from './AppIconButton';
 import { AppScreenSection } from './AppScreen';
 import { AppText } from './AppText';
@@ -29,13 +30,6 @@ type AppHeaderProps = {
   /** Optional profile image URI. */
   avatarUri?: string | null;
 };
-
-function initialsFromName(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return '';
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase();
-}
 
 type DrawerRoute = '/(tabs)' | '/(tabs)/progress' | '/(tabs)/settings';
 

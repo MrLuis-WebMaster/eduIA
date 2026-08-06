@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { AppProviders } from '@/bootstrap/providers';
+import { AppProviders } from '@/bootstrap/AppProviders';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
   // Ignore if splash was already hidden.

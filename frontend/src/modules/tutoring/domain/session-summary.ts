@@ -2,6 +2,7 @@
 
 import { SUBJECT_LABELS } from './constants';
 import type { Difficulty, Subject, TutorSession } from './types';
+import { truncate } from '@/shared/utils';
 
 export type RecentTutoringSessionDto = {
   id: string;
@@ -34,9 +35,4 @@ export function toRecentTutoringSessionDto(
     firstQuestion: firstQuestion ? truncate(firstQuestion, 120) : null,
     lastAssistantPreview: lastAssistant ? truncate(lastAssistant, 160) : null,
   };
-}
-
-function truncate(value: string, max: number): string {
-  if (value.length <= max) return value;
-  return `${value.slice(0, max - 1)}…`;
 }

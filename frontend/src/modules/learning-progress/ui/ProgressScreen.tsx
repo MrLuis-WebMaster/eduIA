@@ -9,6 +9,7 @@ import {
   AppSkeleton,
 } from '@/design-system';
 import { LEVEL_OPTIONS, usePreferences } from '@/modules/user-preferences';
+import { firstNameFromDisplayName } from '@/shared/utils';
 
 import { ProgressActivitySection } from './components/ProgressActivitySection';
 import { ProgressEngagementSection } from './components/ProgressEngagementSection';
@@ -21,7 +22,6 @@ import { useLearningProgress } from './hooks/useLearningProgress';
 import {
   buildAchievements,
   buildSubjectActivityRows,
-  firstNameFromDisplayName,
   heroCopy,
   weeklyActivityScore,
 } from './progressPresentation';

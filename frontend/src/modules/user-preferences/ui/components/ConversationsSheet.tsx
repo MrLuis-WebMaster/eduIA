@@ -21,10 +21,11 @@ import {
   useTheme,
 } from '@/design-system';
 import {
-  DIFFICULTY_OPTIONS,
   useRecentTutoringSessions,
   type Subject,
 } from '@/modules/tutoring';
+import { DIFFICULTY_LABELS } from '@/shared/domain/tutor-profile';
+import { formatRelativeDay } from '@/shared/utils';
 
 type ConversationsSheetProps = {
   visible: boolean;
@@ -102,8 +103,7 @@ export function ConversationsSheet({
           {sessions.map((session) => {
             const Icon = SUBJECT_ICONS[session.subject] ?? MessageSquareText;
             const levelLabel =
-              DIFFICULTY_OPTIONS.find((o) => o.value === session.difficulty)
-                ?.label ?? session.difficulty;
+              DIFFICULTY_LABELS[session.difficulty] ?? session.difficulty;
             const title =
               session.firstQuestion?.trim() ||
               `Sesión de ${session.subjectLabel}`;
@@ -135,21 +135,4 @@ export function ConversationsSheet({
       )}
     </AppBottomSheet>
   );
-}
-
-function formatRelativeDay(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return '';
-
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  const key = (d: Date) =>
-    `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-
-  if (key(date) === key(today)) return 'Hoy';
-  if (key(date) === key(yesterday)) return 'Ayer';
-
-  return date.toLocaleDateString('es', { day: 'numeric', month: 'short' });
 }

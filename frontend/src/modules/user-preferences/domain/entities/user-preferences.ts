@@ -44,6 +44,8 @@ const VALID_SUBJECTS: FavoriteSubject[] = [
   'other',
 ];
 const VALID_THEMES: ThemePreference[] = ['system', 'light', 'dark'];
+const MIN_AGE = 18;
+const MAX_AGE = 99;
 
 export function normalizeProfile(input: Partial<UserProfile>): UserProfile {
   const role = VALID_ROLES.includes(input.role as UserRole)
@@ -68,11 +70,16 @@ export function normalizeProfile(input: Partial<UserProfile>): UserProfile {
       )
     : [];
 
+  const displayName = typeof input.displayName === 'string'
+    ? input.displayName.trim().slice(0, DISPLAY_NAME_MAX_LENGTH)
+    : '';
+  const age = typeof input.age === 'number' && Number.isFinite(input.age)
+    ? input.age >= MIN_AGE && input.age <= MAX_AGE ? Math.round(input.age) : defaultUserPreferences.age
+    : defaultUserPreferences.age;
+
   return {
-    displayName:
-      typeof input.displayName === 'string'
-        ? input.displayName.trim().slice(0, DISPLAY_NAME_MAX_LENGTH)
-        : '',
+    displayName,
+    age,
     role,
     preferredLevel,
     favoriteSubjects,

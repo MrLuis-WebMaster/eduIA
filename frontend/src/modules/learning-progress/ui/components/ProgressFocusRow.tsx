@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { AppCard, AppText, Pressable, Row, Stack, useTheme } from '@/design-system';
+import { clamp } from '@/shared/utils';
 
 export type ProgressFocusRowProps = {
   topic: string | null;
@@ -91,7 +92,7 @@ function GoalCard({
     streakDays >= 3
       ? `Mantén tu racha (${streakDays}d)`
       : `Alcanza nivel ${preferredLevelLabel}`;
-  const fill = Math.max(0, Math.min(100, weeklyPercent));
+  const fill = clamp(weeklyPercent, 0, 100);
 
   return (
     <AppCard

@@ -1,4 +1,4 @@
-export { AppProviders } from './providers';
+export { AppProviders } from './AppProviders';
 export { createQueryClient } from './query-client';
 export {
   createDependencies,

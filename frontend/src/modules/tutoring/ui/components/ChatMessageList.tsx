@@ -22,6 +22,7 @@ import {
   layout,
   useTheme,
 } from '@/design-system';
+import { formatRelativeDay, formatTime, toDateKey } from '@/shared/utils';
 
 import type { ChatMessage, FollowUpSuggestion } from '../../domain';
 import { FollowUpSuggestions } from './FollowUpSuggestions';
@@ -341,12 +342,12 @@ function buildListItems(messages: ChatMessage[]): ListItem[] {
 
   for (const message of messages) {
     if (message.role === 'system') continue;
-    const dayKey = toDayKey(message.createdAt);
+    const dayKey = toDateKey(message.createdAt) || 'unknown';
     if (dayKey !== lastDayKey) {
       items.push({
         type: 'separator',
         id: `sep-${dayKey}`,
-        label: formatDayLabel(message.createdAt),
+        label: formatRelativeDay(message.createdAt) || 'Conversación',
       });
       lastDayKey = dayKey;
     }
@@ -354,37 +355,4 @@ function buildListItems(messages: ChatMessage[]): ListItem[] {
   }
 
   return items;
-}
-
-function toDayKey(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return 'unknown';
-  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-}
-
-function formatDayLabel(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return 'Conversación';
-
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  if (toDayKey(iso) === toDayKey(today.toISOString())) return 'Hoy';
-  if (toDayKey(iso) === toDayKey(yesterday.toISOString())) return 'Ayer';
-
-  return d.toLocaleDateString('es', {
-    day: 'numeric',
-    month: 'short',
-  });
-}
-
-function formatTime(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleTimeString('es', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
 }

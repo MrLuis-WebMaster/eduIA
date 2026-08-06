@@ -106,8 +106,7 @@ export async function probeApiHealth(
   apiUrl: string,
   options: { timeoutMs?: number; signal?: AbortSignal } = {},
 ): Promise<void> {
-  const base = apiUrl.replace(/\/+$/, '');
-  await httpJson(`${base}/api/v1/health`, {
+  await httpJson(`${apiUrl}/api/v1/health`, {
     method: 'GET',
     timeoutMs: options.timeoutMs ?? 4_000,
     signal: options.signal,

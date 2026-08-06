@@ -33,13 +33,17 @@ export function createDependencies(): AppDependencies {
     storage,
   });
 
+  const learningProgress = createLearningProgressModule({
+    listRecentSessions: tutoring.listRecentSessions,
+  });
+
+  const userPreferences = createUserPreferencesModule({ storage });
+
   return {
     storage,
     tutoring,
-    learningProgress: createLearningProgressModule({
-      listRecentSessions: tutoring.listRecentSessions,
-    }),
-    userPreferences: createUserPreferencesModule({ storage }),
+    learningProgress,
+    userPreferences,
   };
 }
 

@@ -4,6 +4,7 @@ import type { AppPreferences, UserPreferences, UserProfile } from './types';
 
 export const defaultUserProfile: UserProfile = {
   displayName: '',
+  age: null,
   role: 'student',
   preferredLevel: 'basic',
   favoriteSubjects: [],

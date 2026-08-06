@@ -13,6 +13,9 @@ export type { AppTextAreaProps } from './AppTextArea';
 export { AppCard } from './AppCard';
 export type { AppCardProps } from './AppCard';
 
+export { AppDivider } from './AppDivider';
+export type { AppDividerProps } from './AppDivider';
+
 export { AppChip } from './AppChip';
 export type { AppChipProps } from './AppChip';
 
