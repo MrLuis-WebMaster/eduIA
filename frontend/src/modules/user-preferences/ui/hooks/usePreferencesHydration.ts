@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 
 import { useTheme } from '@/design-system';
 
-import { usePreferencesStore } from './store/preferences-store';
+import { usePreferencesStore } from '../store/preferences-store';
 
 /**
  * Loads persisted preferences once and syncs theme into ThemeProvider.
- * Mount near the app root (inside ThemeProvider).
+ * Call once under ThemeProvider (e.g. app root bootstrap).
  */
-export function PreferencesHydrator() {
+export function usePreferencesHydration() {
   const hydrated = usePreferencesStore((s) => s.hydrated);
   const hydrate = usePreferencesStore((s) => s.hydrate);
   const theme = usePreferencesStore((s) => s.prefs.theme);
@@ -25,6 +25,4 @@ export function PreferencesHydrator() {
       setPreference(theme);
     }
   }, [hydrated, preference, theme, setPreference]);
-
-  return null;
 }

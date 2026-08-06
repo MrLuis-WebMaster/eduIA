@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ThemeProvider, ToastProvider, useTheme, type ThemePreference } from '@/design-system';
-import { PreferencesHydrator } from '@/modules/user-preferences';
+import { usePreferencesHydration } from '@/modules/user-preferences';
 
 import { DependenciesProvider } from './DependenciesProvider';
 import { createQueryClient } from './query-client';
@@ -19,6 +19,12 @@ function StatusBarFromTheme() {
   return <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />;
 }
 
+/** Runs preference hydration under ThemeProvider. */
+function PreferencesBootstrap({ children }: { children: ReactNode }) {
+  usePreferencesHydration();
+  return children;
+}
+
 export function AppProviders({
   children,
   initialThemePreference = 'system',
@@ -31,9 +37,10 @@ export function AppProviders({
         <QueryClientProvider client={queryClient}>
           <ThemeProvider initialPreference={initialThemePreference}>
             <ToastProvider>
-              <PreferencesHydrator />
-              <StatusBarFromTheme />
-              {children}
+              <PreferencesBootstrap>
+                <StatusBarFromTheme />
+                {children}
+              </PreferencesBootstrap>
             </ToastProvider>
           </ThemeProvider>
         </QueryClientProvider>

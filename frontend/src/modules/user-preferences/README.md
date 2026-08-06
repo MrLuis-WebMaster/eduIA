@@ -10,7 +10,7 @@ Preferencias de perfil y de app con persistencia local.
 | **application/** | load/save/reset use cases + `PreferencesRepository` port |
 | **infrastructure/** | AsyncStorage / in-memory repos |
 | **composition/** | `createUserPreferencesModule` |
-| **ui/** | `PreferencesScreen`, store, hydrator |
+| **ui/** | `PreferencesScreen`, store, hydrator, `options/` (selects de UI con iconos) |
 
 ## Responsibility
 
@@ -24,7 +24,7 @@ Importar desde `@/modules/user-preferences`:
 - Application ports: `PreferencesRepository`.
 - Infrastructure: `AsyncStoragePreferencesRepository`, `InMemoryPreferencesRepository`, `STORAGE_KEYS`.
 - Composition: `createUserPreferencesModule`.
-- Shared UI API: `PreferencesHydrator`, `usePreferences`, `usePreferencesStore`.
+- Shared UI API: `usePreferencesHydration`, `usePreferences`, `usePreferencesStore`.
 
 `PreferencesScreen`: desde `@/modules/user-preferences/ui` solo en `src/app/`.
 

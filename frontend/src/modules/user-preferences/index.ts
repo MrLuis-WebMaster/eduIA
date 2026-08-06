@@ -45,7 +45,7 @@ export {
 } from './composition';
 
 /** Hydration + store — needed at app root without loading PreferencesScreen. */
-export { PreferencesHydrator } from './ui/PreferencesHydrator';
 export { usePreferences } from './ui/hooks/usePreferences';
+export { usePreferencesHydration } from './ui/hooks/usePreferencesHydration';
 export { usePreferencesStore } from './ui/store/preferences-store';
-export { ROLE_SELECT_OPTIONS } from './ui/roleOptions';
+export { ROLE_SELECT_OPTIONS } from './ui/options';

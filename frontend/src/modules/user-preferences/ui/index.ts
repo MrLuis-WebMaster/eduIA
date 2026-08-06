@@ -1,5 +1,5 @@
 export { PreferencesScreen } from './PreferencesScreen';
-export { PreferencesHydrator } from './PreferencesHydrator';
 export { usePreferences } from './hooks/usePreferences';
+export { usePreferencesHydration } from './hooks/usePreferencesHydration';
 export { usePreferencesStore } from './store/preferences-store';
-export { ROLE_SELECT_OPTIONS } from './roleOptions';
+export { ROLE_SELECT_OPTIONS } from './options';

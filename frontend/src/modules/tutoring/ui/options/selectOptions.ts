@@ -12,7 +12,7 @@ import type { LucideIcon } from 'lucide-react-native';
 
 import type { AppSelectOption } from '@/design-system';
 
-import type { Difficulty, Subject } from '../domain';
+import type { Difficulty, Subject } from '../../domain';
 
 /** Shared subject choices for Tutor filters (icons + descriptions). */
 export const SUBJECT_SELECT_OPTIONS: (AppSelectOption<Subject> & {

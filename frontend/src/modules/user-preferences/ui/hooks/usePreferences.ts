@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useAppDependencies } from '@/bootstrap/app-dependencies';
@@ -15,28 +15,15 @@ export function usePreferences() {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { tutoring } = useAppDependencies();
-  const { preference, setPreference } = useTheme();
+  const { setPreference } = useTheme();
   const prefs = usePreferencesStore((s) => s.prefs);
   const hydrated = usePreferencesStore((s) => s.hydrated);
-  const hydrate = usePreferencesStore((s) => s.hydrate);
   const saveStore = usePreferencesStore((s) => s.save);
   const resetStore = usePreferencesStore((s) => s.reset);
 
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [clearingHistory, setClearingHistory] = useState(false);
-
-  useEffect(() => {
-    if (!hydrated) {
-      void hydrate();
-    }
-  }, [hydrated, hydrate]);
-
-  useEffect(() => {
-    if (hydrated && preference !== prefs.theme) {
-      setPreference(prefs.theme);
-    }
-  }, [hydrated, preference, prefs.theme, setPreference]);
 
   const save = useCallback(
     async (

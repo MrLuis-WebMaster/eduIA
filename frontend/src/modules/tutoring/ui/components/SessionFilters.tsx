@@ -7,7 +7,7 @@ import type { Difficulty, Subject, UserRole } from '../../domain';
 import {
   DIFFICULTY_SELECT_OPTIONS,
   SUBJECT_SELECT_OPTIONS,
-} from '../selectOptions';
+} from '../options';
 
 type SessionFiltersProps = {
   subject: Subject;
