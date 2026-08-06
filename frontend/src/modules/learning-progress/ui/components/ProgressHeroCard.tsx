@@ -41,8 +41,7 @@ export function ProgressHeroCard({
   return (
     <AppCard
       padding="md"
-      className="overflow-hidden bg-primary/5"
-      style={{ borderColor: `${colors.primary}33` }}
+      className="overflow-hidden"
       accessibilityLabel={`${title}. ${weeklyDetail}`}>
       <Stack gap="sm">
         <Row align="start" gap="md">

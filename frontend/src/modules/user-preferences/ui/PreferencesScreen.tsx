@@ -79,7 +79,6 @@ export function PreferencesScreen() {
   const subjectsLabel = prefs.favoriteSubjects.map((subject) => SUBJECT_LABELS[subject]).join(', ') || 'Sin elegir';
 
   const displayName = prefs.displayName.trim() || 'Tu espacio';
-  const ageLabel = prefs.age ? `${prefs.age} años` : '';
 
   if (!hydrated) {
     return (
@@ -115,18 +114,25 @@ export function PreferencesScreen() {
 
           <Stack gap="xs" className="min-w-0 flex-1">
             <AppText variant="subtitle" numberOfLines={1}>
-              {displayName} ({ageLabel})
+              {displayName}
             </AppText>
-            <Row
-              align="center"
-              gap="xs"
-              className="self-start rounded-full bg-primary/15 px-2.5 py-1">
-              <GraduationCap size={12} color={colors.primary} strokeWidth={2} />
-              <AppText
-                variant="caption"
-                className="font-medium text-primary">
-                {roleLabel}
-              </AppText>
+            <Row align="center" gap="sm" className="flex-wrap">
+              <Row
+                align="center"
+                gap="xs"
+                className="self-start rounded-full bg-primary/15 px-2.5 py-1">
+                <GraduationCap size={12} color={colors.primary} strokeWidth={2} />
+                <AppText
+                  variant="caption"
+                  className="font-medium text-primary">
+                  {roleLabel}
+                </AppText>
+              </Row>
+              {prefs.age != null ? (
+                <AppText variant="caption" tone="muted">
+                  {prefs.age} años
+                </AppText>
+              ) : null}
             </Row>
             <AppText variant="caption" tone="muted">
               Personaliza tu experiencia y la forma en que EduIA te ayuda.

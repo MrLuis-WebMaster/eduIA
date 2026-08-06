@@ -19,7 +19,7 @@ import { zodResolver } from '@/shared';
 import { initialsFromName } from '@/shared/utils';
 
 import type { UserPreferences } from '../../domain';
-import { ROLE_SELECT_OPTIONS } from '../roleOptions';
+import { ROLE_SELECT_OPTIONS } from '../options';
 
 const profileSchema = z.object({
   displayName: z
@@ -163,7 +163,6 @@ export function ProfileSheet({
           />
         </Stack>
         <Stack gap="sm">
-          <AppText variant="label">Edad</AppText>
           <Controller
             control={control}
             name="age"
@@ -171,11 +170,14 @@ export function ProfileSheet({
               <AppInput
                 label="Edad"
                 value={value?.toString() || ''}
-                onChangeText={onChange}
+                onChangeText={(text) => {
+                  const digits = text.replace(/\D/g, '');
+                  onChange(digits === '' ? null : Number(digits));
+                }}
                 placeholder="Tu edad"
                 error={errors.age?.message}
                 editable={!saving}
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 maxLength={2}
               />
             )}
