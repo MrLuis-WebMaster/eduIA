@@ -1,0 +1,12 @@
+{
+  "name": "academia-os",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.10.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @academia/web --filter @academia/api dev",
+    "build": "pnpm --filter @academia/api build && pnpm --filter @academia/web build",
+    "test": "pnpm --filter @academia/api test",
+    "typecheck": "pnpm --filter @academia/web typecheck && pnpm --filter @academia/api typecheck"
+  }
+}
