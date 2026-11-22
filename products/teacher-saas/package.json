@@ -2,7 +2,7 @@
   "name": "academia-os",
   "private": true,
   "version": "0.1.0",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "pnpm --parallel --filter @academia/web --filter @academia/api dev",
     "build": "pnpm --filter @academia/api build && pnpm --filter @academia/web build",
