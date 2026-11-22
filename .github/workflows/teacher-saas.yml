@@ -24,8 +24,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: pnpm
-          cache-dependency-path: products/teacher-saas/pnpm-lock.yaml
       - name: Install
         run: pnpm install --no-frozen-lockfile
       - name: Typecheck
