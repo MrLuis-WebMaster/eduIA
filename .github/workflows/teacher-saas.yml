@@ -1,0 +1,36 @@
+name: Teacher SaaS foundation
+on:
+  push:
+    branches:
+      - feat/teacher-saas-foundation-20261122
+    paths:
+      - "products/teacher-saas/**"
+      - ".github/workflows/teacher-saas.yml"
+  pull_request:
+    paths:
+      - "products/teacher-saas/**"
+      - ".github/workflows/teacher-saas.yml"
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: products/teacher-saas
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.10.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: products/teacher-saas/pnpm-lock.yaml
+      - name: Install
+        run: pnpm install --no-frozen-lockfile
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Test
+        run: pnpm test
+      - name: Build
+        run: pnpm build

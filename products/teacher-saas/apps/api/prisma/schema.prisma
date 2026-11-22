@@ -1,0 +1,302 @@
+// Draft relational model for the Teacher SaaS product.
+// Never deploy before tenant-authorization checks, migrations and a privacy review.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WorkspaceType {
+  SOLO
+  ACADEMY
+}
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  TEACHER
+  STUDENT
+  GUARDIAN
+}
+
+enum SessionMode {
+  ONLINE
+  ONSITE
+  HYBRID
+}
+
+enum SessionStatus {
+  DRAFT
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum MeetingProvider {
+  MEET
+  ZOOM
+  CUSTOM
+}
+
+enum IntegrationProvider {
+  GOOGLE_CALENDAR
+  GOOGLE_DRIVE
+  ZOOM
+  ONEDRIVE
+  DROPBOX
+  OUTLOOK
+}
+
+enum ConnectionStatus {
+  CONNECTED
+  EXPIRED
+  REVOKED
+  ERROR
+}
+
+enum ResourceProvider {
+  GOOGLE_DRIVE
+  ONEDRIVE
+  DROPBOX
+  UPLOAD
+  EXTERNAL_LINK
+}
+
+enum ReflectionStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+model Workspace {
+  id           String               @id @default(cuid())
+  slug         String               @unique
+  name         String
+  type         WorkspaceType
+  brandColor   String               @default("#6855ed")
+  timezone     String               @default("America/Bogota")
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  memberships  WorkspaceMembership[]
+  teachers     TeacherProfile[]
+  subjects     Subject[]
+  courses      Course[]
+  sessions     TeachingSession[]
+  resources    Resource[]
+  integrations ProviderConnection[]
+}
+
+model User {
+  id           String                @id @default(cuid())
+  email        String                @unique
+  displayName  String
+  createdAt    DateTime              @default(now())
+  memberships  WorkspaceMembership[]
+  teacherProfiles TeacherProfile[]
+  enrollments  Enrollment[]
+  attendance   SessionAttendance[]
+  attempts     PracticeAttempt[]
+  progress     SkillProgress[]
+  integrations ProviderConnection[]
+}
+
+model WorkspaceMembership {
+  id          String          @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        MembershipRole
+  createdAt   DateTime        @default(now())
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([workspaceId, userId, role])
+  @@index([userId])
+}
+
+model TeacherProfile {
+  id          String          @id @default(cuid())
+  workspaceId String
+  userId      String
+  bio         String?
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses     CourseTeacher[]
+  @@unique([workspaceId, userId])
+}
+
+model Subject {
+  id          String    @id @default(cuid())
+  workspaceId String
+  name        String
+  slug        String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  courses     Course[]
+  @@unique([workspaceId, slug])
+}
+
+model Course {
+  id          String         @id @default(cuid())
+  workspaceId String
+  subjectId   String?
+  title       String
+  description String?
+  published   Boolean        @default(false)
+  workspace   Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  subject     Subject?       @relation(fields: [subjectId], references: [id])
+  teachers    CourseTeacher[]
+  topics      Topic[]
+  enrollments Enrollment[]
+  sessions    TeachingSession[]
+  resources   Resource[]
+  @@index([workspaceId])
+}
+
+model CourseTeacher {
+  courseId         String
+  teacherProfileId String
+  course           Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher          TeacherProfile @relation(fields: [teacherProfileId], references: [id], onDelete: Cascade)
+  @@id([courseId, teacherProfileId])
+}
+
+model Topic {
+  id       String          @id @default(cuid())
+  courseId String
+  parentId String?
+  title    String
+  position Int             @default(0)
+  course   Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  parent   Topic?          @relation("TopicTree", fields: [parentId], references: [id])
+  children Topic[]         @relation("TopicTree")
+  resources Resource[]
+  progress  SkillProgress[]
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  courseId  String
+  userId    String
+  startedAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([courseId, userId])
+}
+
+model TeachingSession {
+  id          String         @id @default(cuid())
+  workspaceId String
+  courseId    String?
+  title       String
+  mode        SessionMode
+  status      SessionStatus  @default(DRAFT)
+  provider    MeetingProvider?
+  meetingUrl  String?
+  externalId  String?
+  location    String?
+  startsAt    DateTime
+  endsAt      DateTime
+  capacity    Int            @default(1)
+  workspace   Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  course      Course?        @relation(fields: [courseId], references: [id])
+  attendance  SessionAttendance[]
+  reflection  LessonReflection?
+  resources   Resource[]
+  @@index([workspaceId, startsAt])
+}
+
+model SessionAttendance {
+  sessionId String
+  userId    String
+  status    AttendanceStatus
+  session   TeachingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([sessionId, userId])
+}
+
+model LessonReflection {
+  id          String           @id @default(cuid())
+  sessionId   String           @unique
+  teacherNote String
+  status      ReflectionStatus @default(DRAFT)
+  approvedAt  DateTime?
+  session     TeachingSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  practices   Practice[]
+}
+
+model Practice {
+  id           String           @id @default(cuid())
+  reflectionId String
+  title        String
+  content      Json
+  publishedAt  DateTime?
+  reflection   LessonReflection @relation(fields: [reflectionId], references: [id], onDelete: Cascade)
+  attempts     PracticeAttempt[]
+}
+
+model PracticeAttempt {
+  id        String   @id @default(cuid())
+  practiceId String
+  userId    String
+  attemptNo Int      @default(1)
+  score     Float?
+  answers   Json
+  createdAt DateTime @default(now())
+  practice  Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  student   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([practiceId, userId, attemptNo])
+}
+
+model SkillProgress {
+  topicId       String   @id
+  userId        String   @id
+  mastery       Float    @default(0)
+  evidenceCount Int      @default(0)
+  updatedAt     DateTime @updatedAt
+  topic         Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  student       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([topicId, userId])
+}
+
+model Resource {
+  id           String           @id @default(cuid())
+  workspaceId  String
+  courseId     String?
+  topicId      String?
+  sessionId    String?
+  title        String
+  provider     ResourceProvider
+  externalId   String?
+  url          String?
+  aiAuthorized Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  workspace    Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  course       Course?          @relation(fields: [courseId], references: [id])
+  topic        Topic?           @relation(fields: [topicId], references: [id])
+  session      TeachingSession? @relation(fields: [sessionId], references: [id])
+  @@index([workspaceId])
+}
+
+model ProviderConnection {
+  id                String              @id @default(cuid())
+  workspaceId       String
+  userId            String
+  provider          IntegrationProvider
+  status            ConnectionStatus
+  externalAccountId String?
+  // Secure token vault identifier; NEVER store raw OAuth credentials here.
+  secretRef         String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  workspace         Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([workspaceId, userId, provider])
+}

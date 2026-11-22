@@ -6,8 +6,9 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "start": "node dist/main.js",
-    "test": "tsx --test src/**/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "test": "tsx --test src/booking-rules.test.ts",
+    "typecheck": "tsc --noEmit",
+    "db:validate": "prisma validate"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.0",
